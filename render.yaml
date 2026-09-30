@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: user-admin-demo
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /
+        destination: /user-admin.html

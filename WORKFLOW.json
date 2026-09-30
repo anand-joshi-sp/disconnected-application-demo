@@ -1,0 +1,82 @@
+{
+  "steps": [
+    {
+      "action": "open_page",
+      "instruction": "Open user-admin.html",
+      "control": null,
+      "value": null
+    },
+    {
+      "action": "type",
+      "instruction": "Enter the user name",
+      "control": "Valley User Name",
+      "value": "admin"
+    },
+    {
+      "action": "type",
+      "instruction": "Enter the password",
+      "control": "Valley Password",
+      "value": "admin"
+    },
+    {
+      "action": "click",
+      "instruction": "Submit credentials",
+      "control": "Sign On",
+      "value": null
+    },
+    {
+      "action": "choose",
+      "instruction": "Keep the default test department",
+      "control": "Department",
+      "value": "T001_JS TEST DEPARTMENT"
+    },
+    {
+      "action": "click",
+      "instruction": "Enter the selected department",
+      "control": "Go",
+      "value": null
+    },
+    {
+      "action": "click",
+      "instruction": "Retrieve all seeded users",
+      "control": "Search",
+      "value": null
+    },
+    {
+      "action": "read",
+      "instruction": "Capture the paginated Users table",
+      "control": "Users table",
+      "value": null
+    },
+    {
+      "action": "click",
+      "instruction": "Advance to the next page",
+      "control": "Next page",
+      "value": null
+    },
+    {
+      "action": "type",
+      "instruction": "Search for the seeded read/update account",
+      "control": "Last name",
+      "value": "Miron"
+    },
+    {
+      "action": "click",
+      "instruction": "Run the filtered search",
+      "control": "Search",
+      "value": null
+    },
+    {
+      "action": "click",
+      "instruction": "Open Ivan Miron",
+      "control": "update",
+      "value": null
+    },
+    {
+      "action": "read",
+      "instruction": "Read Profile, Security, Roles, Departments, and Providers",
+      "control": "User tabs",
+      "value": null
+    }
+  ]
+}

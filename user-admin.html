@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>User Administration — Demo Fixture</title>
+<style>
+:root{--purple:#563080;--purple2:#76519b;--lav:#f7f1f8;--lav2:#eee5f2;--line:#c9bdcf;--link:#147c96;--ink:#4e4653;--muted:#807786;--yellow:#fff5a8;--rail:#f4f4ea;--blue:#0b66a7}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font:11px Arial,Helvetica,sans-serif;color:var(--ink);background:#fbf6fb}button,input,select,textarea{font:11px Arial,Helvetica,sans-serif;color:var(--ink)}button{cursor:pointer}a{color:var(--link);text-decoration:underline;cursor:pointer}[hidden]{display:none!important}
+.test-badge{position:fixed;right:6px;bottom:5px;z-index:100;background:#fff4c2;border:1px solid #b79527;padding:3px 6px;color:#705800;font-weight:bold}
+/* login */
+#login{height:100%;background:linear-gradient(120deg,#fff 0 37%,#f3e7fa 62%,#fff 100%);position:relative;overflow:auto}
+.brand-large{position:absolute;left:28px;top:52px;display:flex;align-items:center;font-size:64px;letter-spacing:-5px;color:#5a2788;font-weight:bold}.brand-large i{font-style:normal;color:#82b422;font-size:72px;margin-right:4px}.brand-large span{font-weight:normal}
+.login-card{position:absolute;top:270px;left:30px;width:448px;height:104px;border:1px solid #9e8fa5;background:rgba(255,255,255,.58);display:flex;align-items:center}.hospital-logo{width:150px;padding-left:15px;font-size:21px;line-height:17px;color:#202020}.hospital-logo b{display:block;color:#0d83d5;font-size:38px;float:left;margin-right:6px}.login-fields{border-left:1px solid #b8acbc;padding:6px 20px;flex:1}.login-fields h2{margin:0 0 12px;font-size:13px;color:#30106d}.row{display:flex;align-items:center;margin:4px 0}.row label{width:118px}.row input,.row select{height:20px;border:1px solid #c4b8ca;background:#fff;padding:1px 4px}.small-btn{border:1px solid #999;border-radius:2px;background:linear-gradient(#fff,#ddd);padding:2px 8px}.login-fields .small-btn{margin-left:118px;background:linear-gradient(#555,#111);color:#fff}.forgot{position:absolute;left:61px;top:435px;font-size:19px;color:red}.forgot a{color:red}
+/* department interstitial */
+#department-screen{height:100%;background:linear-gradient(#faeef8 0 43%,#f8f8ff 43%);position:relative}.dept-card{position:absolute;right:13%;top:45%;width:248px;border:1px solid #e1d9e5;background:#fff;padding:12px 15px}.dept-card h3{margin:-25px 0 18px;color:#777;font-size:12px;font-weight:normal}.dept-card label{display:inline-block;width:63px}.dept-card select{width:155px;height:22px;border:1px solid #999;background:#fff}.go-btn{display:block;margin:88px 0 0 auto;width:74px;background:#0065a7;color:white;border:0;border-radius:2px;padding:5px}.last-login{font-size:9px;margin-top:10px}.copyright{position:absolute;right:13%;bottom:11%;color:#999}
+/* app shell */
+#app{height:100%;display:flex;flex-direction:column;min-width:900px}.top{height:38px;background:var(--purple);color:#fff;display:flex;align-items:flex-end;padding:0 5px}.product-name{font-size:12px;font-weight:bold;padding:0 8px 7px 2px}.topnav{display:flex;height:26px}.topnav a{color:white;text-decoration:none;padding:7px 10px 5px}.topnav a:hover{background:var(--purple2)}.top-spacer{flex:1}.global-search{margin:0 6px 6px;width:130px;height:18px;border:1px solid #ccc}.top-user{padding:0 6px 7px;border-left:1px solid rgba(255,255,255,.25)}.top-logout{color:#fff;text-decoration:none!important;padding:0 8px 7px!important;font-weight:bold}
+.body{flex:1;min-height:0;display:flex}.left{width:127px;background:var(--rail);border-right:1px solid #bbb;flex:none;overflow:auto}.left-title{height:27px;background:#eee6ee;border-bottom:1px solid #ccc;padding:8px 4px;font-size:12px}.filter{width:120px;margin:4px 3px;height:19px;border:1px solid #aaa}.practice-links{padding:3px 8px}.practice-links h4{font-size:10px;margin:4px 0 8px;color:#333}.practice-links .section{font-size:10px;margin-top:8px;color:#555}.practice-links a{display:block;font-size:9px;margin:3px 0}
+.content{flex:1;overflow:auto;padding:8px 9px 34px;background:#fdf8fd}.heading{font-size:14px;color:#584868;margin:0 0 8px;border-bottom:1px solid #b7aabf;padding-bottom:8px}.subheading{font-size:14px;color:#584868;border-bottom:1px solid #9e8ca9;padding-bottom:3px;margin:10px 0 14px}.form-grid{display:grid;grid-template-columns:100px 166px 20px 320px;align-items:center;gap:5px 4px;max-width:610px}.form-grid input,.form-grid select{height:20px;border:1px solid #cabfd0;background:#fff;padding:1px 4px}.form-grid input.req,.form-grid select.req{background:var(--yellow)}.form-grid textarea{border:1px solid #666;width:220px;height:76px;padding:4px}.wide{width:335px!important}.date{width:94px!important}.help{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#773b98;color:white;font-weight:bold;font-size:9px}.actions{margin:35px 0 0 101px}.actions button{margin-right:9px}.tabs{height:22px;border-bottom:1px solid #b9aabd;margin:0 15px 6px;display:flex;align-items:flex-end}.tabs button{height:20px;min-width:44px;border:1px solid #b9aabd;border-bottom:0;background:#f2edf4;padding:2px 12px;font-weight:bold;font-size:9px}.tabs button.active{background:#fff;height:22px}
+.info-line{margin:8px 0}.org-line{font-size:13px;color:#65526e;border-bottom:1px solid #9c8ca4;margin:20px 8px 8px 0;padding-bottom:4px}.access-box{border:1px solid #888;width:355px;height:65px;margin-left:0;padding:7px;background:#fff;overflow:auto}.edit-link{margin-left:340px}.footer{height:20px;background:#dddde3;border-top:1px solid #bdbdc4;display:flex;align-items:center;justify-content:center;position:relative}.footer select{position:absolute;right:140px;width:140px;height:17px;font-size:9px}.footer-alerts{position:absolute;right:12px}
+/* find/list */
+.find-form{display:grid;grid-template-columns:100px 95px 20px 260px;gap:5px 4px;align-items:center}.find-form input,.find-form select{height:20px;border:1px solid #c7bccd;background:#fff;padding:1px 4px}.find-actions{margin:24px 0 16px 101px}.find-actions>*{margin-right:8px}.grid-tools{margin:5px 0;color:var(--link)}.pager{height:24px;border:1px solid #bdb1c4;border-bottom:0;padding:4px;background:#faf6fb;color:#685c70}.pager button{border:0;background:none;color:#86a0aa;padding:0 2px}.pager input{width:30px;height:16px;border:1px solid #aaa}.data-wrap{border:1px solid #bdb1c4;overflow:auto;max-height:calc(100vh - 350px);background:white}.data{border-collapse:collapse;width:100%;min-width:900px}.data th{background:#d9cce4;text-align:left;padding:5px;border-right:1px solid #eee;font-size:9px;position:sticky;top:0}.data td{padding:5px;border-right:1px solid #eee;vertical-align:top;font-size:9px}.data tr:nth-child(even){background:#f0e9f4}.data td:first-child{width:42px}.data .identity{max-width:250px;white-space:normal;word-break:break-word}
+/* overlays */
+.overlay{position:fixed;inset:0;background:rgba(30,27,31,.48);z-index:50;display:grid;place-items:center}.dialog{width:240px;min-height:238px;background:#fff8ff;border:1px solid #555;padding:17px 24px;text-align:center;position:relative}.dialog h3{margin:0 0 33px;color:#442463}.dialog .x{position:absolute;right:-7px;top:-8px;background:#333;color:#fff;border:0;border-radius:50%;width:16px;height:16px;padding:0}.dialog button{margin:12px 3px}.toast{position:fixed;right:15px;top:48px;background:#e8f5df;border:1px solid #7b9f69;padding:8px 14px;z-index:80;color:#315329}
+@media(max-width:800px){.brand-large{font-size:46px}.left{width:116px}.form-grid{grid-template-columns:92px 160px 15px 250px}}
+</style>
+</head>
+<body>
+<div class="test-badge">NON-PRODUCTION TEST FIXTURE</div>
+
+<section id="login">
+  <div class="brand-large"><i>♦</i>Demo<span>Health</span></div>
+  <div class="login-card">
+    <div class="hospital-logo"><b>◢</b>Valley<br>Health<br>System</div>
+    <form class="login-fields" id="login-form">
+      <h2>Demo User Administration Sign-On</h2>
+      <div class="row"><label for="login-user">Valley User Name</label><input id="login-user" autocomplete="username"></div>
+      <div class="row"><label for="login-password">Valley Password</label><input id="login-password" type="password" autocomplete="current-password"></div>
+      <button class="small-btn" type="submit">Sign On</button>
+      <div id="login-error" style="color:#b00020;margin:4px 0 0 118px"></div>
+    </form>
+  </div>
+  <div class="forgot">Forgot Password? Click Here <a>Password Reset</a></div>
+</section>
+
+<section id="department-screen" hidden>
+  <div class="dept-card">
+    <h3>NJ - Valley Medical Group</h3>
+    <label for="department-select">Department</label>
+    <select id="department-select"><option>T001_JS TEST DEPARTMENT</option><option>Cardiology</option><option>Clinical Operations</option></select>
+    <button class="go-btn" id="department-go">Go</button>
+    <div class="last-login">Last login: Friday, September 18, 2026 at 08:34 PM ET<br>If you feel this is incorrect, contact your administrator.</div>
+  </div>
+  <div class="copyright">© 2026 Demo Health</div>
+</section>
+
+<main id="app" hidden>
+  <header class="top">
+    <div class="product-name">UserAdmin Demo</div>
+    <nav class="topnav"><a>Calendar</a><a>Patients</a><a>Claims</a><a>Financials</a><a>Reports</a><a>Quality</a><a>Apps</a><a>Support</a><a>⚙</a></nav>
+    <div class="top-spacer"></div><input class="global-search" placeholder="Find patient, claim, or"><span class="top-user">apservice12</span><a class="top-logout" id="logout">Log out</a>
+  </header>
+  <div class="body">
+    <aside class="left">
+      <div class="left-title">User Admin</div><input class="filter" placeholder="Start typing to filter...">
+      <div class="practice-links">
+        <h4>PRACTICE LINKS</h4>
+        <div class="section">Users</div><a data-page="users">Users</a><a>User Access by Location</a><a>User Access Requests</a><a>User Access to Provider Data</a><a>User Access to Departments</a><a data-page="roles">Local Roles</a><a>Emergency Access</a><a>Identity Verification Admin</a>
+        <div class="section">Groups</div><a data-page="groups">User Groups</a><a>User Group Membership</a>
+        <div class="section">Auditing</div><a>User Event Log Report</a><a>Advanced Site User Admin</a><a>Role/Permission Audit</a><a>Provider Access Audit</a><a>Role/Permission Finder</a>
+        <div class="section">Clinical Providers</div><a>Clinical Provider Mapping</a>
+        <div class="section">Providers</div><a>Provider Profiles</a>
+      </div>
+    </aside>
+    <section class="content" id="content"></section>
+  </div>
+  <footer class="footer">CARE GAP WORKLIST <select><option>T001_JS TEST DEPARTMENT</option></select><span class="footer-alerts">▣ 0 &nbsp; tasks &nbsp; ❗ 1</span></footer>
+</main>
+<div id="modal"></div><div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var DBKEY="user-admin-demo-fixture-v1", SESSION="user-admin-demo-session";
+var first=["Aimee","Anitha","Andy","Annabelle","Annaliza","Angelys","Aaron","Beth","Carol","Daniel","Emily","Fatima","Grace","Henry","Ivan","Jane","Karen","Luis","Maria","Nina","Omar","Priya","Quinn","Rob","Sara","Thomas","Uma","Victor","Wendy","Yara"];
+var last=["Abalos","Abraham","Abreu","Abud","Acera","Acevedo","Adams","Baker","Clark","Davis","Evans","Garcia","Hall","Iyer","Joshi","Khan","Lee","Miron","Nair","Olsen","Patel","Reed","Singh","Turner","Verma","White"];
+var roles=["Practice Administrator","Billing Manager","Clinical Staff","Front Office","Physician","Nurse"];
+var groups=["All Practice Users","Clinical Operations","NJ Valley Medical Group","Patient Access","Billing and Claims"];
+function seed(){
+  var users=[];
+  for(var i=0;i<3360;i++){
+    var f=first[i%first.length],l=last[(i*7)%last.length],base=(f.charAt(0)+l).toLowerCase();
+    users.push({id:"U"+String(i+1).padStart(5,"0"),username:base+(i?i:""),lastName:l,firstName:f,organization:"Practice",department:i%4===0?"Manuet PUCC":"",position:roles[i%roles.length],dob:"",otherId:"",phone:"",email:base+"@example.test",notes:"",blocked:i%5===0,expired:i%17===0,identity:f.toUpperCase()+i+" in TESTIDP_Direct-to-Hub, "+base+"@example.test in https://sts.example.test/demo-tenant/",role:roles[i%roles.length],departments:["T001_JS TEST DEPARTMENT"],providers:[],groups:[groups[i%groups.length]],password:"ChangeMe!"+(1000+i),timeout:30,timeZone:"EST"});
+  }
+  users.splice(20,0,{id:"U90001",username:"imiron",lastName:"Miron",firstName:"Ivan",organization:"Practice",department:"",position:"Physician",dob:"07/10/1976",otherId:"",phone:"",email:"ivan.miron@example.test",notes:"update text for Test\\nnew",blocked:false,expired:false,identity:"TESTIDP_Direct-to-Hub",role:"Physician",departments:["T001_JS TEST DEPARTMENT"],providers:[],groups:["Clinical Operations"],password:"DemoOnly_54wise",timeout:30,timeZone:"EST"});
+  return {users:users,groups:groups.map(function(n,i){return{id:"G"+(100+i),name:n,description:"demo practice access group",active:true}}),roles:roles.map(function(n,i){return{id:"R"+(200+i),name:n,description:"Local role for "+n,active:true}})};
+}
+function db(){var x=localStorage.getItem(DBKEY);if(!x){x=JSON.stringify(seed());localStorage.setItem(DBKEY,x)}return JSON.parse(x)}
+function save(x){localStorage.setItem(DBKEY,JSON.stringify(x))}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
+function toast(msg){document.getElementById("toast").innerHTML='<div class="toast">'+esc(msg)+'</div>';setTimeout(function(){document.getElementById("toast").innerHTML=""},2500)}
+function show(id){["login","department-screen","app"].forEach(function(x){document.getElementById(x).hidden=x!==id})}
+function app(){show("app");renderUsers()}
+document.getElementById("login-form").addEventListener("submit",function(e){e.preventDefault();var u=document.getElementById("login-user").value.trim(),p=document.getElementById("login-password").value;if(u==="admin"&&p==="admin"){sessionStorage.setItem(SESSION,u);show("department-screen")}else document.getElementById("login-error").textContent="Invalid user name or password."});
+document.getElementById("department-go").onclick=app;
+document.querySelectorAll("[data-page]").forEach(function(a){a.onclick=function(){this.dataset.page==="users"?renderUsers():renderCatalog(this.dataset.page)}});
+document.getElementById("logout").onclick=function(){document.getElementById("modal").innerHTML='<div class="overlay"><div class="dialog"><button class="x" id="close-logout">×</button><h3>UserAdmin Demo &nbsp; ♦ Demo Health</h3><b>End this session and log out?</b><div><button class="small-btn" id="confirm-logout">Yes</button><button class="small-btn" id="close-logout2">No</button></div></div></div>';document.getElementById("confirm-logout").onclick=function(){sessionStorage.removeItem(SESSION);document.getElementById("modal").innerHTML="";show("login")};["close-logout","close-logout2"].forEach(function(id){document.getElementById(id).onclick=function(){document.getElementById("modal").innerHTML=""}})};
+
+var userState={page:1,size:20,filters:{}};
+function findUsers(data){
+  var f=userState.filters;return data.users.filter(function(u){return(!f.username||u.username.toLowerCase().includes(f.username))&&(!f.lastName||u.lastName.toLowerCase().includes(f.lastName))&&(!f.firstName||u.firstName.toLowerCase().includes(f.firstName))});
+}
+function renderUsers(){
+  var d=db(),rows=findUsers(d),pages=Math.max(1,Math.ceil(rows.length/userState.size));if(userState.page>pages)userState.page=pages;var start=(userState.page-1)*userState.size,visible=rows.slice(start,start+userState.size);
+  document.getElementById("content").innerHTML='<h1 class="heading">Users</h1><div class="subheading">Find User</div>'+
+  '<form id="find-form" class="find-form"><label>Username</label><input name="username" value="'+esc(userState.filters.username||"")+'"><span></span><span></span><label>Last name</label><input name="lastName" value="'+esc(userState.filters.lastName||"")+'"><span></span><span></span><label>First name</label><input name="firstName" value="'+esc(userState.filters.firstName||"")+'"><span></span><span></span><label>Organization</label><select><option>Practice</option></select><span></span><span></span><label>Identity mapping</label><input><span>in</span><select class="wide"><option>AAAIDP_Direct-to-Hub</option></select><label>MFA Policy Included</label><select><option>No</option><option>Yes</option></select><span></span><span></span><label>Other ID</label><input><span></span><span></span><label>Date of birth</label><input class="date"><span>▣</span><span></span><label>User created between</label><input class="date"><span>▣ and</span><input class="date"><label>Practice</label><input class="wide" value="NJ - Valley Medical Group [5622]" readonly><span></span><span></span><label>Role</label><select class="wide"><option></option>'+d.roles.map(function(r){return"<option>"+esc(r.name)+"</option>"}).join("")+'</select><span></span><span></span><label>Permission</label><select class="wide"><option></option><option>View</option><option>Edit</option></select></form>'+
+  '<div class="find-actions"><button class="small-btn" id="search">Search</button><button class="small-btn">Worklist</button><a id="add-user">Add user</a></div>'+
+  '<div class="grid-tools">▧ <a>Export to Excel</a></div><div class="pager"><button id="first">◀◀</button><button id="prev">◀</button> Page <input id="page-number" value="'+userState.page+'"> of '+pages+' <button id="next">▶</button><button id="last">▶▶</button></div>'+
+  '<div class="data-wrap"><table class="data"><thead><tr><th></th><th>Username</th><th>Last Name</th><th>First Name</th><th>Organization</th><th>Department</th><th>Position</th><th>Phone</th><th>Blocked</th><th>Expired</th><th>Identity Mapping</th></tr></thead><tbody>'+
+  visible.map(function(u){return'<tr><td><a class="update-user" data-id="'+u.id+'">update</a></td><td>'+esc(u.username)+'</td><td>'+esc(u.lastName)+'</td><td>'+esc(u.firstName)+'</td><td>'+esc(u.organization)+'</td><td>'+esc(u.department)+'</td><td>'+esc(u.position)+'</td><td>'+esc(u.phone)+'</td><td>'+(u.blocked?"Blocked":"")+'</td><td>'+(u.expired?"Expired":"")+'</td><td class="identity">'+esc(u.identity)+'</td></tr>'}).join("")+
+  '</tbody></table></div>';
+  document.getElementById("search").onclick=function(){var fd=new FormData(document.getElementById("find-form"));userState.filters={username:String(fd.get("username")||"").toLowerCase(),lastName:String(fd.get("lastName")||"").toLowerCase(),firstName:String(fd.get("firstName")||"").toLowerCase()};userState.page=1;renderUsers()};
+  document.getElementById("add-user").onclick=function(){renderUser(null,"profile",true)};
+  document.querySelectorAll(".update-user").forEach(function(a){a.onclick=function(){renderUser(this.dataset.id,"profile",false)}});
+  document.getElementById("first").onclick=function(){userState.page=1;renderUsers()};document.getElementById("prev").onclick=function(){if(userState.page>1)userState.page--;renderUsers()};document.getElementById("next").onclick=function(){if(userState.page<pages)userState.page++;renderUsers()};document.getElementById("last").onclick=function(){userState.page=pages;renderUsers()};document.getElementById("page-number").onchange=function(){userState.page=Math.max(1,Math.min(pages,+this.value||1));renderUsers()};
+}
+function tabs(active,isNew){return'<div class="tabs">'+["profile","security","roles","departments","providers"].filter(function(t){return!isNew||["profile","security","roles"].includes(t)}).map(function(t){return'<button class="user-tab '+(t===active?"active":"")+'" data-tab="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</button>'}).join("")+"</div>"}
+function renderUser(id,tab,isNew){
+  var d=db(),u=isNew?{id:null,username:"",lastName:"",firstName:"",organization:"Practice",department:"",position:"Other (Please Specify)",dob:"",otherId:"",phone:"",email:"",notes:"",blocked:false,expired:false,identity:"AAAIDP_Direct-to-Hub",role:"",departments:["T001_JS TEST DEPARTMENT"],providers:[],groups:[],password:"",timeout:30,timeZone:"EST"}:d.users.find(function(x){return x.id===id});if(!u)return renderUsers();
+  var title=isNew?"Users: New User":"User Admin : "+esc(u.firstName+" "+u.lastName)+" ("+u.username+")";
+  var body='<h1 class="heading">'+title+(isNew?"":' <span style="font-size:9px;color:#1684a1">♙ Training</span>')+'</h1>'+tabs(tab,isNew)+'<div id="tab-body"></div>';
+  document.getElementById("content").innerHTML=body;
+  document.querySelectorAll(".user-tab").forEach(function(b){b.onclick=function(){renderUser(id,this.dataset.tab,isNew)}});
+  var target=document.getElementById("tab-body");
+  if(tab==="profile") target.innerHTML=profileForm(u,isNew);
+  if(tab==="security") target.innerHTML=securityForm(u,isNew);
+  if(tab==="roles") target.innerHTML=accessPanel(u,"roles",u.role?[u.role]:[]);
+  if(tab==="departments") target.innerHTML=accessPanel(u,"departments",u.departments||[]);
+  if(tab==="providers") target.innerHTML=accessPanel(u,"providers",u.providers||[]);
+  var form=document.getElementById("user-form");if(form)form.onsubmit=function(e){e.preventDefault();var fd=new FormData(form);if(isNew){if(!fd.get("lastName")||!fd.get("firstName")||!fd.get("email"))return toast("Last name, first name, and email are required.");var base=(String(fd.get("firstName")).charAt(0)+fd.get("lastName")).toLowerCase().replace(/[^a-z0-9]/g,""),exists=d.users.some(function(x){return x.username===base}),name=base+(exists?Math.floor(Math.random()*90+10):"");u.id="U"+Date.now();u.username=name;u.password="ThatXoby_"+Math.random().toString(36).slice(2,8);d.users.unshift(u)}["lastName","firstName","organization","department","position","dob","otherId","phone","email","notes"].forEach(function(k){u[k]=String(fd.get(k)||"")});if(fd.has("blocked"))u.blocked=fd.get("blocked")==="Yes";save(d);toast("User saved successfully.");renderUser(u.id,isNew?"security":tab,false)};var cancel=document.getElementById("cancel-user");if(cancel)cancel.onclick=renderUsers;
+  var edit=document.getElementById("edit-access");if(edit)edit.onclick=function(){renderAccessEdit(u,tab)};
+}
+function profileForm(u,isNew){return'<form id="user-form"><div class="form-grid"><label>Last name</label><input class="req" name="lastName" value="'+esc(u.lastName)+'"><span></span><span></span><label>First name</label><input class="req" name="firstName" value="'+esc(u.firstName)+'"><span></span><span></span><label>Organization</label><select class="req" name="organization"><option>Practice</option></select><span></span><span></span><label>Identity mapping</label><input name="identityLocal"><span>in</span><select class="req wide"><option>AAAIDP_Direct-to-Hub</option></select><label></label><span></span><span>in</span><select class="wide"><option>-- select a provider --</option></select><label>Training Practice</label><input class="wide"><span></span><span></span><label>Training department</label><input name="trainingDepartment"><span></span><span></span><label>Department name</label><input name="department" value="'+esc(u.department)+'"><span></span><span></span><label>Position</label><select class="req wide" name="position">'+["Other (Please Specify)","Physician","Nurse","Clinical Support Staff (MA/CNA/Tech)","Front Office","Not a Practice Employee"].map(function(x){return'<option '+(x===u.position?"selected":"")+'>'+x+'</option>'}).join("")+'</select><span></span><span></span><label>Other (Specify)</label><input class="req"><span></span><span></span><label>Portal display name</label><span style="width:250px"><label><input type="radio" checked> Display full name</label><br><label><input type="radio"> Display custom name</label></span><span></span><span></span><label>Date of birth</label><input class="req date" name="dob" value="'+esc(u.dob)+'"><span>▣</span><span></span><label>Other ID</label><input name="otherId" value="'+esc(u.otherId)+'"><span></span><span></span><label>Phone</label><input name="phone" value="'+esc(u.phone)+'"><span></span><span></span><label>Email <span class="help">?</span></label><input class="req" name="email" value="'+esc(u.email)+'"><span></span><span></span><label>Notes</label><textarea name="notes">'+esc(u.notes)+'</textarea></div><div class="actions"><button class="small-btn" type="submit">Save</button><span class="help">?</span><button class="small-btn" type="button" id="cancel-user">Cancel</button></div></form>'}
+function securityForm(u){return'<div class="info-line"><b>'+esc(u.firstName+" "+u.lastName+" ("+u.username+")")+'</b> has been assigned the following username and password.</div><p>Username: '+esc(u.username)+'<br>Password: '+esc(u.password)+'</p><form id="user-form"><input type="hidden" name="lastName" value="'+esc(u.lastName)+'"><input type="hidden" name="firstName" value="'+esc(u.firstName)+'"><input type="hidden" name="organization" value="'+esc(u.organization)+'"><input type="hidden" name="department" value="'+esc(u.department)+'"><input type="hidden" name="position" value="'+esc(u.position)+'"><input type="hidden" name="dob" value="'+esc(u.dob)+'"><input type="hidden" name="otherId" value="'+esc(u.otherId)+'"><input type="hidden" name="phone" value="'+esc(u.phone)+'"><input type="hidden" name="email" value="'+esc(u.email)+'"><input type="hidden" name="notes" value="'+esc(u.notes)+'"><div class="form-grid"><label>Username</label><span>'+esc(u.username)+'</span><span></span><span></span><label>New password</label><input type="password"><span></span><span><a>Show Password Help</a></span><label>Confirm password</label><input type="password"><span></span><span></span><label>Require change</label><label><input type="checkbox"> Require password change on next login</label><span></span><span></span><label>Block account</label><select name="blocked"><option '+(!u.blocked?"selected":"")+'>No</option><option '+(u.blocked?"selected":"")+'>Yes</option></select><span></span><span></span><label>Block password reset</label><select><option>No</option><option>Yes</option></select><span></span><span></span><label>Account expiration</label><input class="date"><span>▣</span><span>Will not expire if left blank</span><label>Session timeout</label><input value="'+u.timeout+'"><span></span><span>(between 1 and 120 minutes)</span><label>Account access</label><span>☑ Mon &nbsp; to ▾<br>☑ Tue &nbsp; to ▾<br>☑ Wed &nbsp; to ▾<br>☑ Thu &nbsp; to ▾<br>☑ Fri &nbsp; to ▾<br>☑ Sat &nbsp; to ▾<br>☑ Sun &nbsp; to ▾</span><span></span><span></span><label>Time Zone</label><select><option>EST</option><option>CST</option><option>PST</option></select></div><div class="actions"><button class="small-btn" type="submit">Save</button> <span class="help">?</span> <button class="small-btn" type="button" id="cancel-user">Cancel</button></div></form>'}
+function accessPanel(u,type,items){return'<div class="info-line"><b>'+esc(u.firstName+" "+u.lastName+" ("+u.username+")")+'</b> has access to the '+type+' listed below.</div><div class="org-line">NJ - Valley Medical Group [5622]</div><a id="edit-access" class="edit-link">Edit</a><div class="access-box">'+(items.length?items.map(esc).join("<br>"):"No access.")+'</div><p><a>Audit history</a></p>'}
+function renderAccessEdit(u,type){var d=db(),catalog=type==="roles"?d.roles:type==="departments"?[{name:"T001_JS TEST DEPARTMENT"},{name:"Cardiology"},{name:"Clinical Operations"}]:[{name:"Dr. Andrea Patel"},{name:"Dr. Carlos Ruiz"}];document.getElementById("tab-body").innerHTML='<div class="subheading">Edit '+type+'</div><form id="access-form">'+catalog.map(function(x){var current=type==="roles"?u.role===x.name:(u[type]||[]).includes(x.name);return'<label style="display:block;margin:7px"><input type="'+(type==="roles"?"radio":"checkbox")+'" name="access" value="'+esc(x.name)+'" '+(current?"checked":"")+'> '+esc(x.name)+'</label>'}).join("")+'<div class="actions"><button class="small-btn">Save</button><button class="small-btn" type="button" id="access-cancel">Cancel</button></div></form>';document.getElementById("access-cancel").onclick=function(){renderUser(u.id,type,false)};document.getElementById("access-form").onsubmit=function(e){e.preventDefault();var vals=Array.from(new FormData(this).getAll("access")),stored=d.users.find(function(x){return x.id===u.id});if(type==="roles")stored.role=vals[0]||"";else stored[type]=vals;save(d);toast(type+" updated.");renderUser(u.id,type,false)}}
+function renderCatalog(type){var d=db(),items=d[type];document.getElementById("content").innerHTML='<h1 class="heading">'+(type==="groups"?"User Groups":"Local Roles")+'</h1><div class="subheading">Find '+(type==="groups"?"Group":"Role")+'</div><div class="find-form"><label>Name</label><input id="catalog-filter"><span></span><span></span><label>Status</label><select><option>Active</option><option>All</option></select></div><div class="find-actions"><button class="small-btn" id="catalog-search">Search</button></div><div class="pager">Page 1 of 1</div><div class="data-wrap"><table class="data"><thead><tr><th></th><th>Name</th><th>Description</th><th>Status</th></tr></thead><tbody>'+items.map(function(x){return'<tr><td><a>update</a></td><td>'+esc(x.name)+'</td><td>'+esc(x.description)+'</td><td>'+(x.active?"Active":"Inactive")+'</td></tr>'}).join("")+'</tbody></table></div>'}
+if(sessionStorage.getItem(SESSION))show("department-screen");else show("login");
+})();
+</script>
+</body>
+</html>
