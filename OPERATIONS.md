@@ -35,8 +35,8 @@ State is stored in browser `localStorage` and survives reloads.
 
 1. Sign in with `admin` / `admin`.
 2. Keep `T001_JS TEST DEPARTMENT` and click **Go**.
-3. The Users screen opens automatically.
-4. Click **Search** with blank criteria to show all users.
+3. The Users screen opens automatically with an empty results table.
+4. Click **Search** with blank criteria to load all users.
 5. The table exposes Username, Last Name, First Name, Organization, Department,
    Position, Phone, Blocked, Expired, and Identity Mapping.
 6. Use the paginator controls above the table. The seeded list spans 169 pages.
