@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: health-user-admin-fixture
+    name: disconnected-application-demo
     runtime: static
     buildCommand: ""
     staticPublishPath: .

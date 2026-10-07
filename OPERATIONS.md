@@ -1,6 +1,6 @@
-# Health User Administration Demo Fixture
+# Disconnected Application Demo Fixture
 
-**Archetype:** legacy health-system user administration portal
+**Archetype:** legacy disconnected-application user administration portal
 **File:** `user-admin.html` — one static file, no dependencies or build
 **Purpose:** disconnected-application capture and RPA replay testing
 
@@ -90,7 +90,7 @@ location.reload();
 The fixture includes the major UI details visible in the supplied recording:
 
 - purple product header and legacy practice-links rail
-- Valley Health System sign-on card and password-reset text
+- Disconnected Application sign-on card and password-reset text
 - post-login department selector
 - Users search form and paginated alternating-row table
 - Profile, Security, Roles, Departments, and Providers tabs

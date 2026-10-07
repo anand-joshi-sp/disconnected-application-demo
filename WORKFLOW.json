@@ -9,13 +9,13 @@
     {
       "action": "type",
       "instruction": "Enter the user name",
-      "control": "Valley User Name",
+      "control": "User Name",
       "value": "admin"
     },
     {
       "action": "type",
       "instruction": "Enter the password",
-      "control": "Valley Password",
+      "control": "Password",
       "value": "admin"
     },
     {
