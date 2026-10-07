@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: user-admin-demo
+    name: health-user-admin-fixture
     runtime: static
     buildCommand: ""
     staticPublishPath: .

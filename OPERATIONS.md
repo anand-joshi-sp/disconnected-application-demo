@@ -1,8 +1,11 @@
-# User Administration Demo Fixture
+# Health User Administration Demo Fixture
 
 **Archetype:** legacy health-system user administration portal
 **File:** `user-admin.html` — one static file, no dependencies or build
 **Purpose:** disconnected-application capture and RPA replay testing
+
+The interaction flow and screen structure were validated against the supplied
+exported HTML reference pages.
 
 This is a synthetic, non-production test application.
 
