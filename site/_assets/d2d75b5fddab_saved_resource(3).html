@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<!-- saved from url=(0100)https://athenanet.athenahealth.com/5622/9/statusbar.esp?CSRFPROTECT=296d438e97b8cebd7a5d041cbd376ebc -->
+<html class="standards"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="meta-graphql-router-endpoint" content="https://apollo-router.api.athena.io/apollo-router">
+<meta name="format-detection" content="telephone=no">
+<meta content="1" name="MULTIPRINTLOG">
+<meta content="1" name="PrintingFrameworkEnabled">
+<meta content="1" name="UPFFileversionMismatch">
+<meta content="3" name="UpfAjaxcallTimeout">
+<meta content="30" name="UpfDefaultTimeout">
+<meta content="1" name="UpfEdgeSupport">
+			<script async="" src="./datadog-rum-v5.js.download"></script><script type="text/javascript" src="./js-athena-polyfill-20191022135002-UZz9_aIKDUrorn_zUs31cQ-min.js.download"></script>
+			
+			
+			
+			
+			<script>
+				window['datadog-token'] = 'pub9f2fae809ccf9e111fa9502090cca018';
+				window['datadog-application-id'] = '2053f8dd-ff49-4c63-868f-619c1eea050a';
+				window['datadog-rum-env'] = 'production';
+				window['datadog-service-name'] = 'aOne';
+				window['datadog-current-route'] = '/statusbar.esp';
+				window['datadog-allowed-tracing-urls'] = ["https:\/\/scheduling-practice-apps.api.athena.io\/scheduling-practice-apps"];
+				window['use_datadog_rum_api'] = 1;
+			</script>
+			<script src="./datadog_20260326.js.download"></script>
+		
+			
+			
+			
+			<link href="./css-facit-20150512144213-lQ7lZWSkGWFQM8W7olrIKw-min.css" type="text/css" rel="stylesheet">
+			
+			<script type="text/javascript">
+				try {
+					
+		var MetricsProfilingData = {
+			unique_id : 'asUI7ETC9n-N1GcQiKl5ZgAAADc'
+		};
+	
+				}
+				catch (e) {};
+			</script>
+	
+			
+			<script type="text/javascript">var static_host = '/static_20260917';</script>
+			
+			
+			
+			<title></title>
+			
+			<link href="./css-athenanet-reskin-20260909113436-JAq22Ge6oUQ2SJxO5fAaMQ-min.css" type="text/css" rel="stylesheet">
+<link href="./css-statusbar-20260430180546-8p_2UQBFqywrqQNKi9p5Pw-min.css" type="text/css" rel="stylesheet">
+<link href="./css-common-20260116090815-nIa8XhZnvUcmCmDFzVZsiw-min.css" type="text/css" rel="stylesheet">
+			<link href="./css-sprites-reskin-20260116090815-dgx4kwLQDbzZgY_9rTW2fQ-min.css" type="text/css" rel="stylesheet">
+			
+			
+			<script src="./js-athenanet-20260923081807-ud971hdzv6RmfiQqJUCwRQ-min.js.download" type="text/javascript"></script>
+<script src="./js-statusbar-20260806103704-pXY3Cpyq3E2uV7lyhVofCQ-min.js.download" type="text/javascript"></script>
+<script src="./js-task-statusbar-20260327164639-uENWBM6GtGLD0W-XaABA3A-min.js.download" type="text/javascript"></script>
+			
+			
+			
+		<script type="text/javascript">
+			
+			var dictationflag = 0;
+			var isadmdictationenabled = 0;
+			var startpolling = 1;
+			var departmentid = '594';
+			var username = 'aservice12';
+			var logindepartmentid = '';
+			var loginpracticeid = '';
+		
+			var isClinicalInboxApiOn = 1;
+			var isClinicalReminderOn = 0;
+			var notificationhtml;
+		
+				var POLLINGINTERVAL = 120000;
+				var PollingTimerID = null;
+				var UNIQUEID = Math.floor(Math.random() * 1000000000);
+				var MINPOLLINGINTERVAL = 100000;
+				var lastupdate = new Date() - MINPOLLINGINTERVAL;
+				var flaggedtaskids;
+				var patientdetails;
+				var currentMiniCalNotification = {};
+				var isMetricsFlaggedTasksOn = 0;
+				var coveragesenabled = 1;
+				var priorityInboxEnabled = 0;
+				var isInpatient = 0;
+				var inboxMetricsEnabled = 1;
+				var resultConsolidationByPatient = 1;
+			
+			AH.SetGlobal('FIX_REFRESH_TIMEOUT_OKTA_SESSION_EXPIRY', true);
+		
+			AH.SetGlobal('FIX_SESSION_LOCKED_EVENT_RACE_CONDITION', true);
+		
+			const staticUrl = '/static_20260917/blank.html';
+			if (1) {
+				try {
+					const athenaoneBroadcastChannel = new BroadcastChannel('athenaoneBroadcastChannel');
+					athenaoneBroadcastChannel.onmessage = (event) => {
+						if (event.origin !== window.origin) {
+							return;
+						}
+						if (event.data.message === 'syncSessionWithTimedoutTab') {
+							if (event.data.serverDateTime && SetServerDateTime) {
+								SetServerDateTime(event.data.serverDateTime);
+							}
+							InitOktaSessionManagement();
+							AH.SetGlobal('OKTARELOGINCOMPLETED', true);
+							AH.Frames.Help.SetLocation(staticUrl);
+						}
+						if (event.data.message === 'syncSessionWithRefreshTimeoutTab') {
+							if (event.data.serverDateTime && SetServerDateTime) {
+								SetServerDateTime(event.data.serverDateTime);
+								InitOktaSessionManagement();
+							}
+						}
+					};
+				}
+				catch (error) {
+					jQuery.post('/login/loginscribelog.esp', {
+						CATEGORY: 'identity-services-sync-okta-session',
+						LOGLINES: JSON.stringify([{
+							CATEGORY: 'FailedToSyncSession',
+							DESCRIPTION: 'Failed to sync session with timedout tab',
+							DATA: {
+								USERNAME: AH.GetGlobal('USERNAME'),
+								ERROR: JSON.stringify(error),
+								TIME: Date.now()
+							}
+						}])
+					});
+				}
+			}
+			window.addEventListener('message', function(event) {
+				if (event.origin !== window.origin)
+					return;
+				if (event.data === 'closeme') {
+					event.source.close();
+					InitOktaSessionManagement();
+					AH.SetGlobal('OKTARELOGINCOMPLETED', true);
+					AH.Frames.Help.SetLocation(staticUrl);
+				}
+				if (event.data.resumesessionfromohsw) {
+					InitOktaSessionManagement();
+				}
+				if (event.data.oktasessiontoken) {
+					const redirecturl = window.origin + "/1/1/login/createoktasession.esp";
+					top.CallRemote({
+						SUB: 'Athena::Driver::IdentityAccessManagement::PrepareAuthorizeUserURL',
+						ARGS: {
+							PROMPT: 'none',
+							SESSIONTOKEN: event.data.oktasessiontoken,
+							RESPONSEMODE: 'query',
+							REDIRECTURL: redirecturl,
+							SCOPES: ['openid'],
+							UNIQUEID: 1
+						},
+						ONFINISH: function (reloginsessionauthurl) {
+							var reloginframe = document.getElementById("reloginsessioniframe");
+							reloginframe.onload = function() {
+								// Okta Session Management SDK maintained session state does not get refreshed when the user
+								// re-login from locked screen, so we are re-initializing the SDK instance.
+								InitOktaSessionManagement();
+								AH.SetGlobal('OKTARELOGINCOMPLETED', true);
+							};
+							reloginframe.src = reloginsessionauthurl;
+						}
+					});
+				}
+			}, false);
+		
+
+			jQuery(function() {
+				function _StatusbarInit() {
+					
+		InitializePage();
+	
+			require([
+				'shared:/scripts/athena/utils/cross_frame_events'
+			], function(
+				CrossFrameEventsUtils
+			) {
+				CrossFrameEventsUtils.on('athenatext-update-icon', function(active, unread) {
+					var $stmHandle = jQuery('#stm-handle');
+					var inactiveClassName = 'sprite-stm-statusbar-24x20';
+					var activeClassName = 'sprite-stm-statusbar-opened-24x20';
+					var needsAttnClassName = 'sprite-stm-statusbar-attn-24x20';
+
+					if (active) {
+						$stmHandle.parent().addClass('stm-active');
+						jQuery('#stm-statusbar-pipe').css('visibility', 'hidden');
+					}
+					else {
+						$stmHandle.parent().removeClass('stm-active');
+						jQuery('#stm-statusbar-pipe').css('visibility', 'visible');
+					}
+
+					if (unread) {
+						$stmHandle
+							.addClass(needsAttnClassName)
+							.removeClass(inactiveClassName)
+							.removeClass(activeClassName)
+					;
+					}
+					else if (active) {
+						$stmHandle
+							.addClass(activeClassName)
+							.removeClass(inactiveClassName)
+							.removeClass(needsAttnClassName)
+						;
+					}
+					else {
+						$stmHandle
+							.addClass(inactiveClassName)
+							.removeClass(activeClassName)
+							.removeClass(needsAttnClassName)
+						;
+					}
+				});
+
+				jQuery('#stm-handle-wrapper').bind('click', function() {
+					CrossFrameEventsUtils.trigger('athenatext-toggle-messaging-frame');
+				});
+
+				CrossFrameEventsUtils.on('athenatext-set-unread-message-count', function(unreadMessageCount) {
+					jQuery('#stm-handle').text(unreadMessageCount);
+				});
+
+				CrossFrameEventsUtils.on('statusbar-ping', function() {
+					CrossFrameEventsUtils.trigger('statusbar-pong');
+				});
+			});
+		
+		require(
+			['shared:/scripts/athena/utils/cross_frame_events'],
+			function(CrossFrameEventsUtils) {
+				jQuery('.inbox-toggle').bind('click', function() {
+					CrossFrameEventsUtils.trigger('inbox-toggle');
+				});
+			}
+		);
+	
+		require([
+			'shared:/scripts/athena/utils/cross_frame_events'
+		], function(
+			CrossFrameEventsUtils
+		) {
+			CrossFrameEventsUtils.trigger('statusbar-loaded');
+		});
+	AH.SetGlobal('DEPARTMENTID', 594);
+		pollStreamlinedStatusBar();
+		documentSaveHandler();
+	
+		require(
+			['shared:/scripts/athena/utils/cross_frame_events'],
+			function(CrossFrameEventsUtils) {
+				CrossFrameEventsUtils.on(
+					'change-department-dropdown-value',
+					function(departmentid, departmentname) {
+						var departmentinputelement = document.getElementById('DEPARTMENTID');
+						var departmentnameelement = document.getElementById('departmentname');
+						if (
+							departmentid
+							&& departmentinputelement
+							&& departmentinputelement.value !== departmentid
+						) {
+							departmentinputelement.value = departmentid;
+						}
+						else if (departmentname && departmentnameelement) {
+							departmentnameelement.innerText = departmentname;
+						}
+					}
+				);
+			}
+		);
+	
+				}
+
+				function _WaitForAH() {
+					if (!0 || top.AH) {
+						if (top.AH) {
+							AH = top.AH;
+						}
+						_StatusbarInit();
+					}
+					else if (0) {
+						setTimeout(_WaitForAH, 100);
+					}
+				}
+
+				_WaitForAH();
+			});
+		</script>
+		
+	
+			
+			
+			<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Regular.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Bold.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Semibold.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Light.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-It.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-SemiboldIt.otf.woff2" type="font/woff2" crossorigin="anonymous">
+			
+		</head>
+
+	<body class="statusbar_esp reskin_statusbar" scroll="no" style="zoom: 1;">
+	
+	
+
+				<div>
+					
+				<span onclick="
+					var CrossFrameEventsUtils = require('shared:/scripts/athena/utils/cross_frame_events');
+					CrossFrameEventsUtils.trigger('global-statusbar-clicked');">
+			
+					<div class="inbox-toggle display-none">
+	<div class="icon-show-inbox"></div>
+	<div class="icon-hide-inbox"></div>
+</div>
+					
+					
+				<span id="stm-handle-wrapper" class="statusbar indicator">
+					<span id="stm-handle" class="sprite-stm-statusbar-attn-24x20">1</span>
+				</span>
+				<span class="statusbar-pipe" id="stm-statusbar-pipe" style="visibility: visible;"></span>
+			
+					
+						<div class="statusbar" id="alltaskinfo" onmouseover="ShowNotifier()" onmouseout="HideNotifier()">
+							<span class="indicator" onclick="LoadInbox('FLAGGED_CURRENT')">
+								<span class="taskwrapper currenttasks">
+									<span id="currenttasks">0</span><span class="sprite-flag7-blue sprite-link"></span>
+								</span>
+							</span>
+							<span class="indicator" onclick="LoadInbox('FLAGGED_URGENT')">
+								<span class="taskwrapper urgenttasks">
+									<span id="urgenttasks">0</span><span class="sprite-flag7-red sprite-link"></span>
+								</span>
+							</span>
+							<span class="indicator" onclick="LoadInbox(null)">
+								<span id="tasks">1</span>tasks
+							</span>
+						</div>
+					
+					<div class="statusbar-schedule-wrapper display-none">
+	<span class="statusbar-pipe right"></span>
+	<div class="statusbar-schedule display-none" onclick="ToggleStreamlinedSchedule(event)">
+		<span class="statusbar-duration-wrapper display-none"></span>
+		<span class="statusbar-icon-wrapper">
+			<span class="icon mini-cal-icon icon-statusbar-schedule"></span>
+		</span>
+	</div>
+	<span class="statusbar-pipe left"></span>
+</div>
+
+					<div id="department" class="statusbar">
+						<div class="department-controls">
+							
+							<div id="departmentinput"><select id="DEPARTMENTID" name="DEPARTMENTID" onchange="SelectNewDepartment(this)" type="SELECT"> <option value="1177">000_ACCESS NAVIGATION</option><option value="1475">000_DI ACCESS CENTER</option><option value="1617">002_140 E RIDGEWOOD AMB</option><option value="1616">002_140 IMAGING CENTER</option><option value="1494">002_ADULT EKG ED</option><option value="1525">002_ADULT EKG ED_TNVH</option><option value="1495">002_ADULT EKG IP</option><option value="1526">002_ADULT EKG IP_TNVH</option><option value="1496">002_ADULT EKG OP</option><option value="1527">002_ADULT EKG OP_TNVH</option><option value="918">002_CARD VALLEY ED</option><option value="1529">002_CARD VALLEY ED_TNVH</option><option value="921">002_CARD VALLEY IP</option><option value="1528">002_CARD VALLEY IP_TNVH</option><option value="923">002_CARD VALLEY OP</option><option value="1530">002_CARD VALLEY OP_TNVH</option><option value="1562">002_CARDIAC SURGERY 7189</option><option value="1643">002_CARDIOLOGY MARKET ST MONTVALE 7407</option><option value="1583">002_CARDIOLOGY MONTVALE 7407</option><option value="1645">002_CARDIOLOGY OHR WESTWOOD 7228</option><option value="1573">002_CARDIOLOGY PARAMUS 7152</option><option value="911">002_CLIFTON OFFICE</option><option value="912">002_DUMONT PUCC</option><option value="1591">002_EP NEW YORK 7501</option><option value="1588">002_EP PARAMUS 7601</option><option value="1604">002_EP VALLEY ED_TNVH</option><option value="1605">002_EP VALLEY IP_TNVH</option><option value="1656">002_EP VALLEY OP_140</option><option value="1606">002_EP VALLEY OP_TNVH</option><option value="1590">002_EP WAYNE RT 23 7601</option><option value="938">002_HACKENSACK OFFICE</option><option value="1335">002_HEART FAILURE LUCKOW (OCOP)</option><option value="1523">002_HEART FAILURE PRACTICE 7289</option><option value="1464">002_HEART FAILURE PROGRAM - TVH</option><option value="1581">002_HF INFUSION CENTER 6752</option><option value="1108">002_HOHOKUS OFFICE</option><option value="944">002_IMAGING CENTER</option><option value="940">002_LINWOOD AVE OFFICE</option><option value="1296">002_LUCKOW</option><option value="1483">002_MIDLAND PARK OFFICE</option><option value="931">002_OAKLAND OFFICE</option><option value="933">002_PARAMUS OFFICE</option><option value="1489">002_PEDS EKG ED</option><option value="1531">002_PEDS EKG ED_TNVH</option><option value="1490">002_PEDS EKG IP</option><option value="1532">002_PEDS EKG IP_TNVH</option><option value="1491">002_PEDS EKG OP</option><option value="1533">002_PEDS EKG OP_TNVH</option><option value="932">002_RIDGEWOOD OFFICE - 1200</option><option value="1287">002_RIDGEWOOD OFFICE-1200-108</option><option value="1282">002_RIDGEWOOD OFFICE-1200-304</option><option value="1125">002_ROCHELLE PARK OFFICE</option><option value="1524">002_STRUC/INTERVEN CARD 7295</option><option value="942">002_TVH OFFICE</option><option value="1167">002_WAYNE IMAGING CENTER</option><option value="1168">002_WAYNE OFFICE - 23</option><option value="928">002_WAYNE OFFICE - 508</option><option value="929">002_WAYNE PUCC</option><option value="915">002_WESTWOOD OFFICE</option><option value="1297">006_INTEGRATIVE MED-MAHWAH</option><option value="1109">006_INTEGRATIVE MEDICINE</option><option value="1298">006_NUTRITIONIST-MAHWAH</option><option value="1457">006_NUTRITIONIST-RAMSEY</option><option value="1283">006_RIDGEWOOD NUTRITIONIST</option><option value="1212">006_RIDGEWOOD OFFICE</option><option value="1187">013_MONTVALE PSYCH</option><option value="1194">013_PARAMUS PSYCH</option><option value="1188">013_PSYCH VALLEY ED</option><option value="1534">013_PSYCH VALLEY ED_TNVH</option><option value="1189">013_PSYCH VALLEY IP</option><option value="1535">013_PSYCH VALLEY IP_TNVH</option><option value="1190">013_PSYCH VALLEY OP</option><option value="1536">013_PSYCH VALLEY OP_TNVH</option><option value="1141">013a_MONTVALE PSYCH</option><option value="1142">013a_PEDS PSYCH PARK RIDGE</option><option value="1145">013a_PSYCH VALLEY ED</option><option value="1537">013a_PSYCH VALLEY ED_TNVH</option><option value="1143">013a_PSYCH VALLEY IP</option><option value="1538">013a_PSYCH VALLEY IP_TNVH</option><option value="1144">013a_PSYCH VALLEY OP</option><option value="1539">013a_PSYCH VALLEY OP_TNVH</option><option value="947">014_BREAST OFFICE</option><option value="1346">014_BREAST OFFICE - TH</option><option value="950">014_GYN ONC OFFICE</option><option value="1347">014_GYN ONC OFFICE - TH</option><option value="1620">014_HEAD AND NECK CLINIC</option><option value="1289">014_INTERVENTIONAL RADIOLOGY</option><option value="1348">014_INTERVENTIONAL RADIOLOGY - TH</option><option value="960">014_LUCKOW OUTPATIENT (OCOP)</option><option value="952">014_MED ONC OFFICE</option><option value="1349">014_MED ONC OFFICE - TH</option><option value="966">014_ONC VALLEY ED</option><option value="1548">014_ONC VALLEY ED_TNVH</option><option value="962">014_ONC VALLEY IP</option><option value="1549">014_ONC VALLEY IP_TNVH</option><option value="964">014_ONC VALLEY OP</option><option value="1550">014_ONC VALLEY OP_TNVH</option><option value="955">014_PALL LUCKOW OFFICE</option><option value="1350">014_PALL LUCKOW OFFICE - TH</option><option value="958">014_RAD ONC LUCKOW (OCOP)</option><option value="954">014_SURG ONC OFFICE</option><option value="1351">014_SURG ONC OFFICE - TH</option><option value="956">014_THOR SURG OFFICE</option><option value="1352">014_THOR SURG OFFICE - TH</option><option value="1466">014_VMG_MEDONC_INFUSION</option><option value="1208">014_WAYNE OFFICE - 23</option><option value="957">014_WESTWOOD OFFICE</option><option value="1354">014_WESTWOOD OFFICE - TH</option><option value="976">016_CLIFTON OFFICE - 1111</option><option value="978">016_DUMONT PUCC</option><option value="1159">016_EMERSON OFFICE</option><option value="995">016_FAIR LAWN OFFICE - 1920</option><option value="999">016_FAIR LAWN OFFICE - 2020</option><option value="997">016_FAIR LAWN OFFICE - 2809</option><option value="1603">016_GLEN ROCK PC 7163</option><option value="1175">016_HAWTHORNE OFFICE</option><option value="1085">016_HOME</option><option value="1517">016_KINDERKAMACK WALK-IN 7410</option><option value="1512">016_LGBTQ Paramus Rt 17 South 7276</option><option value="1213">016_MAHWAH URGENT CARE</option><option value="1285">016_MAHWAH-PM&amp;R</option><option value="968">016_MIDLAND PARK OFFICE - 301</option><option value="1003">016_MIDLAND PARK OFFICE - 44-102</option><option value="992">016_MIDLAND PARK OFFICE - 44-201</option><option value="1594">016_MIDLANDPARK 44 PC 7131</option><option value="980">016_MONTVALE PUCC</option><option value="1598">016_MP/GLEN ROCK PC 7211</option><option value="1005">016_OAKLAND OFFICE - 43</option><option value="1198">016_OAKLAND OFFICE - 9</option><option value="1567">016_OAKLAND PC - 7143</option><option value="1009">016_OHS ONSITE</option><option value="1006">016_PARAMUS OFFICE-1</option><option value="1107">016_PARAMUS OFFICE-140</option><option value="1430">016_PARAMUS OFFICE-2</option><option value="1510">016_PARAMUS RT 17S 7186</option><option value="971">016_PARK RIDGE OFFICE</option><option value="1369">016_PARK RIDGE OFFICE - TH</option><option value="1013">016_PCP VALLEY ED</option><option value="1553">016_PCP VALLEY ED_TNVH</option><option value="1015">016_PCP VALLEY IP</option><option value="1554">016_PCP VALLEY IP_TNVH</option><option value="1017">016_PCP VALLEY OP</option><option value="1555">016_PCP VALLEY OP_TNVH</option><option value="1181">016_POMPTON LAKES OFFICE</option><option value="1634">016_RAMAPO 7030</option><option value="1011">016_RAMSEY OFFICE</option><option value="1658">016_RIDGEWOOD PC - 7431</option><option value="984">016_RIVERDALE PUCC</option><option value="1504">016_RIVERDALE WALK-IN 7305</option><option value="1019">016_ROCHELLE PARK OFFICE</option><option value="1308">016_SENIOR CARE PROGRAM</option><option value="1480">016_SWAB &amp; GO - 599</option><option value="987">016_TEANECK PUCC</option><option value="1435">016_TELEHEALTH</option><option value="1211">016_WALDWICK OFFICE - 140</option><option value="989">016_WALDWICK PUCC</option><option value="1178">016_WAYNE LAB - 23</option><option value="1166">016_WAYNE OFFICE - 23</option><option value="1027">016_WAYNE OFFICE - 508</option><option value="990">016_WAYNE PUCC</option><option value="1031">016_WESTWOOD OFFICE</option><option value="1292">016_WESTWOOD OFFICE-400</option><option value="1652">016_WOUND &amp; OSTOMY CARE 6720</option><option value="1033">018_BARIATRIC RIDGEWOOD OFFICE</option><option value="1380">018_BARIATRIC RIDGEWOOD OFFICE - TH</option><option value="1579">018_BARIATRIC SURGERY PARAMUS 7217</option><option value="1205">018_COLO SURG ENGLEWOOD OFFICE</option><option value="1412">018_COLO SURG ENGLEWOOD OFFICE - TH</option><option value="1337">018_COLO SURG PARAMUS OFFICE</option><option value="1413">018_COLO SURG PARAMUS OFFICE - TH</option><option value="1206">018_COLO SURG RIDGEWOOD OFFICE</option><option value="1414">018_COLO SURG RIDGEWOOD OFFICE - TH</option><option value="1284">018_COLO SURG RIDGEWOOD OFFICE-1124</option><option value="1415">018_COLO SURG RIDGEWOOD OFFICE-1124 - TH</option><option value="1582">018_COLO SURG WAYNE OFFICE 7268</option><option value="1184">018_ENDO RIDGEWOOD OFFICE</option><option value="1577">018_ENDO SURG PARAMUS 7254</option><option value="1288">018_ENDO SURG-1200</option><option value="1416">018_ENDO SURG-1200 - TH</option><option value="1035">018_GEN SURG GLEN ROCK OFFICE</option><option value="1417">018_GEN SURG GLEN ROCK OFFICE - TH</option><option value="1038">018_GEN SURG LUCKOW OFFICE</option><option value="1037">018_GEN SURG MONTVALE OFFICE</option><option value="1578">018_GEN SURG PARAMUS 7129</option><option value="1481">018_GEN SURG RIDGEWOOD OFFICE</option><option value="1162">018_HOME</option><option value="1601">018_INTERVENTIONAL RADIOLOGY PARAMUS 7264</option><option value="1068">018_OPHT RIDGEWOOD OFFICE</option><option value="1418">018_OPHT RIDGEWOOD OFFICE - TH</option><option value="1653">018_OPTICAL RIDGEWOOD 7221</option><option value="1610">018_PAIN MGMT MONTVALE OFFICE 7248</option><option value="1163">018_PAIN MGMT PARAMUS OFFICE</option><option value="1419">018_PAIN MGMT PARAMUS OFFICE - TH</option><option value="1597">018_PAIN MGMT RIDGEWOOD 7248</option><option value="1608">018_PEDS GEN SURG PARAMUS 7406</option><option value="1621">018_PODIATRY MONTVALE 7246</option><option value="1576">018_PODIATRY PARAMUS 7246</option><option value="1160">018_PODIATRY WALDWICK OFFICE</option><option value="1420">018_PODIATRY WALDWICK OFFICE - TH</option><option value="1488">018_PODIATRY WAYNE OFFICE</option><option value="1041">018_SURG LUCKOW (OCOP)</option><option value="1048">018_SURG VALLEY ED</option><option value="1556">018_SURG VALLEY ED_TNVH</option><option value="1043">018_SURG VALLEY IP</option><option value="1557">018_SURG VALLEY IP_TNVH</option><option value="1046">018_SURG VALLEY OP</option><option value="1558">018_SURG VALLEY OP_TNVH</option><option value="1572">018_UROLOGY OFFICE 7405</option><option value="1602">018_UROLOGY ONCOLOGY PARAMUS 7405</option><option value="1629">018_UROLOGY RIDGEWOOD OFFICE 7405</option><option value="1183">018_WAYNE OFFICE - 23</option><option value="1051">022_FAIR LAWN OFFICE</option><option value="1098">022_GLEN ROCK BREAST IMAGING</option><option value="1059">022_MFM KRAFT (OCOP)</option><option value="1173">022_MFM PARAMUS 6871</option><option value="1513">022_MIDWIFERY PARAMUS RT 17 SOUTH 7283</option><option value="1294">022_MONTVALE OFFICE</option><option value="1502">022_OB/GYN Paramus 7196</option><option value="1180">022_PARAMUS OFFICE</option><option value="1471">022_PARAMUS OFFICE - MIGS</option><option value="1595">022_PEDS GYN MONTVALE 7281</option><option value="1596">022_PEDS GYN PARAMUS 7281</option><option value="1651">022_PEDS GYN RIDGEWOOD</option><option value="1304">022_RAMSEY OFFICE- 470</option><option value="1607">022_RIDGEWOOD BREAST IMAGING</option><option value="1650">022_RIDGEWOOD GYN 7203</option><option value="1657">022_RIDGEWOOD OBGYN 7430</option><option value="1280">022_RIDGEWOOD OFFICE - 1200</option><option value="1057">022_RIDGEWOOD OFFICE - 550</option><option value="1503">022_UROGYN PARAMUS 7258</option><option value="1169">022_WAYNE OFFICE - 23</option><option value="1065">022_WOMENS SERVICES LUCKOW (OCOP)</option><option value="1074">022_WOMENS SERVICES VALLEY ED</option><option value="1559">022_WOMENS SERVICES VALLEY ED_TNVH</option><option value="1069">022_WOMENS SERVICES VALLEY IP</option><option value="1560">022_WOMENS SERVICES VALLEY IP_TNVH</option><option value="1071">022_WOMENS SERVICES VALLEY OP</option><option value="1561">022_WOMENS SERVICES VALLEY OP_TNVH</option><option value="1077">026_CARDIAC SCREENING</option><option value="1393">026_CARDIAC SCREENING - TH</option><option value="1079">026_INV RAD VALLEY IP</option><option value="1551">026_INV RAD VALLEY IP_TNVH</option><option value="1186">026_INV RAD VALLEY OP</option><option value="1552">026_INV RAD VALLEY OP_TNVH</option><option value="1078">026_PAIN MGMT LUCKOW (OCOP)</option><option value="1076">026_PAIN MGMT VALLEY IP</option><option value="1546">026_PAIN MGMT VALLEY IP_TNVH</option><option value="1152">026_PAIN MGMT VALLEY OP</option><option value="1547">026_PAIN MGMT VALLEY OP_TNVH</option><option value="1498">026_SCREENING</option><option value="1600">033_ALLERGY &amp; IMMUNOLOGY PARAMUS 7423</option><option value="1625">033_ALLERGY AND IMMUNOLOGY WAYNE 7423</option><option value="1632">033_BEHAVIORAL HEALTH ED_TNVH</option><option value="1631">033_BEHAVIORAL HEALTH IP_TNVH</option><option value="1630">033_BEHAVIORAL HEALTH OP_TNVH</option><option value="1614">033_BEHAVIORAL HEALTH RIDGEWOOD 7294</option><option value="1626">033_DERM MONTVALE 7177</option><option value="1070">033_DERM RIDGEWOOD OFFICE</option><option value="1636">033_DIABETES CENTER - PARAMUS 7293</option><option value="1640">033_DIABETES CENTER - PARAMUS LINWOOD 7293</option><option value="1482">033_DIABETES CENTER - RIDGEWOOD</option><option value="1648">033_ENDO MONTVALE OFFICE 7222</option><option value="1637">033_ENDO PARAMUS 7222</option><option value="1055">033_ENDO RIDGEWOOD OFFICE</option><option value="1170">033_ENDO WAYNE OFFICE - 23</option><option value="1050">033_GASTRO MAHWAH OFFICE</option><option value="1647">033_GASTRO MARKET ST 7213</option><option value="1492">033_GASTRO MONTVALE OFFICE</option><option value="1336">033_GASTRO PARAMUS OFFICE</option><option value="1052">033_GASTRO RIDGEWOOD OFFICE</option><option value="1428">033_GASTRO WAYNE OFFICE - 23</option><option value="1599">033_GERIATRICS GLEN ROCK 7251</option><option value="1086">033_HOME</option><option value="1563">033_INTEGRATIVE MEDICINE 7212</option><option value="1611">033_INTEGRATIVE MEDICINE MONTVALE 7212</option><option value="1619">033_INTEGRATIVE MEDICINE PARAMUS 7212</option><option value="1624">033_INTEGRATIVE MEDICINE RIDGEWOOD 7212</option><option value="1649">033_MANAGED WEIGHT LOSS MARKET ST 7421</option><option value="1628">033_MANAGED WEIGHT LOSS MONTVALE_7421</option><option value="1592">033_MANAGED WEIGHT LOSS PARAMUS_7421</option><option value="1655">033_NEUROLOGY MONTVALE 7404</option><option value="1470">033_PALLIATIVE CARE</option><option value="1618">033_PM&amp;R MAHWAH 7231</option><option value="1609">033_PM&amp;R MONTVALE 7231</option><option value="1425">033_PM&amp;R PARK RIDGE OFFICE</option><option value="1574">033_PM&amp;R RIDGEWOOD 7231</option><option value="1439">033_PM&amp;R WAYNE OFFICE - 23</option><option value="1056">033_PULM CEDAR CREST OFFICE</option><option value="1644">033_PULM MONTVALE OFFICE</option><option value="1062">033_PULM RIDGEWOOD OFFICE - 1200</option><option value="1301">033_PULM RIDGEWOOD OFFICE-SLEEP</option><option value="1067">033_PULM WAYNE OFFICE - 401</option><option value="1171">033_PULM WAYNE OFFICE -23</option><option value="1613">033_PULMONARY SLEEP RIDGEWOOD CAMPUS 7208</option><option value="1612">033_RHEUM MONTVALE 7262</option><option value="1281">033_RHEUM RIDGEWOOD OFFICE</option><option value="1172">033_RHEUM WAYNE OFFICE - 23</option><option value="1580">033_SLEEP MEDICINE PARAMUS OFFICE 7208</option><option value="1099">033_SPEC LUCKOW (OCOP)</option><option value="1543">033_SPEC VALLEY ED_TNVH</option><option value="1073">033_SPEC VALLEY IP</option><option value="1544">033_SPEC VALLEY IP_TNVH</option><option value="1075">033_SPEC VALLEY OP</option><option value="1545">033_SPEC VALLEY OP_TNVH</option><option value="1568">033_TELESTROKE ED 7419_TNVH</option><option value="1569">033_TELESTROKE IP 7419_TNVH</option><option value="1570">033_TELESTROKE OP 7419_TNVH</option><option value="1484">033_WALDWICK PSYCH</option><option value="1207">035_MAHWAH OFFICE</option><option value="1486">035_MONTVALE PEDS OFFICE</option><option value="1638">035_PEDS ENDO MONTVALE 7119</option><option value="1192">035_PEDS ENDO PARAMUS OFFICE</option><option value="1639">035_PEDS ENDO WAYNE 7119</option><option value="1434">035_PEDS GASTRO MONTVALE OFFICE</option><option value="1193">035_PEDS GASTRO PARAMUS OFFICE</option><option value="1627">035_PEDS SLEEP RIDGEWOOD 7110</option><option value="1511">035_PEDS SPEC LUCKOW (OCOP)</option><option value="1191">035_PEDS SPEC PARAMUS OFFICE</option><option value="1540">035_PEDS VALLEY ED_TNVH</option><option value="1045">035_PEDS VALLEY IP</option><option value="1541">035_PEDS VALLEY IP_TNVH</option><option value="1047">035_PEDS VALLEY OP</option><option value="1542">035_PEDS VALLEY OP_TNVH</option><option value="1623">035_PEDS WAYNE OFFICE 7429</option><option value="1468">ALLEGRO</option><option value="910">ALLENDALE NURSING HOME</option><option value="1589">ARBOR TERRACE</option><option value="1199">ARDEN COURTS OF WAYNE</option><option value="913">ATRIUM AT PARK RIDGE (AL)</option><option value="1331">ATRIUM AT PARK RIDGE (NF)</option><option value="1329">ATRIUM AT PARK RIDGE (PATIENTS HOME)</option><option value="1330">ATRIUM AT PARK RIDGE (SNF)</option><option value="1333">ATRIUM AT WAYNE (AL)</option><option value="1334">ATRIUM AT WAYNE (NF)</option><option value="1332">ATRIUM AT WAYNE (PATIENTS HOME)</option><option value="914">ATRIUM AT WAYNE (SNF)</option><option value="917">BARNABAS IP</option><option value="1293">BERGEN REGIONAL MEDICAL CENTER</option><option value="1201">BLOOMINGDALE NURSING &amp; REHAB</option><option value="919">BRANDYWINE SENIOR LIVING</option><option value="1174">BRIGHTON GARDENS SADDLE RVR</option><option value="1443">BRIGHTVIEW LAKE TAPPEN</option><option value="1133">BRIGHTVIEW PARAMUS</option><option value="1633">BRISTAL AT ENGLEWOOD</option><option value="1509">BRISTAL AT WOODCLIFF LAKE (AL)</option><option value="959">BROOKDALE EMERSON</option><option value="1508">CARE AT HOME</option><option value="1306">CARE ON AT PASCACK VALLEY</option><option value="922">CARE ONE AT CUPOLA</option><option value="1316">CARE ONE AT CUPOLA (AL)</option><option value="1317">CARE ONE AT CUPOLA (NF)</option><option value="1315">CARE ONE AT CUPOLA (PATIENTS HOME)</option><option value="1313">CARE ONE AT HACKENSACK (AL)</option><option value="1307">CARE ONE AT HACKENSACK (NURSING FACILITY)</option><option value="1312">CARE ONE AT HACKENSACK (PATIENTS HOME)</option><option value="1314">CARE ONE AT HACKENSACK (SNF)</option><option value="920">CARE ONE AT PV (250)</option><option value="1310">CARE ONE AT PV (AL)</option><option value="1311">CARE ONE AT PV (NURSING FACILITY)</option><option value="1309">CARE ONE AT PV (PATIENTS HOME)</option><option value="1319">CARE ONE AT RIDGEWOOD AVE (AL)</option><option value="1320">CARE ONE AT RIDGEWOOD AVE (NF)</option><option value="1318">CARE ONE AT RIDGEWOOD AVE (PATIENTS HOME)</option><option value="924">CARE ONE AT RIDGEWOOD AVE (SNF)</option><option value="1322">CARE ONE AT VALLEY (AL)</option><option value="1323">CARE ONE AT VALLEY (NF)</option><option value="1321">CARE ONE AT VALLEY (PATIENTS HOME)</option><option value="925">CARE ONE AT VALLEY (SNF)</option><option value="1305">CARE ONE AT WAYNE (AL)</option><option value="1325">CARE ONE AT WAYNE (NF)</option><option value="1324">CARE ONE AT WAYNE (PATIENTS HOME)</option><option value="927">CARE ONE AT WAYNE (SNF)</option><option value="1327">CARE ONE AT WELLINGTON (AL)</option><option value="1328">CARE ONE AT WELLINGTON (NF)</option><option value="1326">CARE ONE AT WELLINGTON (PATIENTS HOME))</option><option value="1203">CARE ONE AT WELLINGTON (SNF)</option><option value="930">CHESTNUT HILL</option><option value="934">CHILTON ED</option><option value="935">CHILTON IP</option><option value="937">CHILTON OP</option><option value="939">CHRISTIAN HEALTH (AL)</option><option value="941">CHRISTIAN HEALTH (SNF)</option><option value="946">COLUMBIA IP</option><option value="948">DAUGHTERS OF MIRIAM</option><option value="949">DELLRIDGE CARE CTR</option><option value="1436">EH001_CHEEL EMPLOYEE HEALTH</option><option value="1431">EH001_LUCKOW EMPLOYEE HEALTH</option><option value="1433">EH001_TVH EMPLOYEE HEALTH</option><option value="1432">EH001_WALDWICK EMPLOYEE HEALTH</option><option value="951">EHMC IP</option><option value="953">EHMC OP</option><option value="961">EMERSON HEALTH CARE</option><option value="1014">Excel Care in Wayne</option><option value="1286">FAMILY OF CARING HEALTHCARE AT RIDGEWOOD</option><option value="963">FRESENIUS DIALYSIS</option><option value="1507">Family of Caring Park Ridge</option><option value="1514">H001_TVH CLINIC HAWTHORNE 6440</option><option value="1571">H001_TVH CLINIC RIDGEWOOD 6440</option><option value="1521">H001_TVH IP</option><option value="1622">H001_TVH PEDS CLINIC RIDGEWOOD 6440</option><option value="965">HAMILTON PLAZA</option><option value="1575">HARMONY VILLAGE</option><option value="1585">HARMONY VILLAGE WESTWOOD</option><option value="967">HNH IP</option><option value="969">HNH OP</option><option value="970">HUMC ED</option><option value="972">HUMC IP</option><option value="973">HUMC OP</option><option value="975">JSMC IP</option><option value="1467">JUNIPER VILLAGE (AL)</option><option value="977">KINDRED IP</option><option value="979">KINDRED OP</option><option value="1202">LAKELAND HEALTHCARE CTR</option><option value="981">LAKEVIEW ADV CARE CTR</option><option value="983">LINCOLN PARK CARE CTR</option><option value="985">LINCOLN PARK RENAISSANCE</option><option value="1151">LIVA EYE CENTER</option><option value="986">LLANFAIR HOUSE</option><option value="1635">LUCKOW INFUSION LAB</option><option value="10">M001_CSICU VALLEY ED</option><option value="8">M001_CSICU VALLEY IP</option><option value="9">M001_CSICU VALLEY OP</option><option value="336">M001_HOSP VALLEY ED</option><option value="7">M001_HOUSE VALLEY ED</option><option value="6">M001_HOUSE VALLEY OP</option><option value="281">M001_HOUSE VALLEY OP</option><option value="254">M001_NEONATAL GOFFLE RD OFFICE</option><option value="13">M001_NICU VALLEY ED</option><option value="50">M001_ONC FELLOW VALLEY IP</option><option value="267">M001_PED HOUSE ED</option><option value="372">M001_PED HOUSE VALLEY OP</option><option value="52">M001_PICU VALLEY IP</option><option value="352">M001_PICU VALLEY OP</option><option value="4">M001_PSYCH VALLEY ED</option><option value="3">M001_PSYCH VALLEY OP</option><option value="53">M001_PYSCHOLOGY VALLEY IP</option><option value="240">M001_SURG FELL VALLEY IP</option><option value="335">M001_SURG FELL VALLEY OP</option><option value="340">M003_ SURG ONC OFFICE</option><option value="342">M003_ SURG ONC VALLEY ED</option><option value="365">M003_ SURG ONC VALLEY EMER IP</option><option value="364">M003_ SURG ONC VALLEY EMER OP</option><option value="371">M003_CHILTON IP</option><option value="343">M003_SURG ONC VALLEY IP</option><option value="344">M003_SURG ONC VALLEY OP</option><option value="381">M004_BREAST IMAGING CENTER</option><option value="439">M005_GENERAL SURGERY SURGICARE RIDGEWOOD</option><option value="401">M005_GENERAL SURGERY VALLEY ED</option><option value="403">M005_GENERAL SURGERY VALLEY OP</option><option value="400">M005_GLEN ROCK GEN SURG OFFICE</option><option value="631">M005_MONTVALE GEN SURG OFFICE</option><option value="534">M006_PARK RIDGE GENERAL SURGERY BERGEN REG ED</option><option value="533">M006_PARK RIDGE GENERAL SURGERY BERGEN REG IP</option><option value="532">M006_PARK RIDGE GENERAL SURGERY BERGEN REG OP</option><option value="528">M006_PARK RIDGE GENERAL SURGERY EHMC ED</option><option value="527">M006_PARK RIDGE GENERAL SURGERY EHMC IP</option><option value="526">M006_PARK RIDGE GENERAL SURGERY EHMC OP</option><option value="473">M006_PARK RIDGE GENERAL SURGERY OFFICE</option><option value="531">M006_PARK RIDGE GENERAL SURGERY PASCACK ED</option><option value="530">M006_PARK RIDGE GENERAL SURGERY PASCACK IP</option><option value="529">M006_PARK RIDGE GENERAL SURGERY PASCACK OP</option><option value="535">M006_PARK RIDGE GENERAL SURGERY ROCK BERG SURG CTR</option><option value="476">M006_PARK RIDGE GENERAL SURGERY VALLEY ED</option><option value="474">M006_PARK RIDGE GENERAL SURGERY VALLEY IP</option><option value="475">M006_PARK RIDGE GENERAL SURGERY VALLEY OP</option><option value="760">M006_WALDWICK INTEGRATIVE MEDICINE</option><option value="1101">MAHWAH SURGICAL CTR</option><option value="988">MAYWOOD CTR</option><option value="991">MILFORD MANOR</option><option value="993">MILL GARDENS</option><option value="1654">MONARCH PARAMUS</option><option value="994">MOUNTAINSIDE IP</option><option value="996">MOUNTAINSIDE OP</option><option value="1">Main Office</option><option value="509">N001_200 WEST 57 STREET</option><option value="1522">N001_EP 7601</option><option value="99">N001_EP MOUNTAINSIDE ED</option><option value="38">N001_EP ROOSEVELT IP</option><option value="39">N001_EP ROOSEVELT OP</option><option value="37">N001_EP VALLEY ED</option><option value="1564">N001_EP VALLEY ED_TNVH</option><option value="35">N001_EP VALLEY IP</option><option value="1565">N001_EP VALLEY IP_TNVH</option><option value="36">N001_EP VALLEY OP</option><option value="1566">N001_EP VALLEY OP_TNVH</option><option value="1182">N001_IMAGING CENTER</option><option value="738">N001_LINWOOD AVE OFFICE</option><option value="1214">N001_LUCKOW (OCOP)</option><option value="522">N001_W 57TH STREET AMB</option><option value="1176">N001_WAYNE 23 OFFICE</option><option value="504">N004_NANUET OFFICE</option><option value="648">N005_MMG EDGEWATER DRIVE</option><option value="650">N005_MMG MALTESE DRIVE</option><option value="610">N005_NY SPECIALIST NANUET OFFICE</option><option value="998">OAK RIDGE REHAB</option><option value="1000">OAKLAND CARE CTR</option><option value="1001">ORADELL HEALTH CARE CTR</option><option value="1002">ORADELL SURGICAL CTR</option><option value="1422">OUTPATIENT LAB - 1200</option><option value="1423">OUTPATIENT LAB - MAHWAH WELLNESS CENTER</option><option value="1421">OUTPATIENT LAB - THE VALLEY HOSPITAL</option><option value="637">P013_PLAZA AT MILL POND (ATRIUM)</option><option value="41">P016_RIVERDALE</option><option value="263">P017_INT MED VALLEY OP</option><option value="801">P025_BRANDYWINE ASST LIVING</option><option value="1117">P029_NICU GOFFLE RD OFFICE</option><option value="419">P030_MAHWAH GASTRO OFFICE</option><option value="815">P032_CARDIAC SCREENING</option><option value="456">P035_PEDS SUBSPECIALTY RAMSEY OFFICE</option><option value="600">P038_RADBURN MEDICAL OFFICE</option><option value="1004">PASCACK VALLEY ED</option><option value="1007">PASCACK VALLEY IP</option><option value="1008">PASCACK VALLEY OP</option><option value="1200">PHOENIX CENTER FOR REHABILITATION AND PEDIATRICS</option><option value="1010">PLAZA REGENCY PARK RIDGE (SNF)</option><option value="1012">PREAKNESS HEALTH CARE CTR</option><option value="1584">PRIMARY HOMEBOUND 7271</option><option value="1204">PROSPECT HEIGHTS CARE CTR</option><option value="1016">RENAL CENTER OF WESTWOOD</option><option value="1018">RIDGEWOOD SURG CTR</option><option value="1444">SHARE COTTAGE</option><option value="1445">SHARE PROSPECT</option><option value="1020">SJRMC PATERSON ED</option><option value="1021">SJRMC PATERSON IP</option><option value="1022">SJRMC PATERSON OP</option><option value="1024">SJRMC WAYNE ED</option><option value="1025">SJRMC WAYNE IP</option><option value="1026">SJRMC WAYNE OP</option><option value="1028">ST MARYS ED</option><option value="1029">ST MARYS IP</option><option value="1030">ST MARYS OP</option><option value="1615">SUNRISE AT WOODCLIFF LAKE AL</option><option value="1485">SUNRISE OF FRANKLIN LAKES</option><option value="1130">SUNRISE WAYNE (AL)</option><option value="1497">T001_FAX_TEST</option><option selected="selected" value="594">T001_IS TEST DEPARTMENT</option><option value="1303">THE BRISTAL</option><option value="1487">THE VISTA</option><option value="1505">THRIVE AT MONTVALE</option><option value="1102">TVH SLEEP CENTER</option><option value="1469">TVH001_LAB - CHEEL</option><option value="1493">TVH_SWAB AND GO</option><option value="477">V001_TVH CLINIC</option><option value="479">V001_TVH IP</option><option value="1500">V002_TVH MAHWAH IMAGING</option><option value="1499">V002_TVH RIDGEWOOD IMAGING</option><option value="1442">V003_TVH VACCINE CLINIC - 599</option><option value="1472">V004_COMMUNITY FLU CLINIC</option><option value="1463">V016_VPS VACCINE CLINIC - GARDEN STATE PLAZA</option><option value="1032">VAN DYK HEALTHCARE</option><option value="1427">VAN DYK PARK PLACE ASSISTED LIVING</option><option value="1100">WAYNE SURG CTR</option><option value="1034">WAYNE VIEW CARE CTR</option><option value="1587">WINDMERE (AL)</option><option value="1036">WOODCLIFF LAKE MANOR</option></select></div>
+						</div>
+					</div><span class="statusbar-pipe"></span>
+					<div class="worklists" onclick="OpenCareGapWorklist()">
+	<span class="care-gap-worklist-text">CARE GAP WORKLIST</span>
+	<span class="care-gap-worklist-image sprite-patient-worklist-27x19 sprite-link"></span>
+</div>
+
+					<div id="username" class="statusbar display-none">aservice12</div>
+					<div id="leftpadding" class="statusbar"></div>
+					
+					
+				</span>
+				<span>
+			
+					<div class="previous-next-wrapper display-none">
+	 <div class="previous-next">
+	 	  <span class="icon icon-streamlined-next" onclick="NextTaskInQueue()"></span>
+		  <span class="queue-summary"></span>
+		  <span class="icon icon-streamlined-previous" onclick="PreviousTaskInQueue()"></span>
+	</div>
+</div>
+
+					
+				</span>
+				<span onclick="
+					var CrossFrameEventsUtils = require('shared:/scripts/athena/utils/cross_frame_events');
+					CrossFrameEventsUtils.trigger('global-statusbar-clicked');">
+			
+					
+			<form id="oktaconfig" name="oktaconfig" class="invisible">
+				<input type="hidden" value="0oag8kip5lRFvmBYy297" id="clientid">
+				<input type="hidden" value="https://identity.athenahealth.com/oauth2/auset0ja9xZ2Hniep296" id="authserver">
+				<input type="hidden" value="https://cdn.nimbus.athenahealth.com/static/athena__identity-login-frame/1.0.1" id="loginframeurl">
+				<input type="hidden" value="00uvwwdrvvvmntvKt297" id="oktauserid">
+				<input type="hidden" value="https://athenanet.athenahealth.com/1/1/login/createoktasession.esp" id="redirecturl">
+				<input type="hidden" value="1791297772883.8" id="serverdatetime">
+			</form>
+			<script>
+				AH.SetGlobal('ENABLE_STATUSBAR_RELOAD_ON_REAUTHENTICATION', 1);
+				AH.SetGlobal('SET_OKTA_USERID_COOKIE', 1);
+			</script>
+			<script type="text/javascript" src="./identity-session-management.js.download"></script>
+		
+					<iframe id="reloginsessioniframe" name="reloginsessioniframe" src="./saved_resource(6).html" width="0" height="0" class="is__hidden"> </iframe>
+					
+				</span>
+			
+				</div>
+			
+		<script type="text/javascript" src="./test_connectivity.js.download"></script>
+		<script type="text/javascript">
+		(function() {
+			function silentFailure(callback) {
+				try {
+					return callback();
+				}
+				catch (e) {
+
+				}
+			}
+			silentFailure(function() {
+				var displayErrorLightbox = function() {
+					require(['shared:/scripts/athena/utils/cross_frame_events'], function(CrossFrameEventsUtils) {
+						silentFailure(function() {
+							top.AthenaPattern_Popup.open({
+								OVERLAYTYPE:'LIGHTBOX',
+								ONCLOSE: function( main_frame_destination ) {
+									if ( main_frame_destination ) {
+										AH.Frames.Main.SetLocation(main_frame_destination);
+									}
+								},
+								CONTENTHTML:
+								 '<h1 style="margin-left: 10px; color:#514A79"> You may have a connectivity problem </h1>' +
+									'<p style="margin-left: 10px; color:black">' +
+										'It appears that you are having problems connecting to one or more of our datacenters. ' +
+										'This means that in certain situations, you could be unable to access athenaNet due to ' +
+										'your current firewall configuration. To ensure uninterrupted access to athenaNet, ' +
+										'please visit our Connectivity test page below for next steps.' +
+									'</p>' +
+									'<ul style="margin-left: 10px;">' +
+										"<li> I'm ready to visit the " +'<a style="color:#C2B5C7"  onclick="AthenaPattern_Popup.close(AH.GetGlobal(\'BASE_HREF\') + \'/platform/connectivity.esp\');"> connectivity test page </a> now </li>' +
+										"<li> I want to review information on athenaNet's" +'<a style="color:#C2B5C7; text-decoration:none" onclick="AthenaPattern_Popup.close()"  href="https://www.athenahealth.com/_doc/pdf/athenahealth_Tech_Requirements.pdf"> connectivity requirements </a> </li>' +
+										"<li> I'll visit the connectivity test page later (it's available under practice manager admin) </li>" +
+									'</ul>' +
+									'<p><b>You should work with your IT team to resolve this issue prior to 11/13.</b> If you are unable to resolve it, please reach out to your account manager.</p>' +
+									'<img style="height:1px; width:1px;" src="/5622/9/static/beacon_ping.png?purpose=connectivityModal&amp;unique_id=asUI7ETC9n-N1GcQiKl5ZgAAADc">'
+							});
+						});
+					});
+				}
+				require(['static:/platform/lib/test_connectivity'], function(TestConnectivity) {
+					silentFailure(function() {
+						// Prevent multiple day activity in single session.
+						var date = DateToString(new Date());
+						var cookieName = 'LastBeaconConnectionTest';
+
+						if (GetCookieValue(cookieName) === date) {
+							return;
+						}
+
+						document.cookie = cookieName + "=" + date + ";path=/";
+
+						// Real work.
+						var uniqueId  = 'asUI7ETC9n-N1GcQiKl5ZgAAADc';
+						var contextId = '5622';
+						var username  = 'aservice12';
+						var reportUrl = '/5622/9/static/beacon_report.png';
+						// Testing self to see if theres just something odd with AJAX.
+						var selfTestUrl = '/5622/9/static/beacon_ping.png?UNIQUEID=' + uniqueId;
+						// Test connectivity to Platform 2.0
+						var platformPingUrl = '';
+						if (platformPingUrl) {
+							platformPingUrl += '?UNIQUEID=' + uniqueId;
+						}
+						// Test connectivity to UPF 2.0
+						var upfMicroservicePingUrl = 'https://printing.api.athena.io/upf/v1/ping';
+						if(upfMicroservicePingUrl) {
+							upfMicroservicePingUrl += '?UNIQUEID=' + uniqueId;
+						}
+						// Also, test the other servers.
+						var logStatusChange = function logStatusChange (url, status, retries) {
+							silentFailure(function() {
+								if (jQuery) {
+									jQuery.get(reportUrl, {
+										url:		url,
+										unique_id:	uniqueId,
+										username:	username,
+										context_id: contextId,
+										status:		status
+									});
+								}
+							});
+						};
+						var connectivityParams = {
+							onloadCallback : function(xhr, options) {
+								return silentFailure(function () {
+									var browserObject = BrowserVersion();
+									if( browserObject.BROWSER == 'IE' && ( browserObject.VERSION == 8 || browserObject.VERSION == 9 ) ) {
+										if(xhr.responseText != '') {
+											logStatusChange(options.url, 'SUCCESS');
+											return true;
+										}
+										else {
+											logStatusChange(options.url, 'FAILED');
+											return false;
+										}
+									}
+									else {
+										if (xhr.status === 200) {
+											logStatusChange(options.url, 'SUCCESS');
+											return true;
+										}
+										else {
+											logStatusChange(options.url, 'FAILED');
+											return false;
+										}
+									}
+								});
+							},
+							onerrorCallback : function(xhr, options) {
+								return silentFailure(function() {
+									logStatusChange(options.url, 'ERROR')
+									return false;
+								});
+							},
+							ontimeoutCallback : function(xhr,options) {
+								return silentFailure(function() {
+									logStatusChange(options.url, 'TIMEOUT');
+									return false;
+								});
+							},
+							cleanupCallback : function(xhr, options) {
+								return silentFailure(function() {
+									logStatusChange(options.url, 'SENT');
+								});
+							},
+						};
+						var connections = [
+							{
+								url : selfTestUrl,
+								params : connectivityParams
+							},
+						];
+
+						var extra_domains = ['app610', 'app611', 'app612', 'app613', 'app620', 'app621', 'app622', 'app623', 'app510', 'app511', 'app512', 'app513', 'app514', 'app515'];
+						if(extra_domains.length > 0) {
+							connections = connections.concat(
+								extra_domains.map(function(subdomain) {
+									return {
+										url : 'https://' + subdomain + '.athenanet.athenahealth.com/5622/9/static/beacon_ping.png?UNIQUEID=' + uniqueId,
+										params : connectivityParams
+									};
+								})
+							);
+						}
+
+						if (platformPingUrl) {
+							connections.push({
+								url: platformPingUrl,
+								params: connectivityParams
+							});
+						}
+						if (upfMicroservicePingUrl) {
+							connections.push({
+								url: upfMicroservicePingUrl,
+								params: connectivityParams
+							});
+						}
+						var promise = TestConnectivity.testConnections(connections);
+						if (0) {
+							promise.then(function(results) {
+								silentFailure(function() {
+									for( var i = 0; i < results.length ; i++ ) {
+										if( results[i] == false ) {
+											displayErrorLightbox();
+											return;
+										}
+									}
+								});
+							});
+						}
+					});
+				});
+			});
+		})();
+		</script>
+	
+			<script type="text/javascript">
+				try {
+					
+		if (window.ClientSideProfiling == true) {
+			var metricdata = {
+				initjs : {
+					size : '5793',
+					count : '5'
+				},
+				initjs_immediate : {
+					size : '10030',
+					count : '3'
+				}
+			};
+			for ( var metric in metricdata ) {
+				for (var property in metricdata[metric]) {
+					if(metricdata[metric][property] != '') {
+						top.Metrics.Set({
+							subsystem : 'common',
+							group : 'client',
+							type : 'scriptlet',
+							namespace : document.location.pathname + document.location.search,
+							metric : [metric, property],
+							value : metricdata[metric][property]
+						});
+					}
+				}
+			}
+		}
+	
+				}
+				catch (e) {};
+			</script>
+	<iframe id="identity_okta_login_frame_identity_athenahealth_com" src="./index.html" style="display: none;"></iframe></body></html>

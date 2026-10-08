@@ -1,0 +1,199 @@
+
+<!-- saved from url=(0187)# -->
+<html class="standards"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+			<meta name="meta-graphql-router-endpoint" content="#">
+<meta name="format-detection" content="telephone=no">
+<meta content="1" name="MULTIPRINTLOG">
+<meta content="1" name="PrintingFrameworkEnabled">
+<meta content="1" name="UPFFileversionMismatch">
+<meta content="3" name="UpfAjaxcallTimeout">
+<meta content="30" name="UpfDefaultTimeout">
+<meta content="1" name="UpfEdgeSupport">
+			<script async="" src="../_assets/5313b7e73718_datadog-rum-v5.js.download"></script><script type="text/javascript" src="../_assets/10531da58e7e_js-athena-polyfill-20191022135002-UZz9_aIKDUrorn_zUs31cQ-min.js.download"></script>
+			
+			
+			
+			
+			<script>
+				window['datadog-token'] = 'pub9f2fae809ccf9e111fa9502090cca018';
+				window['datadog-application-id'] = '2053f8dd-ff49-4c63-868f-619c1eea050a';
+				window['datadog-rum-env'] = 'production';
+				window['datadog-service-name'] = 'aOne';
+				window['datadog-current-route'] = '/globaliframe.esp';
+				window['datadog-allowed-tracing-urls'] = ["https:\/\/scheduling-practice-apps.api.athena.io\/scheduling-practice-apps"];
+				window['use_datadog_rum_api'] = 1;
+			</script>
+			<script src="../_assets/defc8ec7206e_datadog_20260326.js.download"></script>
+		
+			
+			
+			
+			<link href="../_assets/b752fe09d576_css-facit-20150512144213-lQ7lZWSkGWFQM8W7olrIKw-min.css" type="text/css" rel="stylesheet">
+			
+			<script type="text/javascript">
+				try {
+					
+		var MetricsProfilingData = {
+			unique_id : 'asUI7ArkgoxY36dZbG1NuwAAAAw'
+		};
+	
+				}
+				catch (e) {};
+			</script>
+	
+			
+			<script type="text/javascript">var static_host = '/static_20260917';</script>
+			
+			<script type="text/javascript">
+	try {
+		if (window.parent && window.parent.FixFrameDisplay) {
+			window.parent.FixFrameDisplay(window.frameElement);
+		}
+	}
+	catch (err) {}
+</script>
+
+			
+			<title>Disconnected Application v26.7 NJ - Disconnected Application [5622]  | T001_IS TEST PROVIDER GROUP [561]</title>
+			
+			
+			<link href="../_assets/0578782d4bf8_css-sprites-reskin-20260116090815-dgx4kwLQDbzZgY_9rTW2fQ-min.css" type="text/css" rel="stylesheet">
+			
+			
+			<script src="../_assets/f3defbf7f350_js-athenanet-20260923081807-ud971hdzv6RmfiQqJUCwRQ-min.js.download" type="text/javascript"></script>
+			
+			
+			
+			
+			<script type="text/javascript">
+				// Using top.AH to ensure we set the globals in the right frame, as AH alias from athenalib.js may not be active yet
+				top.AH.SetGlobals({
+					BASE_HREF:           "/5622/9",
+					AIRLOCK_URL:         "#",
+					AIRLOCK_URL_PREFIX:  "ax",
+					HOMEPAGE_PREFERENCE: "non_clinician",
+					SSIWIZARD:           undefined,
+					ATHENACLINICALS:     {}, // store caching information for the encounter section
+					USERNAME:            "aservice12",
+					LOGINPRACTICEID:     "5622",
+					DEPARTMENTID:        "594",
+					MAINHEIGHT:          undefined,
+					AIRLOCKINCLASSICFRAMESET:     1
+				});
+
+				
+
+				AH.SetGlobal('SKIPLOGOUTDIALOG', "1");
+
+				AH.SetGlobal('SSODIGEST', "abecdca6f0d09ee150c36f0ac21d2125d8f57561f96a20caecc33723abf6290b"); AH.SetGlobal('IDENTITYPROVIDERID', "363"); AH.SetGlobal('OKTAOIDC', "Y"); AH.SetGlobal('SUPERUSERNAME', "");
+
+				// This function exists for compatibility with existing calls that expect it to be here.
+				// New code should call AH.Frames.ScheduleNav.Hide() directly.
+				function SnapShut() {
+					AH.Frames.ScheduleNav.AutoHide();
+				}
+
+				function OnunloadLogout() {
+					// LOGGEDOUTALREADY is a flag that is set if user explicitly logs out,
+					// in which case we do not want to trigger any logout prompt when the explicit logout tries to close the window
+					if (
+						!AH.GetGlobal('LOGGEDOUTALREADY')
+						&& (AH.GetGlobal('SKIPLOGOUTDIALOG') != 1)
+					) {
+						// iPad triggers onunload but not unbeforeunload
+						// furthermore, iPad will execute commands but not interact with user (i.e. can not 'alert' a notification)
+						jQuery.ajax({
+							url: AH.PrependBasePath("/logout.esp?USERNAME=aservice12&CLOSE=1USERNAME=aservice12"),
+							async: false
+						});
+					}
+				}
+
+				function OnBeforeUnloadLogout(e) {
+					if (AH.GetGlobal('arrivedFromAirlock')) return;
+
+					if (e) {
+						e.returnValue = 'Please indicate that you would like to stay on this page.';
+					}
+					return 'Please indicate that you would like to stay on this page.';
+				}
+
+				// Hydra 271186 - the top.fr* references are to support saved encounters, which have saved top.frFrameName references
+				jQuery('document').ready(function () {
+
+					AH.SetGlobal('JSFRAME', AH.Frames.Status.Frame());
+					top.frMain = top.AH.Frames.Main.Frame();
+					top.frScheduleNav = top.AH.Frames.ScheduleNav.Frame();
+					top.frGlobalNav = top.AH.Frames.GlobalNav.Frame();
+					top.frStatus = top.AH.Frames.Status.Frame();
+					top.frHidden = top.AH.Frames.Hidden.Frame();
+					// load global elements after frameset is loaded; see comments in globalframeset
+					if (keys(AH.GlobalElements).length) {
+						AH.Frames.Top.Frame().LoadGlobalElements();
+					}
+				});
+
+				// For IE10 in compatibility mode, navigating from a standards page to a non-standards
+				// page causes the frame to behave as if its width and height are zero.  This results
+				// in the "blank gray page" bug.  Explicitly changing the frame element's clear style
+				// forces the browser to redraw it correctly.
+				function FixFrameDisplay(frame) {
+					if (frame && frame.tagName == 'FRAME' && frame.currentStyle && frame.width === 0) {
+						var clear = frame.style.clear;
+						frame.style.clear = clear == '' ? frame.currentStyle.clear : '';
+						frame.style.clear = clear;
+					}
+				}
+				// If we came from the practice switcher, the back button could cause
+				// unpredictable things, like different frames being connected to different
+				// practices. To prevent that, add a buffer in the browser history to
+				// reduce the likelihood of this state occurring accidentally
+				function FramesetConsistency(frame) {
+					if (typeof(history.pushState) === 'function') {
+						for (var i=0; i<25; i++) {
+							history.pushState({}, '', frame.src);
+						}
+					}
+				}
+			</script>
+		
+			
+			
+			<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="#" type="font/woff2" crossorigin="anonymous">
+			
+		<script>
+// Check to see if we come from POP and need to call the ShowNavigation function an additional time
+
+
+
+
+
+
+
+
+</script></head>
+
+
+
+
+
+<frameset border="0" frameborder="NO" framespacing="0" id="frWrapper" marginwidth="0" name="frWrapper" onbeforeunload="if (!AH.GetGlobal(&quot;LOGGEDOUTALREADY&quot;) &amp;&amp; AH.GetGlobal(&quot;SKIPLOGOUTDIALOG&quot;) != 1) { return OnBeforeUnloadLogout(window.event); }" rows="0,0,*">
+
+	<frame src="../_assets/8247d5b0be6b_blank.html" name="frHelp" marginwidth="0" marginheight="0">
+	<frame src="../_assets/528fad09dce8_blank(1).html" frameborder="0" name="frHidden">
+	<!-- used for utility Javascript functions -->
+
+
+
+
+		<!-- main content frames -->
+		<frame id="frameContent" name="frameContent" src="../_assets/9b4d623e4fa3_framecontent.html">
+	
+</frameset>
+
+</html>

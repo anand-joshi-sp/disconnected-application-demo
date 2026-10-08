@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<!-- saved from url=(0121)https://athenanet.athenahealth.com/5622/9/useradmin/userwizard.esp?ADDUSER=1&CSRFPROTECT=296d438e97b8cebd7a5d041cbd376ebc -->
+<html class="standards  pagepattern"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="meta-graphql-router-endpoint" content="https://apollo-router.api.athena.io/apollo-router">
+<meta name="format-detection" content="telephone=no">
+
+<meta content="1" name="MULTIPRINTLOG">
+<meta content="1" name="PrintingFrameworkEnabled">
+<meta content="1" name="UPFFileversionMismatch">
+<meta content="3" name="UpfAjaxcallTimeout">
+<meta content="30" name="UpfDefaultTimeout">
+<meta content="1" name="UpfEdgeSupport">
+			<script async="" src="./datadog-rum-v5.js.download"></script><script type="text/javascript" src="./js-athena-polyfill-20191022135002-UZz9_aIKDUrorn_zUs31cQ-min.js.download"></script>
+			
+			
+			
+			
+			<script>
+				window['datadog-token'] = 'pub9f2fae809ccf9e111fa9502090cca018';
+				window['datadog-application-id'] = '2053f8dd-ff49-4c63-868f-619c1eea050a';
+				window['datadog-rum-env'] = 'production';
+				window['datadog-service-name'] = 'aOne';
+				window['datadog-current-route'] = '/useradmin/userwizard.esp';
+				window['datadog-allowed-tracing-urls'] = ["https:\/\/scheduling-practice-apps.api.athena.io\/scheduling-practice-apps"];
+				window['use_datadog_rum_api'] = 1;
+			</script>
+			<script src="./datadog_20260326.js.download"></script>
+		
+			
+			
+			
+		<script>
+		if (
+			window.navigator
+			&& (typeof window.navigator.userAgent === 'string')
+			&& !window.navigator.userAgent.match(/wkhtmltopdf/i)
+		) {
+			window.addEventListener('load', function() {
+				(function(apiKey){
+					(function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+						v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+							o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+							y=e.createElement(n);y.async=!0;y.src='https://us1.cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+
+							// We are removing the script tag after load to avoid breaking printing workflows
+							var scriptRemover = function() {
+								try {
+									y.parentNode.removeChild(y);
+								}
+								catch (err) {
+									// Nothing we can do at this point. Log to console so we can see it in dev
+									console.warn("Failed to remove pendo agent script tag");
+								}
+							};
+							y.onload = scriptRemover;
+							y.onerror = scriptRemover;
+
+							// Back to stock pendo snippet code
+							z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+					pendo.initialize({
+						visitor: { id:	'aservice12' },
+						account: { id:	5622 },
+						excludeAllText: true
+					});
+				})('7788b6b7-1f73-41d2-7845-dbe9a20a6b2c');
+			});
+		}
+		</script>
+	
+			<link href="./css-facit-20150512144213-lQ7lZWSkGWFQM8W7olrIKw-min.css" type="text/css" rel="stylesheet">
+			
+			<script type="text/javascript">
+				try {
+					
+		var MetricsProfilingData = {
+			unique_id : 'asULPvgXqHTWzO2Q9rtVjAAAABM'
+		};
+	
+				}
+				catch (e) {};
+			</script>
+	
+			
+			<script type="text/javascript">var static_host = '/static_20260917';</script>
+			
+			
+			
+			<title></title>
+			
+			<link href="./css-common-20260116090815-nIa8XhZnvUcmCmDFzVZsiw-min.css" type="text/css" rel="stylesheet">
+<link href="./css-athenanet-reskin-20260909113436-JAq22Ge6oUQ2SJxO5fAaMQ-min.css" type="text/css" rel="stylesheet">
+			<link href="./css-sprites-reskin-20260116090815-dgx4kwLQDbzZgY_9rTW2fQ-min.css" type="text/css" rel="stylesheet">
+			
+			
+			<script src="./js-athenanet-20260923081807-ud971hdzv6RmfiQqJUCwRQ-min.js.download" type="text/javascript"></script>
+			
+			
+			
+			<script type="text/javascript">
+	document.helpkey = 'Users_PH.htm';
+</script>
+
+			
+			<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Regular.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Bold.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Semibold.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-Light.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-It.otf.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="https://athenanet.athenahealth.com/static/font/sourcesanspro/SourceSansPro-SemiboldIt.otf.woff2" type="font/woff2" crossorigin="anonymous">
+			
+		<style type="text/css" scoped="scoped" class=" pendo-style-IsPbm7wobh9WCkZtK4Nne9esi0Q" style="white-space: pre-wrap;"></style><style type="text/css" scoped="scoped" class=" pendo-style-JWLC3VMg2sgh-7tKYAi6HlRoanc" style="white-space: pre-wrap;"></style></head>
+
+	<body class="admin useradmin_pm useradmin_userwizard_esp" style="zoom: 1;">
+	
+	<div class="reskinpagetitle">
+Users: New User
+
+</div>
+
+
+
+<div class="tabspattern">
+	<table id="userwizardtabs">
+		<tbody><tr>
+			<td width="2%">
+				<div class="emptycell">&nbsp;</div>
+			</td>
+				<td class="tabcontrol" id="TABCELLPROFILE">
+					<div class="selectedtab" onclick="
+				AthenaPattern_Tabs.HandleTabOnClick(this, function () { GoToTab(&quot;PROFILE&quot;) });
+			" tabid="PROFILE" nowrap="">
+						&nbsp;&nbsp;Profile&nbsp;&nbsp;
+					</div>
+				</td>
+				<td class="tabcontrol" id="TABCELLSECURITY">
+					<div class="disabledtab" onclick="
+				AthenaPattern_Tabs.HandleTabOnClick(this, function () { GoToTab(&quot;SECURITY&quot;) });
+			" tabid="SECURITY" nowrap="">
+						&nbsp;&nbsp;Security&nbsp;&nbsp;
+					</div>
+				</td>
+				<td class="tabcontrol" id="TABCELLROLES">
+					<div class="unselectedtab" onclick="
+				AthenaPattern_Tabs.HandleTabOnClick(this, function () { GoToTab(&quot;ROLES&quot;) });
+			" tabid="ROLES" nowrap="">
+						&nbsp;&nbsp;Roles&nbsp;&nbsp;
+					</div>
+				</td>
+			<td width="100%">
+				<div class="emptycell">
+					&nbsp;
+				</div>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+<div class="transitionalusertabcontainer">	<form id="formasULPwrBChYANJEfAAALEA" class="form c__form" method="POST" name="zform" onsubmit="return ValidateInputForm()">
+		<div id="formsectionasULPwrBChYANJEfAAALEQ" class="formsection ">
+	<div class="fieldset">
+				<table class="formtable c__form-table l__no-padding l__no-margin">
+<input defaultvalue="Add" name="operation" type="HIDDEN" value="Add">
+<input defaultvalue="PRACTICE" name="ORGANIZATIONTYPE" type="HIDDEN" value="PRACTICE">
+<input defaultvalue="" name="ID" type="HIDDEN" value="">
+<input defaultvalue="10/06/26 10:52:47" name="PAGELOADTIMESTAMP" type="HIDDEN" value="10/06/26 10:52:47">
+<input defaultvalue="26473770" name="MAXUSERPROVIDERACCESSAUDRID" type="HIDDEN" value="26473770">
+<input defaultvalue="15856485" name="MAXUSERDEPARTMENTAUDRID" type="HIDDEN" value="15856485">
+<input defaultvalue="PROFILE" name="TAB" type="HIDDEN" value="PROFILE">
+<input defaultvalue="" name="DISPLAYPOPDATAACCESS" type="HIDDEN" value="">
+<input defaultvalue="" name="MOVETOPOPDATAACCESS" type="HIDDEN" value="">
+<input defaultvalue="" name="NEWTAB" type="HIDDEN" value="">
+<input defaultvalue="COLLECTOR" id="CONTRACTTYPEID" name="CONTRACTTYPEID" type="HIDDEN" value="COLLECTOR">
+
+	<tbody><tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Last name</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input class="RequiredField" fieldtitle="Last Name" harderror="1" maxlength="255" name="LASTNAME" onblur="; CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var isvalid=true;; this.value = TrimWhitespace(this.value); var input = new InputWrapper( this ); if( this.value != '' &amp;&amp; ! this.value.match( new RegExp( '^[\\-A-Za-z,.\&quot;\'() ]{2,}$' ) ) ){ input.MarkInvalid( 'Last name must be at least two characters in length and special characters other than , . - \\\&quot; \\\' ( ) are not allowed in Last Name.' ); isvalid = false; }; if(isvalid &amp;&amp; typeof(input) != 'undefined'){input.MarkValid();}" type="TEXT" validationfailedmessage="Last name must be at least two characters in length and special characters other than , . - \&quot; \' ( ) are not allowed in Last Name." tooltiphtml=""><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">First name</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input class="RequiredField" fieldtitle="First Name" harderror="1" maxlength="255" name="FIRSTNAME" onblur="; CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var isvalid=true;; this.value = TrimWhitespace(this.value); var input = new InputWrapper( this ); if( this.value != '' &amp;&amp; ! this.value.match( new RegExp( '^[\\-A-Za-z,.\&quot;\'() ]+$' ) ) ){ input.MarkInvalid( 'Special characters other than , . - \&quot; \' ( ) are not allowed in First Name.' ); isvalid = false; }; if(isvalid &amp;&amp; typeof(input) != 'undefined'){input.MarkValid();}" type="TEXT" validationfailedmessage="Special characters other than , . - &quot; ' ( ) are not allowed in First Name." tooltiphtml=""><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Organization</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<select class="RequiredField" fieldtitle="Organization" id="ORGANIZATIONID" name="ORGANIZATIONID" onchange="ChangeOrganization(this, document.zform.AUTHENTICATIONDOMAINID, {&quot;ACCESS&quot;:{&quot;SETTING&quot;:&quot;BYUSER&quot;,&quot;IDENTITYPROVIDERS&quot;:{&quot;IDS&quot;:[&quot;281&quot;],&quot;TEXTS&quot;:[&quot;http:\/\/www.okta.com\/exk11ivk6n9NwBg11297&quot;]}},&quot;PRACTICE&quot;:{&quot;SETTING&quot;:&quot;BYUSER&quot;,&quot;IDENTITYPROVIDERS&quot;:{&quot;IDS&quot;:[&quot;&quot;,&quot;363&quot;,&quot;4557&quot;],&quot;TEXTS&quot;:[&quot;-- select a provider --&quot;,&quot;AAAIDP_Direct-to-Hub&quot;,&quot;https:\/\/sts.windows.net\/95bedc6a-bf88-45a8-8131-afc1f7f8b9fe\/&quot;]}},&quot;ATHENA&quot;:{&quot;SETTING&quot;:&quot;ALL&quot;,&quot;IDENTITYPROVIDERS&quot;:{&quot;IDS&quot;:[&quot;1123&quot;],&quot;TEXTS&quot;:[&quot;AAD&quot;]}}}, 2); UpdateTrainingDepartment(&quot;_&quot;); document.zform.POSITIONID[0].text = &quot;Other (Please Specify)&quot;" type="SELECT"><option value=""></option><option value="PRACTICE">Practice</option></select><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="LOCATIONROW" class="formelement l__padding-none l__margin-none  " style="display: none;">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Location</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<select fieldtitle="Employee Location" name="EMPLOYEELOCATIONID" type="SELECT" class=""><option value=""></option><option value=""></option></select><span style="display:none;">*</span>
+		</td>
+	</tr>
+<input defaultvalue="5622" name="INSERTCONTEXTID" type="HIDDEN" value="5622">
+
+	<tr id="AUTHENTICATIONDOMAINIDROW" class="formelement l__padding-none l__margin-none  " style="display:none;">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Authentication domain</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<select id="AUTHENTICATIONDOMAINID" name="AUTHENTICATIONDOMAINID" onchange="ChangeAuthenticationDomain(this, document.zform.ORGANIZATIONID);" type="SELECT" disabled=""><option value=""></option></select><div class="hidden" id="AUTHENTICATIONDOMAIN_ATHENA"><option value=""></option><option value="1">athenahealth Corporate</option></div><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="IDENTITYMAPPINGROW" class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Identity mapping</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input id="IDENTITYMAPPING0" maxlength="200" name="IDENTITYMAPPING0" onchange="UpdateIdentityMapping(0);" title="Identity Mapping" type="TEXT"> in <select harderror="1" id="IDENTITYPROVIDER0" name="IDENTITYPROVIDER0" onchange="UpdateIdentityMapping(0);ValidateIdentityMappingSeletion();" title="Identity Provider" type="SELECT" validationfailedmessage="Cannot map a value to an identity provider more than once." class="RequiredField"><option value="">-- select a provider --</option><option value="363">AAAIDP_Direct-to-Hub</option><option value="4557">https://sts.windows.net/95bedc6a-bf88-45a8-8131-afc1f7f8b9fe/</option></select><br><input id="IDENTITYMAPPING1" maxlength="200" name="IDENTITYMAPPING1" onchange="UpdateIdentityMapping(1);" title="Identity Mapping" type="TEXT"> in <select harderror="1" id="IDENTITYPROVIDER1" name="IDENTITYPROVIDER1" onchange="UpdateIdentityMapping(1);ValidateIdentityMappingSeletion();" title="Identity Provider" type="SELECT" validationfailedmessage="Cannot map a value to an identity provider more than once."><option value="">-- select a provider --</option><option value="363">AAAIDP_Direct-to-Hub</option><option value="4557">https://sts.windows.net/95bedc6a-bf88-45a8-8131-afc1f7f8b9fe/</option></select><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="WINDOWSUSERNAMEROW" class="formelement l__padding-none l__margin-none  " style="display:none;">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Windows username</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input fieldtitle="Windows Username" id="WINDOWSUSERNAME" maxlength="100" name="WINDOWSUSERNAME" onchange="this.value=Trim(this.value);this.value=this.value.toLowerCase();" type="TEXT" disabled=""><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="TRAININGCONTEXTROW" class="formelement l__padding-none l__margin-none  " style="display: none;">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Training Practice</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input alwayscomplete="1" autocomplete="OFF" cancelisclear="1" fieldtitle="Training practice" forcecompletenodelete="1" id="autocomplete_TRAININGCONTEXTNAME" inputclass="AUTOCOMPLETE" name="TRAININGCONTEXTNAME" onactivate=";addautocomplete(this, {&quot;COMPLETIONS&quot;:&quot;[\&quot;NJ - Valley Medical Group [5622]\&quot;]&quot;,&quot;FROMBEGINNING&quot;:0,&quot;TEXTWRAP&quot;:0,&quot;FORCECOMPLETE&quot;:1,&quot;ALWAYSCOMPLETE&quot;:1,&quot;MOUSEUPAUTOTAB&quot;:1,&quot;FORCECOMPLETENODELETE&quot;:1,&quot;STARTSVALID&quot;:1,&quot;BLANKOK&quot;:1}, function(field){UpdateTrainingDepartment()});;addautocomplete(this, {&quot;COMPLETIONS&quot;:&quot;[\&quot;NJ - Valley Medical Group [5622]\&quot;]&quot;,&quot;FROMBEGINNING&quot;:0,&quot;TEXTWRAP&quot;:0,&quot;FORCECOMPLETE&quot;:1,&quot;ALWAYSCOMPLETE&quot;:1,&quot;MOUSEUPAUTOTAB&quot;:1,&quot;FORCECOMPLETENODELETE&quot;:1,&quot;STARTSVALID&quot;:1,&quot;BLANKOK&quot;:1}, function(field){UpdateTrainingDepartment()});if (this.select) { this.select(); } if (this.autocompleteobj.focus) { this.autocompleteobj.focus(this); }" onblur=";return this.autocompleteobj.blur(event);" onclick=";AutoScroll(false, this);" onfocus=";addautocomplete(this, {&quot;COMPLETIONS&quot;:&quot;[\&quot;NJ - Valley Medical Group [5622]\&quot;]&quot;,&quot;FROMBEGINNING&quot;:0,&quot;TEXTWRAP&quot;:0,&quot;FORCECOMPLETE&quot;:1,&quot;ALWAYSCOMPLETE&quot;:1,&quot;MOUSEUPAUTOTAB&quot;:1,&quot;FORCECOMPLETENODELETE&quot;:1,&quot;STARTSVALID&quot;:1,&quot;BLANKOK&quot;:1}, function(field){UpdateTrainingDepartment()});if (this.select) { this.select(); } if (this.autocompleteobj.focus) { this.autocompleteobj.focus(this); }" onkeydown="return this.autocompleteobj.keydown(event);" onkeyup="this.autocompleteobj.keyup(event);" startsvalid="1" style="width:250px;" type="TEXT"><span style="display:none;">*</span>
+		</td>
+	</tr>
+<input defaultvalue="_" name="EXISTINGTRAININGDEPARTMENT" type="HIDDEN" value="_">
+
+	<tr id="TRAININGDEPARTMENTROW" class="formelement l__padding-none l__margin-none  " style="display: none">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Training department</div>
+		</td>
+		<td class="fieldinput c__form__field-input" id="TRAININGDEPARTMENTINPUT">
+			<span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="DEPARTMENTTEXTROW" class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Department name</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input fieldtitle="Department" harderror="1" maxlength="255" name="DEPARTMENTNAME" oldvalue="-1" onblur="; CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var isvalid=true;; this.value = TrimWhitespace(this.value); if(isvalid &amp;&amp; typeof(input) != 'undefined'){input.MarkValid();}" title="Department Name" type="TEXT"><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="DEPARTMENTSELECTROW" class="formelement l__padding-none l__margin-none  " style="display: none;">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Department name</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<select fieldtitle="Department Name" name="DEPARTMENTNAMESELECT" onchange="document.zform.DEPARTMENTNAME.value = this.value;" type="SELECT" class=""><option value=""></option><option value="Claim Resolution">Claim Resolution</option><option value="Clinicals Documents">Clinicals Documents</option><option value="Coding Services">Coding Services</option><option value="Communicator">Communicator</option><option value="Coordinator - PreCert">Coordinator - PreCert</option><option value="Credentialing">Credentialing</option><option value="Enrollment">Enrollment</option><option value="Posting - Analysis">Posting - Analysis</option><option value="R&amp;IP">R&amp;IP</option></select><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Position</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<select fieldtitle="Position" name="POSITIONID" onchange="Position();" type="SELECT"><option value="">Other (Please Specify)</option><option value="1">Physician</option><option value="50">Advanced Practice Clinician (NP/PA/CRNA)</option><option value="51">Nurse</option><option value="3">Clinical Support Staff (MA/CNA/Tech)</option><option value="2">Front Office</option><option value="8">Revenue Cycle Staff</option><option value="52">Revenue Cycle Manager</option><option value="53">Quality Manager</option><option value="9">Practice Manager</option><option value="4">Not a Practice Employee</option></select><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="OTHERPOSITIONROW" class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Other (Specify)</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input class="RequiredField" fieldtitle="Other (Specify)" maxlength="255" name="OTHERPOSITION" onblur="; CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var isvalid=true;; this.value = TrimWhitespace(this.value); if(isvalid &amp;&amp; typeof(input) != 'undefined'){input.MarkValid();}" type="TEXT"><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text"> </div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr id="PORTALDISPLAYNAME" class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Portal display name</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<label class="radioinputwrapper" for="rb_PORTALDISPLAYNAMEOPTION_1"><input checked="1" id="rb_PORTALDISPLAYNAMEOPTION_1" name="PORTALDISPLAYNAMEOPTION" onclick="Portaldisplayname()" type="RADIO" value="FULLNAME">Display full name <br></label><label class="radioinputwrapper" for="rb_PORTALDISPLAYNAMEOPTION_2"><input id="rb_PORTALDISPLAYNAMEOPTION_2" name="PORTALDISPLAYNAMEOPTION" onclick="Portaldisplayname()" type="RADIO" value="CUSTOM">Display custom name  </label><input disabled="1" fieldtitle="Portal Display Custom Name" harderror="1" maxlength="511" name="COMMUNICATORDISPLAYNAME" onblur="; CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var isvalid=true;; this.value = TrimWhitespace(this.value); var input = new InputWrapper( this ); if( this.value != '' &amp;&amp; ! this.value.match( new RegExp( '^[\\-A-Za-z,.\&quot;\'() ]{2,}$' ) ) ){ input.MarkInvalid( 'Custom name must be at least two characters in length and special characters other than , . - \&quot; \' ( ) are not allowed' ); isvalid = false; }; if(isvalid &amp;&amp; typeof(input) != 'undefined'){input.MarkValid();}" style="display:none;" validationfailedmessage="Custom name must be at least two characters in length and special characters other than , . - &quot; ' ( ) are not allowed"><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Date of birth</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			
+					<span name="DOB_span" style="white-space: nowrap;"><input class="RequiredField removeie10clearicon" data-type="DATE" defaultvalue="" enforcerestriction="1" fieldtitle="DOB" inputclass="DATE" maxlength="" name="DOB" onblur="SetDate(-100, this);" onkeyup="FormatDate()" size="10" type="TEXT" validationfailedmessage="Date of birth must be a past date." value=""><a class="ui-datepicker-trigger" onclick="PickDate(this.parentElement.children[0], null, 0, null, null, null);" style="cursor:pointer"><span class="sprite-cal ui-datepicker-trigger" style="margin-left: 2px;margin-bottom: 2px;" unselectable="on"></span></a></span>
+				<span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Other ID</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input fieldtitle="OTHERID" harderror="1" maxlength="20" name="OTHERID" validationfailedmessage="The Other ID must be less than 21 characters"><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Phone</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input fieldtitle="Phone" maxlength="100" name="PHONE" onkeypress="FormatPhone()" onkeyup="FormatPhone()"><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Email<button type="button" id="_pendo-badge_RdUehB3T4YUT41BaLavaoW8reGI" data-layout="badgeBlank" class="_pendo-badge _pendo-badge_" style="z-index: 19000; margin: 0px 0px 2px 4px; height: 16px; width: 16px; font-size: 0px; background: rgba(255, 255, 255, 0); padding: 0px; line-height: 1; min-width: auto; box-shadow: rgb(136, 136, 136) 0px 0px 0px 0px; border: 0px; float: none; vertical-align: text-bottom; cursor: pointer; display: inline-block;"><img id="pendo-image-badge-98255370" src="./guide-media-e69628db-123b-4f04-ad66-4d23d3b4536d" alt="" data-_pendo-image-1="" class="_pendo-image _pendo-badge-image" style="display: block; height: 16px; width: 16px; box-shadow: rgb(136, 136, 136) 0px 0px 0px 0px; float: none; vertical-align: baseline;"></button></div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<input class="RequiredField" fieldtitle="Email" harderror="1" maxlength="100" name="EMAIL" onblur="CallAsEvent( this, 'onblurvalidation' );" onblurvalidation="var input = new InputWrapper( this ); if (!ValidateEmailCore(this.value)) { input.MarkInvalid(); } else { input.MarkValid(); } " validationfailedmessage="The email must be a valid address"><br><span style="display:none;">*</span>
+		</td>
+	</tr>
+
+	<tr class="formelement l__padding-none l__margin-none  " style="">
+		<td class="fieldlabel c__form__field-label">
+			<div class="fieldlabeltext c__form__field-label-text">Notes</div>
+		</td>
+		<td class="fieldinput c__form__field-input">
+			<textarea cols="50" doublecountnewlines="1" fieldtitle="Notes" maxlength="500" name="NOTES" onblur="MaxLengthTA(this, 500)" onchange="MaxLengthTA(this,500)" onkeydown="MaxLengthTA(this,500)" onkeyup="MaxLengthTA(this,500)" onpaste="var thisalias = this; setTimeout(function () { MaxLengthTA(thisalias,500) },0)" rows="5" type="TEXTAREA"></textarea><span style="display:none;">*</span>
+		</td>
+	</tr>
+				</tbody></table>
+	</div>
+</div>
+<div class="formsection" id="formsectionasULPwrBChYANJEfAAALEg"><br><p></p></div>
+
+			<div class="formsection l__width-100-pct l__padding-top-large">
+				<div class="fieldset l__margin-none l__padding-none">
+					<table class="formtable">
+						<tbody><tr class="formelement">
+							<td class="fieldlabel c__form__field-label"><div class="fieldlabeltext c__form__field-label-text">&nbsp;</div></td>
+							<td class="fieldinput c__form__field-input">
+<div class="actiongrouppattern">
+	<span class="actiongroup">
+		<span class="actiongroupbuttonsection"><input name="SAVE" onclick="if (ValidateInputForm() &amp;&amp; ConfirmHIPAA()) { if(ValidateInputForm()){ValidateSalesforceCaseid(event,function(){ jQuery('input[name=SAVE]').prop('disabled', true); GoToTab('PROFILE');});} }" type="BUTTON" value="Save"><button type="button" id="_pendo-badge_Itn6lNhSZxoSxwpVEv63-rKNNTk" data-layout="badgeBlank" class="_pendo-badge _pendo-badge_" style="z-index: 19000; margin: 0px 0px 2px 4px; height: 16px; width: 16px; font-size: 0px; background: rgba(255, 255, 255, 0); padding: 0px; line-height: 1; min-width: auto; box-shadow: rgb(136, 136, 136) 0px 0px 0px 0px; border: 0px; float: none; vertical-align: text-bottom; cursor: pointer; display: inline-block;"><img id="pendo-image-badge-f30a4226" src="./guide-media-27a3a080-2640-483b-800f-0897231337a9" alt="" data-_pendo-image-1="" class="_pendo-image _pendo-badge-image" style="display: block; height: 16px; width: 16px; box-shadow: rgb(136, 136, 136) 0px 0px 0px 0px; float: none; vertical-align: baseline;"></button></span>
+	
+		<span class="actiongroupbuttonsection"><input name="CANCEL" onclick="AH.Frames.Main.SetLocation(AH.PrependBasePath('/useradmin/userwizard.esp'));" type="BUTTON" value="Cancel"></span>
+	</span>
+	
+</div>
+
+</td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+	</form>
+	<div class="formclear l__clear"></div>
+ 
+				<script>var positionorganizationarray = {"ATHENA":{"DEFAULT":[{"ID":"","NAME":""},{"ID":"7","NAME":"Consultant"},{"ID":"5","NAME":"Employee"},{"ID":"6","NAME":"Temp"}]},"DEFAULT":{"COORDINATOR":[{"ID":"","NAME":""},{"ID":"30","NAME":"Practice Staff"},{"ID":"31","NAME":"Order Signoff"},{"ID":"32","NAME":"Scheduling Staff"},{"ID":"34","NAME":"Facility Staff"},{"ID":"35","NAME":"Facility Administrator"},{"ID":"36","NAME":"Facility - Order Data Entry"},{"ID":"33","NAME":"Scheduling Supervisor"}],"DEFAULT":[{"ID":"","NAME":""},{"ID":"1","NAME":"Physician"},{"ID":"50","NAME":"Advanced Practice Clinician (NP\/PA\/CRNA)"},{"ID":"51","NAME":"Nurse"},{"ID":"3","NAME":"Clinical Support Staff (MA\/CNA\/Tech)"},{"ID":"2","NAME":"Front Office"},{"ID":"8","NAME":"Revenue Cycle Staff"},{"ID":"52","NAME":"Revenue Cycle Manager"},{"ID":"53","NAME":"Quality Manager"},{"ID":"9","NAME":"Practice Manager"},{"ID":"4","NAME":"Not a Practice Employee"}]},"VENDOR":{"DEFAULT":[{"ID":"","NAME":""},{"ID":"7","NAME":"Consultant"},{"ID":"5","NAME":"Employee"},{"ID":"6","NAME":"Temp"}]},"SSI":{"DEFAULT":[{"ID":"","NAME":""},{"ID":"11","NAME":"Finance"},{"ID":"12","NAME":"Information Technology"},{"ID":"10","NAME":"Diagnostic Technician"}]}}</script>
+			
+				<script>
+					if (document.zform.ORGANIZATIONID && document.zform.POSITIONID) {
+						OrganizationUserPositionArrayJS(document.zform.ORGANIZATIONID, document.zform.POSITIONID, '');
+						document.zform.POSITIONID[0].text = 'Other (Please Specify)';
+					}
+
+					function Position(){
+						if (document.zform.POSITIONID.value == '') {
+							document.getElementById('OTHERPOSITIONROW').style.display = '';
+							document.zform.POSITIONID.className = '';
+							document.zform.OTHERPOSITION.className = 'RequiredField';
+						}
+						else {
+							document.getElementById('OTHERPOSITIONROW').style.display = 'none';
+							document.zform.POSITIONID.className = 'RequiredField';
+							document.zform.OTHERPOSITION.className = '';
+						}
+
+						if(document.zform.POSITIONID.value == '1') {
+							document.zform.COMMUNICATORDISPLAYNAME.style.display = 'none';
+							document.zform.PORTALDISPLAYNAMEOPTION[0].checked = true;
+							document.zform.PORTALDISPLAYNAMEOPTION[0].disabled = true;
+							document.zform.PORTALDISPLAYNAMEOPTION[1].disabled = true;
+							document.zform.COMMUNICATORDISPLAYNAME.value = TrimWhitespace(document.zform.FIRSTNAME.value + ' ' + document.zform.LASTNAME.value);
+							document.zform.COMMUNICATORDISPLAYNAME.disabled = true;
+							document.zform.COMMUNICATORDISPLAYNAME.className = '';
+							jQuery('#PORTALDISPLAYNAME').hide();
+						}
+						else {
+							jQuery('#PORTALDISPLAYNAME').show();
+							document.zform.PORTALDISPLAYNAMEOPTION[0].disabled = false;
+							document.zform.PORTALDISPLAYNAMEOPTION[1].disabled = false;
+							document.zform.COMMUNICATORDISPLAYNAME.disabled = false;
+							if(document.zform.PORTALDISPLAYNAMEOPTION[1].checked) {
+								document.zform.COMMUNICATORDISPLAYNAME.className = 'RequiredField';
+							}
+						}
+					}
+
+					function Portaldisplayname(){
+						if(document.zform.PORTALDISPLAYNAMEOPTION[0].checked) {
+							document.zform.COMMUNICATORDISPLAYNAME.style.display = 'none';
+							document.zform.COMMUNICATORDISPLAYNAME.value = TrimWhitespace(document.zform.FIRSTNAME.value + ' ' + document.zform.LASTNAME.value);
+							document.zform.COMMUNICATORDISPLAYNAME.disabled = true;
+							document.zform.COMMUNICATORDISPLAYNAME.className = '';
+						}
+						else {
+							document.zform.COMMUNICATORDISPLAYNAME.value = TrimWhitespace(document.zform.FIRSTNAME.value + ' ' + document.zform.LASTNAME.value);
+							document.zform.COMMUNICATORDISPLAYNAME.style.display = '';
+							document.zform.COMMUNICATORDISPLAYNAME.className = 'RequiredField';
+							document.zform.COMMUNICATORDISPLAYNAME.disabled = false;
+						}
+					}
+				</script>
+			<script>
+	function CheckIfBPOComplianceFormIsRequired(orgid) {
+		CallRemote({
+			SUB: 'UserAdmin::IsOrganizationBPOCompliant',
+			ARGS: {
+				ORGANIZATIONID: orgid
+			},
+			ONFINISH: function(isrequired) {
+				HideOrShowComplianceForm(isrequired, 'BPO');
+			},
+			LOADINGINDICATORFLAG: true
+		});
+	}
+</script>
+
+				<script>
+					locationidarray = new Array();
+					locationnamearray = new Array();
+				organizationidarray = new Array();
+					organizationtypearray = new Array();
+			locationidarray[0] = "2";
+							locationnamearray[0] = "Chennai";
+							organizationidarray[0] = "CSACCESS";
+							organizationtypearray[0] = "VENDOR";
+							locationidarray[1] = "2";
+							locationnamearray[1] = "Chennai";
+							organizationidarray[1] = "CSATHENAACCESS";
+							organizationtypearray[1] = "VENDOR";
+							locationidarray[2] = "2";
+							locationnamearray[2] = "Chennai";
+							organizationidarray[2] = "CSATHENAOMEGA";
+							organizationtypearray[2] = "VENDOR";
+							locationidarray[3] = "";
+							locationnamearray[3] = "";
+							organizationidarray[3] = "CSATHENAPARTNER";
+							organizationtypearray[3] = "VENDOR";
+							locationidarray[4] = "";
+							locationnamearray[4] = "";
+							organizationidarray[4] = "ACCENTURE";
+							organizationtypearray[4] = "CONSULTANT";
+							locationidarray[5] = "2";
+							locationnamearray[5] = "Chennai";
+							organizationidarray[5] = "ACCESS";
+							organizationtypearray[5] = "VENDOR";
+							locationidarray[6] = "22";
+							locationnamearray[6] = "Coimbatore";
+							organizationidarray[6] = "ACCESS";
+							organizationtypearray[6] = "VENDOR";
+							locationidarray[7] = "21";
+							locationnamearray[7] = "Manila";
+							organizationidarray[7] = "ACCESS";
+							organizationtypearray[7] = "VENDOR";
+							locationidarray[8] = "24";
+							locationnamearray[8] = "Other";
+							organizationidarray[8] = "ACCESS";
+							organizationtypearray[8] = "VENDOR";
+							locationidarray[9] = "23";
+							locationnamearray[9] = "Pune";
+							organizationidarray[9] = "ACCESS";
+							organizationtypearray[9] = "VENDOR";
+							locationidarray[10] = "69";
+							locationnamearray[10] = "Salem";
+							organizationidarray[10] = "ACCESS";
+							organizationtypearray[10] = "VENDOR";
+							locationidarray[11] = "68";
+							locationnamearray[11] = "Trichy";
+							organizationidarray[11] = "ACCESS";
+							organizationtypearray[11] = "VENDOR";
+							locationidarray[12] = "";
+							locationnamearray[12] = "";
+							organizationidarray[12] = "ACCOUNTCONSULTANT";
+							organizationtypearray[12] = "CONSULTANT";
+							locationidarray[13] = "";
+							locationnamearray[13] = "";
+							organizationidarray[13] = "ARCADIA";
+							organizationtypearray[13] = "CONSULTANT";
+							locationidarray[14] = "61";
+							locationnamearray[14] = "Atlanta";
+							organizationidarray[14] = "ATHENA";
+							organizationtypearray[14] = "ATHENA";
+							locationidarray[15] = "62";
+							locationnamearray[15] = "Austin";
+							organizationidarray[15] = "ATHENA";
+							organizationtypearray[15] = "ATHENA";
+							locationidarray[16] = "63";
+							locationnamearray[16] = "Bangalore";
+							organizationidarray[16] = "ATHENA";
+							organizationtypearray[16] = "ATHENA";
+							locationidarray[17] = "3";
+							locationnamearray[17] = "Belfast";
+							organizationidarray[17] = "ATHENA";
+							organizationtypearray[17] = "ATHENA";
+							locationidarray[18] = "64";
+							locationnamearray[18] = "Boston";
+							organizationidarray[18] = "ATHENA";
+							organizationtypearray[18] = "ATHENA";
+							locationidarray[19] = "65";
+							locationnamearray[19] = "Burlington";
+							organizationidarray[19] = "ATHENA";
+							organizationtypearray[19] = "ATHENA";
+							locationidarray[20] = "2";
+							locationnamearray[20] = "Chennai";
+							organizationidarray[20] = "ATHENA";
+							organizationtypearray[20] = "ATHENA";
+							locationidarray[21] = "23";
+							locationnamearray[21] = "Pune";
+							organizationidarray[21] = "ATHENA";
+							organizationtypearray[21] = "ATHENA";
+							locationidarray[22] = "4";
+							locationnamearray[22] = "Remote";
+							organizationidarray[22] = "ATHENA";
+							organizationtypearray[22] = "ATHENA";
+							locationidarray[23] = "70";
+							locationnamearray[23] = "Seattle";
+							organizationidarray[23] = "ATHENA";
+							organizationtypearray[23] = "ATHENA";
+							locationidarray[24] = "1";
+							locationnamearray[24] = "Watertown";
+							organizationidarray[24] = "ATHENA";
+							organizationtypearray[24] = "ATHENA";
+							locationidarray[25] = "";
+							locationnamearray[25] = "";
+							organizationidarray[25] = "ATHENAPHIFREE";
+							organizationtypearray[25] = "ATHENA";
+							locationidarray[26] = "";
+							locationnamearray[26] = "";
+							organizationidarray[26] = "CLINOVATIONS";
+							organizationtypearray[26] = "CONSULTANT";
+							locationidarray[27] = "24";
+							locationnamearray[27] = "Other";
+							organizationidarray[27] = "CONVERGYS";
+							organizationtypearray[27] = "VENDOR";
+							locationidarray[28] = "24";
+							locationnamearray[28] = "Other";
+							organizationidarray[28] = "CORROHEALTH";
+							organizationtypearray[28] = "VENDOR";
+							locationidarray[29] = "";
+							locationnamearray[29] = "";
+							organizationidarray[29] = "DELLCONSULTANT";
+							organizationtypearray[29] = "CONSULTANT";
+							locationidarray[30] = "";
+							locationnamearray[30] = "";
+							organizationidarray[30] = "FLUIDEDGE";
+							organizationtypearray[30] = "CONSULTANT";
+							locationidarray[31] = "2";
+							locationnamearray[31] = "Chennai";
+							organizationidarray[31] = "GEBBS";
+							organizationtypearray[31] = "VENDOR";
+							locationidarray[32] = "22";
+							locationnamearray[32] = "Coimbatore";
+							organizationidarray[32] = "GEBBS";
+							organizationtypearray[32] = "VENDOR";
+							locationidarray[33] = "67";
+							locationnamearray[33] = "Mumbai";
+							organizationidarray[33] = "GEBBS";
+							organizationtypearray[33] = "VENDOR";
+							locationidarray[34] = "24";
+							locationnamearray[34] = "Other";
+							organizationidarray[34] = "GEBBS";
+							organizationtypearray[34] = "VENDOR";
+							locationidarray[35] = "2";
+							locationnamearray[35] = "Chennai";
+							organizationidarray[35] = "GLOBAL";
+							organizationtypearray[35] = "VENDOR";
+							locationidarray[36] = "";
+							locationnamearray[36] = "";
+							organizationidarray[36] = "HARPERANDPEARSON";
+							organizationtypearray[36] = "CONSULTANT";
+							locationidarray[37] = "21";
+							locationnamearray[37] = "Manila";
+							organizationidarray[37] = "IBM";
+							organizationtypearray[37] = "VENDOR";
+							locationidarray[38] = "23";
+							locationnamearray[38] = "Pune";
+							organizationidarray[38] = "IBM";
+							organizationtypearray[38] = "VENDOR";
+							locationidarray[39] = "";
+							locationnamearray[39] = "";
+							organizationidarray[39] = "IMPCONSULTANT";
+							organizationtypearray[39] = "CONSULTANT";
+							locationidarray[40] = "24";
+							locationnamearray[40] = "Other";
+							organizationidarray[40] = "NOTIFYMD";
+							organizationtypearray[40] = "VENDOR";
+							locationidarray[41] = "63";
+							locationnamearray[41] = "Bangalore";
+							organizationidarray[41] = "OMEGA";
+							organizationtypearray[41] = "VENDOR";
+							locationidarray[42] = "2";
+							locationnamearray[42] = "Chennai";
+							organizationidarray[42] = "OMEGA";
+							organizationtypearray[42] = "VENDOR";
+							locationidarray[43] = "22";
+							locationnamearray[43] = "Coimbatore";
+							organizationidarray[43] = "OMEGA";
+							organizationtypearray[43] = "VENDOR";
+							locationidarray[44] = "66";
+							locationnamearray[44] = "Hyderabad";
+							organizationidarray[44] = "OMEGA";
+							organizationtypearray[44] = "VENDOR";
+							locationidarray[45] = "21";
+							locationnamearray[45] = "Manila";
+							organizationidarray[45] = "OMEGA";
+							organizationtypearray[45] = "VENDOR";
+							locationidarray[46] = "24";
+							locationnamearray[46] = "Other";
+							organizationidarray[46] = "OMEGA";
+							organizationtypearray[46] = "VENDOR";
+							locationidarray[47] = "23";
+							locationnamearray[47] = "Pune";
+							organizationidarray[47] = "OMEGA";
+							organizationtypearray[47] = "VENDOR";
+							locationidarray[48] = "68";
+							locationnamearray[48] = "Trichy";
+							organizationidarray[48] = "OMEGA";
+							organizationtypearray[48] = "VENDOR";
+							locationidarray[49] = "";
+							locationnamearray[49] = "";
+							organizationidarray[49] = "OPTIMUM";
+							organizationtypearray[49] = "CONSULTANT";
+							locationidarray[50] = "24";
+							locationnamearray[50] = "Other";
+							organizationidarray[50] = "ORBOGRAPH";
+							organizationtypearray[50] = "VENDOR";
+							locationidarray[51] = "";
+							locationnamearray[51] = "";
+							organizationidarray[51] = "PRNADVISORS";
+							organizationtypearray[51] = "CONSULTANT";
+							locationidarray[52] = "63";
+							locationnamearray[52] = "Bangalore";
+							organizationidarray[52] = "PEROT";
+							organizationtypearray[52] = "VENDOR";
+							locationidarray[53] = "2";
+							locationnamearray[53] = "Chennai";
+							organizationidarray[53] = "PEROT";
+							organizationtypearray[53] = "VENDOR";
+							locationidarray[54] = "22";
+							locationnamearray[54] = "Coimbatore";
+							organizationidarray[54] = "PEROT";
+							organizationtypearray[54] = "VENDOR";
+							locationidarray[55] = "66";
+							locationnamearray[55] = "Hyderabad";
+							organizationidarray[55] = "PEROT";
+							organizationtypearray[55] = "VENDOR";
+							locationidarray[56] = "21";
+							locationnamearray[56] = "Manila";
+							organizationidarray[56] = "PEROT";
+							organizationtypearray[56] = "VENDOR";
+							locationidarray[57] = "41";
+							locationnamearray[57] = "Noida";
+							organizationidarray[57] = "PEROT";
+							organizationtypearray[57] = "VENDOR";
+							locationidarray[58] = "24";
+							locationnamearray[58] = "Other";
+							organizationidarray[58] = "PEROT";
+							organizationtypearray[58] = "VENDOR";
+							locationidarray[59] = "23";
+							locationnamearray[59] = "Pune";
+							organizationidarray[59] = "PEROT";
+							organizationtypearray[59] = "VENDOR";
+							locationidarray[60] = "68";
+							locationnamearray[60] = "Trichy";
+							organizationidarray[60] = "PEROT";
+							organizationtypearray[60] = "VENDOR";
+							locationidarray[61] = "2";
+							locationnamearray[61] = "Chennai";
+							organizationidarray[61] = "PILOT";
+							organizationtypearray[61] = "VENDOR";
+							locationidarray[62] = "22";
+							locationnamearray[62] = "Coimbatore";
+							organizationidarray[62] = "PILOT";
+							organizationtypearray[62] = "VENDOR";
+							locationidarray[63] = "21";
+							locationnamearray[63] = "Manila";
+							organizationidarray[63] = "PILOT";
+							organizationtypearray[63] = "VENDOR";
+							locationidarray[64] = "24";
+							locationnamearray[64] = "Other";
+							organizationidarray[64] = "PILOT";
+							organizationtypearray[64] = "VENDOR";
+							locationidarray[65] = "23";
+							locationnamearray[65] = "Pune";
+							organizationidarray[65] = "PILOT";
+							organizationtypearray[65] = "VENDOR";
+							locationidarray[66] = "";
+							locationnamearray[66] = "";
+							organizationidarray[66] = "PRACTICE";
+							organizationtypearray[66] = "PRACTICE";
+							locationidarray[67] = "";
+							locationnamearray[67] = "";
+							organizationidarray[67] = "PROVIDERPORTALUSER";
+							organizationtypearray[67] = "PRACTICE";
+							locationidarray[68] = "24";
+							locationnamearray[68] = "Other";
+							organizationidarray[68] = "SUTHERLAND";
+							organizationtypearray[68] = "CONSULTANT";
+							locationidarray[69] = "";
+							locationnamearray[69] = "";
+							organizationidarray[69] = "THEWESTONGROUP";
+							organizationtypearray[69] = "CONSULTANT";
+							locationidarray[70] = "24";
+							locationnamearray[70] = "Other";
+							organizationidarray[70] = "TRUSTHCS";
+							organizationtypearray[70] = "CONSULTANT";
+							locationidarray[71] = "24";
+							locationnamearray[71] = "Other";
+							organizationidarray[71] = "VEEHEALTH";
+							organizationtypearray[71] = "VENDOR";
+							locationidarray[72] = "";
+							locationnamearray[72] = "";
+							organizationidarray[72] = "VISION";
+							organizationtypearray[72] = "VENDOR";
+							locationidarray[73] = "4";
+							locationnamearray[73] = "Remote";
+							organizationidarray[73] = "VISUALUTIONS";
+							organizationtypearray[73] = "VENDOR";
+							locationidarray[74] = "";
+							locationnamearray[74] = "";
+							organizationidarray[74] = "EHEALTHLINK";
+							organizationtypearray[74] = "CONSULTANT";
+							
+					var loadTimeCall = true;
+					//field post-processing; adds requiredfield/etc for organization=athenahealth
+					if (document.zform.ORGANIZATIONID && document.zform.AUTHENTICATIONDOMAINID) {
+						ChangeOrganization(document.zform.ORGANIZATIONID, document.zform.AUTHENTICATIONDOMAINID, undefined, undefined, );
+					}
+					if (document.zform.POSITIONID) {
+						document.zform.POSITIONID[0].text = 'Other (Please Specify)';
+					}
+					jQuery(document).ready(function(){
+						var department = '_';
+						UpdateTrainingDepartment(department);
+					});
+
+					
+				</script>
+			</div>
+
+			<script type="text/javascript">
+				try {
+					
+		if (window.ClientSideProfiling == true) {
+			var metricdata = {
+				initjs : {
+					size : '',
+					count : ''
+				},
+				initjs_immediate : {
+					size : '',
+					count : ''
+				}
+			};
+			for ( var metric in metricdata ) {
+				for (var property in metricdata[metric]) {
+					if(metricdata[metric][property] != '') {
+						top.Metrics.Set({
+							subsystem : 'common',
+							group : 'client',
+							type : 'scriptlet',
+							namespace : document.location.pathname + document.location.search,
+							metric : [metric, property],
+							value : metricdata[metric][property]
+						});
+					}
+				}
+			}
+		}
+	
+				}
+				catch (e) {};
+			</script>
+	
+
+			<script type="text/javascript">
+				try {
+					
+		if (window.ClientSideProfiling == true) {
+			var metricdata = {
+				initjs : {
+					size : '',
+					count : ''
+				},
+				initjs_immediate : {
+					size : '',
+					count : ''
+				}
+			};
+			for ( var metric in metricdata ) {
+				for (var property in metricdata[metric]) {
+					if(metricdata[metric][property] != '') {
+						top.Metrics.Set({
+							subsystem : 'common',
+							group : 'client',
+							type : 'scriptlet',
+							namespace : document.location.pathname + document.location.search,
+							metric : [metric, property],
+							value : metricdata[metric][property]
+						});
+					}
+				}
+			}
+		}
+	
+				}
+				catch (e) {};
+			</script>
+	<div id="loadingdiv" style="top: 10px; display: none;">Loading</div></body></html>

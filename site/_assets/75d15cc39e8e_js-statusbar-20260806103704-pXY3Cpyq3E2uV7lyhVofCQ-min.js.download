@@ -1,0 +1,107 @@
+var GetStaticURL=(typeof GetStaticURL==='undefined')?function(initial_static_host){var stored_static_host=initial_static_host||'/static';return function(url){var slashurl=url.replace(/^\/?/,'/');return stored_static_host+slashurl;}}(typeof static_host==='undefined'?'':static_host):GetStaticURL;function _SelectNewValue(args){"use strict";var currentvalue,getstringparams={},newvalue,$dropdown;AssertFields(args,['CHANGEFLAG','CURRENTVALUE','DROPDOWN','VALUENAME'],['CHANGEFUNCTION']);$dropdown=jQuery(args.DROPDOWN);currentvalue=args.CURRENTVALUE;newvalue=$dropdown
+.find("option:selected")
+.val();$dropdown.val(currentvalue);if(newvalue===currentvalue){return false;}
+else{getstringparams[args.CHANGEFLAG]=1;getstringparams[args.VALUENAME]=newvalue;if(args.CHANGEFUNCTION){args.CHANGEFUNCTION(newvalue);}
+else{AH.Frames.Main.SetLocation(AH.PrependBasePath('/message/athenahome.esp?'+
+MakeGetString(getstringparams)));}
+jQuery('body').focus();return true;}}
+function SelectNewDepartment(dropdown){"use strict";return _SelectNewValue({CHANGEFLAG:'CHANGELOGINDEPARTMENT',CURRENTVALUE:AH.GetGlobal('DEPARTMENTID')||departmentid,DROPDOWN:dropdown,VALUENAME:'DEPARTMENTID',CHANGEFUNCTION:function(departmentid){ChangeDepartment(departmentid,'','',1);}});}
+function SelectNewUsername(dropdown){"use strict";return _SelectNewValue({CHANGEFLAG:'CHANGEUSERNAME',CURRENTVALUE:AH.GetGlobal('USERNAME'),DROPDOWN:dropdown,VALUENAME:'SELECTEDUSERNAME'});}
+function documentSaveHandler(){require(['shared:/scripts/athena/utils/cross_frame_events','shared:/scripts/athena/task/utils','shared:/scripts/athena/task/queue'],function(frameset,taskQueueUtils,taskQueue){frameset.on('document-optimistic-save-next',function(model){var airlockurlprefix=AH.GetGlobal('AIRLOCK_URL_PREFIX')||'ax';var saveurl=AH.GetGlobal('AIRLOCK_URL')
++AH.GetGlobal('BASE_HREF')+"/"+airlockurlprefix+"/";var id=model.documentEntity.ID;var frMainURL=AH.Frames.Main.GetLocation();var dashboardPattern=/\/ax\/(dashboard|non_clinician)/;var taskdata=taskQueueUtils.streamlinedTaskURL({task:{messageType:taskQueue.queueMessageType(),assignedTo:model.documentEntity.AssignedTo,documentId:id,departmentId:model.documentEntity.DepartmentID,chartId:model.documentEntity.ChartID,documentClass:model.documentEntity.Class},page:dashboardPattern.test(frMainURL)?'dashboard':'briefing'});var taskurl;if(taskdata.airlock){taskurl=AH.GetGlobal('AIRLOCK_URL')
++AH.GetGlobal('BASE_HREF')+'/'
++(AH.GetGlobal('AIRLOCK_URL_PREFIX')||'ax')
++taskdata.url;}
+else{taskurl=AH.PrependBasePath(taskdata.url);}
+var taskdescription=taskQueueUtils.formatMessageType({type:model.documentEntity.Class});model.optimisticSave=true;jQuery.ajax({type:'post',contentType:'application/json',url:saveurl+'documents/rebuild/save',data:JSON.stringify(model),success:function(response){if(response.CONFLICTDATA){var fdatdata=response.FDATDATA;if(!fdatdata.SUBMITVALUE){fdatdata.SUBMITVALUE='Save';}
+ShowConflictResolutionForDocumentView({CONFLICTDATA:response.CONFLICTDATA,FDATDATA:fdatdata,BASEHREF:AH.GetGlobal('BASE_HREF')});}},error:function(error){if(typeof window.sessionStorage!=='object'){alert('The previous document #'+id+'did not save successfully.'
++' Please review the document and contact the CSC');}}});});});}
+function pollStreamlinedStatusBar(){setTimeout(function(){require(['shared:/scripts/athena/task/queue'],function(taskQueue){try{if(pageHasPreviousNext()&&taskQueue.queueLength()>0){var queuepos=taskQueue.queueOverallPosition()+1;var queuemessage=queuepos.toString()
++' of '
++taskQueue.queueLength().toString()
++' '+taskQueue.queueMessageTypeDisplay();jQuery('.queue-summary').text(queuemessage);jQuery('.previous-next-wrapper').removeClass('display-none');}
+else{jQuery('.previous-next-wrapper').addClass('display-none');}
+var $statusBarScheduleWrapper=jQuery('.statusbar-schedule-wrapper');var $statusBarSchedule=$statusBarScheduleWrapper.find('.statusbar-schedule');if(pageHasStatusBarSchedule()){$statusBarSchedule.removeClass('display-none');$statusBarScheduleWrapper.removeClass('display-none');}
+else{$statusBarSchedule.addClass('display-none');$statusBarScheduleWrapper.addClass('display-none');var $pipes=$statusBarScheduleWrapper.find('.statusbar-pipe');$pipes.removeClass('display-none');}
+pollStreamlinedStatusBar();}
+catch(e){ReportError(e,'Error polling for task updates');}});},2000);}
+function pageHasStatusBarSchedule(){if(!AH.Frames.Main.Frame()){return false;}
+var athenaxPattern=/\/ax\/\w+/;var nonClinicianPattern=/\/ax\/non_clinician/;var readinessCenterPattern=/\/ax\/readiness_center/;var frMainURL=AH.Frames.Main.GetLocation();if(athenaxPattern.test(frMainURL)){if(!(nonClinicianPattern.test(frMainURL)||readinessCenterPattern.test(frMainURL))){return true;}
+return false;}
+return false;}
+function pageHasPreviousNext(){if(!AH.Frames.Main.Frame()){return false;}
+var athenaxPattern=/\/ax\/\w+/;var dashboardPattern=/\/ax\/(dashboard|non_clinician)/;var readinessCenterPattern=/\/ax\/readiness_center/;var documentviewPattern=/\/clinicals\/documentview\.esp/;var frMainURL=AH.Frames.Main.GetLocation();if(athenaxPattern.test(frMainURL)){if(!(dashboardPattern.test(frMainURL)||readinessCenterPattern.test(frMainURL))){return true;}
+return false;}
+else if(documentviewPattern.test(frMainURL)){return true;}
+return false;}
+function NavigateToTask(task){require(['shared:/scripts/athena/task/utils','shared:/scripts/athena/utils/cross_frame_events'],function(taskQueueUtils,CrossFrameEventsUtils){var tasklocationdata;if(isClinicalInboxApiOn&&task.airlockUrl){tasklocationdata={airlock:true,url:task.airlockUrl};}
+else if(isClinicalInboxApiOn&&task.stitchingUrl){tasklocationdata={airlock:false,url:task.stitchingUrl};}
+else{tasklocationdata=taskQueueUtils.streamlinedTaskURL({task:task});}
+var url;if(tasklocationdata.airlock){var airlockurlprefix=AH.GetGlobal('AIRLOCK_URL_PREFIX')||'ax';url=AH.GetGlobal('AIRLOCK_URL')
++AH.GetGlobal('BASE_HREF')+'/'
++airlockurlprefix
++tasklocationdata.url;try{if(tasklocationdata.url&&tasklocationdata.url.match('/network_visit_summary/')){var containerID=tasklocationdata.url.substr(tasklocationdata.url.lastIndexOf("/")+1);var ajaxurl=AH.GetGlobal('AIRLOCK_URL')
++AH.GetGlobal('BASE_HREF')+'/'
++(AH.GetGlobal('AIRLOCK_URL_PREFIX')||'ax')
++'/user_behavior_tracking';var payload={project_id:'network_visit_summary',event:{event_type:'status bar: open nvs',user_id:AH.GetGlobal('USERNAME'),event_properties:{container_id:containerID},user_properties:{context_id:AH.Frames.GlobalNav.GetGlobal('contextid')}}};jQuery.ajax({url:ajaxurl,contentType:'application/json',type:'POST',data:JSON.stringify(payload)});}}
+catch(err){}}
+else{url=AH.PrependBasePath(tasklocationdata.url);}
+AH.Frames.Main.SetLocation(url);});}
+function NextTaskInQueue(){var CrossFrameEventsUtils=require('shared:/scripts/athena/utils/cross_frame_events');CrossFrameEventsUtils.off('tasknavigation-icon-clicked');CrossFrameEventsUtils.trigger('tasknavigation-icon-clicked');require(['shared:/scripts/athena/task/queue'],function(queueManager){var next=queueManager.nextInQueue();if(inboxMetricsEnabled){queueManager.updateInboxMetricsData('_document_queue',next,resultConsolidationByPatient);}
+NavigateToTask(next);});}
+function PreviousTaskInQueue(){var CrossFrameEventsUtils=require('shared:/scripts/athena/utils/cross_frame_events');CrossFrameEventsUtils.off('tasknavigation-icon-clicked');CrossFrameEventsUtils.trigger('tasknavigation-icon-clicked');require(['shared:/scripts/athena/task/queue'],function(queueManager){var previous=queueManager.previousInQueue();if(inboxMetricsEnabled){queueManager.updateInboxMetricsData('_document_queue',previous,resultConsolidationByPatient);}
+NavigateToTask(previous);});}
+function TaskQueueConsistency(username){require(['shared:/scripts/athena/task/queue'],function(taskQueue){if(typeof window.sessionStorage!=='object'){return false;}
+var contextid=AH.Frames.GlobalNav.GetGlobal('contextid');if(!contextid){try{contextid=GetContextID();}
+catch(error){if(typeof(console)==='object'&&typeof(console.warn)==='function'){console.warn(error);}}}
+if(taskQueue.queueUsername()!==username||taskQueue.queueContextID()!=contextid){taskQueue.clearQueue();}
+if(!taskQueue.queueUsername()){taskQueue.queueUsername(username);}
+if(!taskQueue.queueContextID()){taskQueue.queueContextID(contextid);}});}
+function InitializePage(){if(priorityInboxEnabled&&!isInpatient){require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.on('handle-priority-inbox-update',function(bucket){HandleInboxBucketUpdate(bucket);});CrossFrameEventsUtils.on('handle-priority-inbox-task-click',function(task){NavigateToTask(task);});});}
+window.addEventListener('load',InitOktaSessionManagement);StartCheckingIfLockedOut({USERNAME:username,LOGINPRACTICE:loginpracticeid,DEPARTMENT:departmentid,FORCERESTART:1});TaskQueueConsistency(username);if(dictationflag){ADM.SupportedFramework({callback:function(_framework){framework=_framework||'NONE';if(framework!='NONE'){AH.DictationNavigator=CreateADMDictationNavigator(AH.Frames.Status.Document());AH.DictationNavigator.OnRefresh();}}});require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.on('streamlined-encounter-display-internal-dictation',function(encounterid){if(AH.DictationNavigator&&isObject(AH.DictationNavigator)){loadedEncounterIds=keys(AH.DictationNavigator._GetEncounterDictations());if(AH.DictationNavigator.DictationControl&&AH.DictationNavigator.DictationControl._audiosaved===0){AH.DictationNavigator.DictationControl.UnloadAudioFile();CrossFrameEventsUtils.trigger('dictation-load-error',{loadedEncounterIds:loadedEncounterIds.join(','),loadingEncounter:encounterid});}}
+ADM.SupportedFramework({callback:function(_framework){if(AH.DictationNavigator&&isObject(AH.DictationNavigator)){AH.DictationNavigator.LoadEncounter(encounterid);}}});});CrossFrameEventsUtils.on('streamlined-encounter-hide-internal-dictation',function(encounterid){if(AH.DictationNavigator&&isObject(AH.DictationNavigator)){AH.DictationNavigator.UnloadEncounter(encounterid);}});CrossFrameEventsUtils.on('internal-dictation-recording-started',function(args){if(AH.DictationNavigator&&isObject(AH.DictationNavigator)){AH.DictationNavigator.Reset(args.encounter_id,args.section,args.field,'NEW',undefined,true);}});});}
+if(IsChrome()){try{dymo.label.framework.getPrinters();}
+catch(e){}}
+if(startpolling){StartPolling();}}
+function StartPolling(){if(typeof(PollingTimerID)!=='undefined'){PollingTimerID=window.setInterval(PollRemote,POLLINGINTERVAL);PollRemote();}}
+function StopPolling(){if(typeof(PollingTimerID)!=='undefined'){window.clearInterval(PollingTimerID);PollingTimerID=null;}}
+function PollRemote(){var timeelapsedsincelastupdate=(new Date())-lastupdate;if((AH.GetGlobal('BASE_HREF')==GetBaseHref(document.location))&&(timeelapsedsincelastupdate>=MINPOLLINGINTERVAL)){var pollargs={'CHECKINBOX':1,'UNIQUEID':UNIQUEID};if(coveragesenabled){pollargs.COVERAGESENABLED=coveragesenabled;}
+CallRemote({SUB:'AthenaSecurity::StatusBarPolling',ARGS:pollargs,AUTOMATIC_POLLING:1,ONFINISH:function(response){HandlePollRemoteResponse(response);}},false);lastupdate=new Date();}}
+function HandlePollRemoteResponse(response){if(response.NOACCESS){StopPolling();RegisterReloginHandler(StartPolling);}
+else{var tasktypes=new Array('','urgent','current');for(var i=0;i<tasktypes.length;i++){var fieldname=tasktypes[i]+'tasks';document.getElementById(fieldname).innerText=response[fieldname.toUpperCase()];}
+notificationhtml=response['FLAGGEDNOTIFICATION'];var notifier=AH.GetGlobal('Notifier');if(notifier){notifier.Update(response['FLAGGEDNOTIFICATION'],AH.Frames.Top.Document());var metricsNavigationData=notifier.GetNavigationAdoptionEvent();if(metricsNavigationData){ClassicMetricsManager.LogMetric('navigation_adoption',{stage:metricsNavigationData[1],milliseconds_since_epoch:metricsNavigationData[0],link_type:'flagged task'});}}
+if(response.URGENTTASKS){UpdateHighlightFlaggedToggle('urgent');}
+if(response.CURRENTTASKS){UpdateHighlightFlaggedToggle('current');}}}
+function LoadInbox(messagetype){if(!messagetype){messagetype='All';}
+var url='dashboard#inbox?bucket='+messagetype
++'&userName='+username
++'&fromStatusBar=1';if(priorityInboxEnabled){var eventType;if(messagetype=='FLAGGED_CURRENT'){eventType='clicked_blue_badge';}
+else if(messagetype=='FLAGGED_URGENT'){eventType='clicked_red_badge';}
+else{eventType='clicked_totals_badge';}
+jQuery.ajax({url:AH.PrependBasePath('/ax/metrics/log_statsd_count'),contentType:'application/json',type:'POST',data:JSON.stringify({key:'Inbox.Tasks.PriorityInbox.'+eventType,product:'Clinicals'})});}
+if(isMetricsFlaggedTasksOn){if(messagetype=='FLAGGED_CURRENT'){ClassicMetricsManager.LogMetric('airlock_event',{event:'flagged_tasks_clicked_blue_badge'});}
+else if(messagetype=='FLAGGED_URGENT'){ClassicMetricsManager.LogMetric('airlock_event',{event:'flagged_tasks_clicked_red_badge'});}}
+redirectToAirlock(buildAirlockURL({url:url}));}
+function HandleInboxBucketClick(bucket){var messageType=bucket.messageType;var isInpatient=bucket.isInpatient;if(isInpatient){var eventType;if(messageType==='FLAGGED_URGENT'){messageType='URGENT_RECENT';eventType='urgent_count_clicked';}
+else{messageType='RECENT';eventType='total_count_clicked';}
+jQuery.ajax({url:AH.PrependBasePath('/inpatient/metrics/log_statsd_count'),contentType:'application/json',type:'POST',data:JSON.stringify({key:'inpatient.task_notifications.'+eventType,product:'Clinicals'})});CallRemote({SUBSYSTEM:'PracticeStructure',SUB:'IsInpatientEmergencyDepartmentClassic',ARGS:{DEPARTMENTID:AH.GetGlobal('DEPARTMENTID')},ONFINISH:function(isEmergencyDepartment){var route=isEmergencyDepartment?'tracking_board':'dashboard';var url=AH.PrependBasePath('/inpatient/'+route+'#inbox?bucket='+messageType);var $inboxToggle=jQuery('.inbox-toggle');if($inboxToggle.is(':visible')&&$inboxToggle.hasClass('hide')){$inboxToggle.click();}
+redirectToAirlock(url);}});}
+else{LoadInbox(messageType);}}
+function HandlePriorityInboxBucketMouseOver(){require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.trigger('priority-inbox-list-refresh-tasks');});}
+function HandleInboxBucketUpdate(bucket){var count=bucket.count;var messageType=bucket.messageType;if(messageType){if(messageType==='FLAGGED_URGENT'){document.getElementById('urgenttasks').innerText=count;UpdateHighlightFlaggedToggle('urgent');}
+else if(messageType==='FLAGGED_CURRENT'){document.getElementById('currenttasks').innerText=count;UpdateHighlightFlaggedToggle('current');}}
+else{document.getElementById('tasks').innerText=count;}}
+var waittoshownotifiertimer;function ShowNotifier(){if(AH.UserPreferences&&AH.GetUserPreference('FLAGGEDTASKSNOTIFIER')=='HIDE'){return false;}
+waittoshownotifiertimer=window.setTimeout(function(){var notifier=AH.GetGlobal('Notifier');if(notifier){if(isMetricsFlaggedTasksOn){ClassicMetricsManager.LogMetric('airlock_event',{event:'flagged_tasks_hovered_over_badges'});}
+if(!isInpatient&&notificationhtml){notifier.Show(notificationhtml,'fast','keepshowing',AH.Frames.Top.Document());}}},750);}
+function HideNotifier(){if(waittoshownotifiertimer){clearInterval(waittoshownotifiertimer);}
+var notifier=AH.GetGlobal('Notifier');if(notifier){if(AH.UserPreferences&&AH.GetUserPreference('FLAGGEDTASKSNOTIFIER')!=='HIDE'){if(event.srcElement.id=='alltaskinfo'){notifier.FastFadeOut();}}}}
+function UpdateHighlightFlaggedToggle(type){var $tasks=jQuery('#'+type+'tasks');if($tasks.length){var $wrapper=$tasks.parent('.taskwrapper');if($wrapper.length){if($tasks.html()=='0'){$wrapper.removeClass('newtasks');}
+else{$wrapper.addClass('newtasks');}}}}
+function ToggleStreamlinedSchedule(event){require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.trigger('toggle-streamlined-schedule');});}
+require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.on('pattern-print-request',function(printargs){if(jQuery('meta[name="PrintingFrameworkEnabled"]').attr('content')){printargs.OLDPRINT=function(){CrossFrameEventsUtils.trigger('pattern-print-failed');};AthenaPattern_Print.print_page(printargs);}
+else{CrossFrameEventsUtils.trigger('pattern-print-failed');}});CrossFrameEventsUtils.on('streamlined-schedule-closed',function(){var $statusBarScheduleWrapper=jQuery('.statusbar-schedule-wrapper');var $statusBarSchedule=$statusBarScheduleWrapper.find('.statusbar-schedule');var $pipes=$statusBarScheduleWrapper.find('.statusbar-pipe');$pipes.removeClass('display-none');$statusBarSchedule.removeClass('active');});CrossFrameEventsUtils.on('streamlined-schedule-opened',function(){var $statusBarScheduleWrapper=jQuery('.statusbar-schedule-wrapper');var $pipes=$statusBarScheduleWrapper.find('.statusbar-pipe');$pipes.addClass('display-none');var $statusBarSchedule=$statusBarScheduleWrapper.find('.statusbar-schedule');$statusBarSchedule.addClass('active');});CrossFrameEventsUtils.on('flagged-tasks-clicked-popup',function(){if(startpolling&&isMetricsFlaggedTasksOn){ClassicMetricsManager.LogMetric('airlock_event',{event:'flagged-tasks-clicked-popup'});}});});function OpenCareGapWorklist(){AH.Frames.Main.SetLocation(AH.GetGlobal('BASE_HREF')+"/clinicals/caregapsworklist.esp");require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.trigger('user-tracking.track-event',{rollout_toggle_key:'AMPLITUDE_ANALYTICS',event_type:'STATUSFOOTER::GAPLIST::NA::NA::OPEN'});});}
+function SetServerDateTime(serverDateTime){var oktaConfig=document.oktaconfig;if(oktaConfig&&oktaConfig.serverdatetime&&oktaConfig.serverdatetime.value){oktaConfig.serverdatetime.value=serverDateTime;}}
+function InitOktaSessionManagement(){var oktaConfig=document.oktaconfig;if(oktaConfig&&oktaConfig.oktauserid&&oktaConfig.oktauserid.value){require(["@athena/identity-session-management"],function(SessionManagement){var config={clientId:oktaConfig.clientid.value,authServer:oktaConfig.authserver.value,scopes:["openid"],standardSessionKeepAlive:false,redirectUri:oktaConfig.redirecturl.value,serverDateTime:oktaConfig.serverdatetime.value,authenticatedUserId:oktaConfig.oktauserid.value};if(oktaConfig.loginframeurl.value){config.loginFrameUrl=oktaConfig.loginframeurl.value;}
+AH.SetGlobal("oktaSessionManager",new SessionManagement.SessionManager(config));AH.SetGlobal("OKTAUSERID",oktaConfig.oktauserid.value);AH.SetGlobal('OKTASESSIONVERIFIED',false);AH.SetGlobal('SESSIONTERMINATIONLOGGED',false);AH.SetGlobal('OKTASESSIONVERIFIEDLOGGED',false);});try{var athenaoneBroadcastChannel=new BroadcastChannel('athenaoneBroadcastChannel');athenaoneBroadcastChannel.postMessage({message:'syncSessionWithRefreshTimeoutTab',username:AH.GetGlobal('USERNAME'),userauthntype:AH.GetGlobal('IDENTITYPROVIDERID')?'SSO':'NONSSO'});}
+catch(error){jQuery.post('/login/loginscribelog.esp',{CATEGORY:'identity-services-sync-okta-session',LOGLINES:JSON.stringify([{CATEGORY:'FailedToSyncSession',DESCRIPTION:'Failed to broadcast syncSessionWithRefreshTimeoutTab event',DATA:{USERNAME:AH.GetGlobal('USERNAME'),ERROR:JSON.stringify(error),TIME:Date.now()}}])});}}}

@@ -1,0 +1,334 @@
+/*currently, our script which defines underscore
+has issues integrating with the way the rest of our
+modules expected underscore to be defined in require.
+The below line is a little hack to get around that*/
+define('static:/platform/lib/test_connectivity',[
+], function() {
+	var module = {};
+
+	/*******************************************************************************
+	* _generateQueryString
+	*
+	* Description:
+	*	A function which given an object representing the fields of a HTTP
+	*	request, returns a query string corresponding to the request
+	* Parameters:
+	*	An object with keys being GET request field names, and values being
+	*	the values of those fields.
+	*	
+	*
+	* Return Value:
+	*	The query string corresponding to the request passed in.
+	*******************************************************************************/
+	var _generateQueryString = function(queryParams) {
+		var ret = [];
+		for(var key in queryParams) {
+			ret.push(key + '=' + queryParams[key]);
+		}
+		ret = '?' + escape( ret.join('&') );
+		return ret;
+	};
+
+
+	/*******************************************************************************
+	* _testConnectionJquery
+	*
+	* Description:
+	*	A function which makes an HTTP request to a url, and returns a promise
+	*	which resolves to an object containing metrics about the request. The 
+	*	HTTP request is done via jQuery's ajax method.
+	* Parameters:
+	*	A string, representing the url to test the connection to, and an optional
+	*	object containing parameters for the connection test (see testConnection)
+	*
+	* Return Value:
+	*	A promise which resolves to an object containing metrics about the request.
+	*******************************************************************************/
+	var _testConnectionJquery = function(testUrl, testParams) {
+		var _processParams = function(params) {
+			var requestStartTime = new Date();
+			var options = {
+				url  : testUrl,
+				name : 'connection test', 
+				queryStringParams : {},
+				onloadCallback : function (xhr, options, data) {
+					var ret = {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : 'onload',
+						"testMethod" : 'jQuery',
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'NOT OK'
+						}
+					};
+					if (xhr.status === 200) {
+						ret["connectivity"]["status"] = 'OK';
+					}
+					return ret;
+				},
+				onerrorCallback : function (xhr, options) {
+					return {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : 'onerror',
+						"testMethod" : 'jQuery',
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'NOT OK'
+						}
+					}
+				},
+				ontimeoutCallback : function (xhr, options) {
+					return {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : "ontimeout",
+						"testMethod" : params['testMethod'],
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'NOT OK'
+						}
+					}
+				},
+				cleanupCallback : function () {} 
+			};
+			jQuery.extend(options, params);
+			return options;
+		};
+		var options = _processParams(testParams);
+		var defer = jQuery.Deferred();
+		jQuery.ajax({
+			url : options.url,
+			success: function( data, textStatus, jqXHR ) { 
+				defer.resolve(options.onloadCallback(jqXHR, options, data));
+			},
+			error : function ( jqXHR, textStatus, errorThrown ) {
+				if ( textStatus == "error" ) {
+					defer.resolve( options.onerrorCallback( jqXHR, options ));
+				}
+				if ( textStatus == "timeout" ) {
+					defer.resolve( options.ontimeoutCallback( jqXHR, options ));
+				}
+			},
+			complete : function( jqXHR ) {
+				options.cleanupCallback( jqXHR, options );
+			},
+			data : options.queryStringParams
+		});
+		return defer;
+	};
+
+	/*******************************************************************************
+	* _testConnectionNative
+	*
+	* Description:
+	*	A function which makes an HTTP request to a url, and returns a promise
+	*	which resolves to an object containing metrics about the request. The 
+	*	HTTP request is done via XMLHttpRequest on modern browsers, and through
+	*	XDomainRequest on IE8/9.
+	* Parameters:
+	*	A string, representing the url to test the connection to, and an optional
+	*	object containing parameters for the connection test (see testConnection).
+	*
+	* Return Value:
+	*	A promise which resolves to an object containing metrics about the request.
+	*******************************************************************************/
+	var _testConnectionNative = function(testUrl, testParams) {
+		var _processParams = function(params) {
+			var testMethod;
+			if ( window.XDomainRequest ) {
+				testMethod = 'IE8/9 XDomainRequest';
+			}
+			else {
+				testMethod = 'XMLHttpRequest';
+			}
+			var requestStartTime = new Date();
+			var options = {
+				url : testUrl,
+				name : 'connection test', 
+				queryStringParams : {},
+				onloadCallback : function (xhr, options, data) {
+					var ret = {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : 'onload',
+						"testMethod" : testMethod,
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'OK'
+						}
+					};
+					return ret;
+				},
+				onerrorCallback : function (xhr, options) {
+					return {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : 'onerror',
+						"testMethod" : testMethod,
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'NOT OK'
+						}
+					}
+				},
+				ontimeoutCallback : function (xhr, options) {
+					return {
+						"name": options['name'],
+						"url" : testUrl,
+						"totalTimeMs" : (new Date() - requestStartTime),
+						"HTTP" : xhr,
+						"handlerFired" : "ontimeout",
+						"testMethod" : testMethod,
+						"category" : options['category'],
+						"connectivity" : {
+							'status': 'NOT OK'
+						}
+					}
+				},
+				cleanupCallback : function () {} 
+			};
+			jQuery.extend(options, params);
+			return options;
+		};
+		var options = _processParams(testParams);
+		var browserObject = BrowserVersion(); 
+		var xhr;
+		if( browserObject.BROWSER == 'IE' && ( browserObject.VERSION == '8' || browserObject.VERSION == '9' ) ) {
+			xhr = new window.XDomainRequest();
+		}
+		else {
+			xhr = new XMLHttpRequest();
+		}
+		var defer = jQuery.Deferred();
+
+		xhr.open('GET', encodeURI(testUrl + _generateQueryString(options.queryStringParams)));
+		xhr.onload = function () {
+			defer.resolve(
+				options.onloadCallback(xhr, options)
+			);
+		};
+		xhr.onerror = function () {
+			defer.resolve(
+				options.onerrorCallback(xhr, options)
+			);
+		};
+		xhr.ontimeout = function () {
+			defer.resolve(
+				options.ontimeoutCallback(xhr, options)
+			);
+		};
+		xhr.send();
+		options.cleanupCallback(xhr, options);
+		return defer;
+	};
+
+	/*******************************************************************************
+	* testConnection
+	*
+	* Description:
+	*	A function which makes an HTTP GET request to a url, and returns a promise
+	*	which resolves to an object containing metrics about the request. The
+	*	method used to preform the request depends on the browser that
+	*	testConnection is called in - jQuery is used for all browsers except for
+	*	IE8/9, for which XDomainRequest is used.
+	* Parameters:
+	*	The url to preform the request onto, and an object of optional parameters
+	*	specifying details about how the connection test is preformed.
+	*
+	*	queryStringParams - an object representing GET fields for the test.
+	*	                    The keys are the field names, and the values are field
+	*	                    values.
+	*
+	*	name              - the name of the connection test
+	*
+	*	onloadCallback    - the callback to be fired when the request 'succedes'.
+	*	                    for jQuery, this maps to jQuery.ajax's success callback.
+	*	                    for XDomainRequest this maps to the onload callback.
+	*	                    The callback should as the first argument the xhr
+	*	                    object corresponding to the request made, and as
+	*	                    a second argument the list of parameters passed to
+	*	                    testconnection.
+	*
+	*	onerrorCallback   - the callback to be fired when the request 'fails'.
+	*	                    for jQuery, this maps to jQuery.ajax's error callback.
+	*	                    for XDomainRequest this maps to the onerror callback.
+	*	                    The callback should as the first argument the xhr
+	*	                    object corresponding to the request made, and as 
+	*	                    a second argument the list of parameters passed to
+	*	                    testconnection.
+	*
+	*	ontimeoutCallback - the callback to be fired when the request times out.
+	*	                    for jQuery, this maps to jQuery.ajax's error callback,
+	*	                    being fired when error's textStatus parameter has value
+	*	                    "timeout". for XDomainRequest this maps to ontimeout.
+	*	                    The callback should as the first argument the xhr
+	*	                    object corresponding to the request made, and as
+	*	                    a second argument the list of parameters passed to
+	*	                    testconnection.
+	*
+	*	cleanupCallback   - a callback to be fired immediatly after the HTTP
+	*	                    request is sent.
+	*
+	* Return Value:
+	*	A promise which resolves to an object containing metrics about the request.
+	*******************************************************************************/
+	module.testConnection = function(url, params) { 
+		params = params || {};
+		var browserObject = BrowserVersion(); 
+		if( browserObject.BROWSER == 'IE' && ( browserObject.VERSION == 8 || browserObject.VERSION == 9 ) ) {
+			// Do the request by hand as we need cross-domain that jquery doesn't support in IE 8 and 9
+			// http://bugs.jquery.com/ticket/8283#comment:43
+			// http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+			return _testConnectionNative( url, params );
+		}
+		else {
+			return _testConnectionJquery( url, params );
+		}
+	};
+
+	/*******************************************************************************
+	* testConnections
+	*
+	* Description:
+	*	A function which makes a series of HTTP requests to an array of urls 
+	*	passed as a list of parameters, returning a promise which resolves to a 
+	*	list of objects containing metrics about the connectivity to those urls.
+	* Parameters:
+	*	An array of objects, representing the connection tests to preform.
+	*	Each object should have two keys : 'url', representing the url to preform	
+	*	the connection test on, and 'params' representing the parameters to pass
+	*	to the connection test (see testConnection).
+	*
+	* Return Value:
+	*	A promise which resolves to a list of objects containing metrics about 
+	*	the request.
+	*******************************************************************************/
+	module.testConnections = function(urlDataList) {
+		var defer = jQuery.Deferred();
+		jQuery.when.apply(
+			null,
+			urlDataList.map(function(urlData) {
+				return module.testConnection(urlData['url'], urlData['params']);
+			})
+		).done(function () {
+			// If we dont do this, testConnections wont resolve to a 'true' javascript array
+			// and this will cause problems
+			defer.resolve(Array.prototype.slice.call(arguments)); 
+		});
+		return defer;
+	};
+
+	return module;
+});

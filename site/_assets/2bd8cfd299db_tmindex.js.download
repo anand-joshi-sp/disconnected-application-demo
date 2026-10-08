@@ -1,0 +1,31 @@
+function changePage()
+{
+        if( self == top ) {
+                 document.getElementsByTagName("body")[0].style.display = 'block' ;
+                 document.getElementsByTagName("body")[0].style.visibility = 'visible' ;
+                 ns_fillName();
+        } else {
+                top.location = self.location ;
+        }
+
+}
+function setFocus(obj)
+{
+   if (obj != null) {
+      obj.focus();
+   }
+}
+
+function loadPage() {
+   rdx.page.add_event_handler(rdx.events.PAGE_LOADED, new rdx.callback(login, login.do_action_on_load));
+   rdx.page.add_event_handler(rdx.events.PAGE_LOADED, new rdx.callback(function()
+   {
+      resize();
+   }));
+   $(window).resize(function(){resize();});
+}
+
+
+rdx.FRAMEWORK_BASE = "/vpn/js" ;
+var Resources = new ResourceManager("/logon/themes/Default/resources/{lang}", "logon");
+$(document).ready(loadPage);

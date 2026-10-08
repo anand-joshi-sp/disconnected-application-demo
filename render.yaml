@@ -2,9 +2,9 @@ services:
   - type: web
     name: disconnected-application-demo
     runtime: static
-    buildCommand: ""
-    staticPublishPath: .
+    buildCommand: "node scripts/build-site.mjs"
+    staticPublishPath: site
     routes:
       - type: rewrite
         source: /
-        destination: /user-admin.html
+        destination: /index.html

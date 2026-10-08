@@ -1,0 +1,26 @@
+var GetStaticURL=(typeof GetStaticURL==='undefined')?function(initial_static_host){var stored_static_host=initial_static_host||'/static';return function(url){var slashurl=url.replace(/^\/?/,'/');return stored_static_host+slashurl;}}(typeof static_host==='undefined'?'':static_host):GetStaticURL;define('shared:/scripts/athena/top_services/ajax',['shared:/scripts/third_party/jquery','shared:/scripts/athena/utils','shared:/scripts/athena/utils/datetime','shared:/scripts/athena/utils/cross_frame_events'],function(jQuery,_,DateTimeUtils,CrossFrameEventsUtils,undefined){"use strict";var TIMEOUT=2*60*60*1000;var _state={};var _data={};var _ajaxArgs={};var _timingMetrics={};var _started=false;function _log(entry){try{if((typeof window)!='undefined'){entry=entry||{};if(window.GetContextID){entry.context_id=window.GetContextID();}
+if(AH&&AH.GetGlobal){entry.username=AH.GetGlobal('USERNAME');}
+if(window.ClassicMetricsManager&&window.ClassicMetricsManager.LogMetric){window.ClassicMetricsManager.LogMetric('pre_fetch_log',entry);}}}catch(e){}}
+function _logTransition(handle,fromState,toState){_log({handle:handle,state:fromState,to_state:toState});}
+function _logRaiseError(handle,errorType){_log({handle:handle,raise_error:true,error_type:errorType});}
+function _logSendData(handle){_log({handle:handle,send_data:true});}
+function _transitionStateForListen(handle){_timingMetrics[handle]=_timingMetrics[handle]||{};_timingMetrics[handle].dataRequestedTime=_timingMetrics[handle].dataRequestedTime||DateTimeUtils.performanceNow();if(_state[handle]==='requested'){_transitionToState(handle,'client-is-listening');}
+else if(_state[handle]==='data-is-ready'){_transitionToState(handle,'data-is-sent');}
+else{_raiseError(handle,'listen-state');}}
+function _transitionStateForData(handle,data){if(_timingMetrics[handle]){_timingMetrics[handle].dataReadyTime=_timingMetrics[handle].dataReadyTime||DateTimeUtils.performanceNow();}
+if(_state[handle]==='requested'){_data[handle]=data;_transitionToState(handle,'data-is-ready',data);}
+else if(_state[handle]==='client-is-listening'){_data[handle]=data;_transitionToState(handle,'data-is-sent',data);}}
+function _transitionStateForRequest(handle,args){if(_state[handle]){_raiseError(handle,'request-state',args.timingMetrics);}
+else{var timingMetrics=args&&args.timingMetrics?args.timingMetrics:{startTime:DateTimeUtils.now()};_timingMetrics[handle]=_timingMetrics[handle]||{};_.extend(_timingMetrics[handle],{requestStartTime:DateTimeUtils.now(),requestTime:DateTimeUtils.performanceNow()},timingMetrics);_ajaxArgs[handle]=_.omit(args,'timingMetrics');_transitionToState(handle,'requested');}}
+function _transitionStateForDataAck(handle){if(_state[handle]==='data-is-sent'){_transitionToState(handle,'none');}
+else{_raiseError(handle,'data-ack-state');}}
+function _transitionToState(handle,state){_logTransition(handle,_state[handle],state);if(state==='none'){delete _state[handle];delete _data[handle];delete _ajaxArgs[handle];delete _timingMetrics[handle];}
+else{_state[handle]=state;}
+if(state==='requested'){jQuery.ajax(_.chain(_ajaxArgs[handle]||{}).clone().extend({success:function(data){_transitionStateForData(handle,data);},error:function(){_raiseError(handle,'requested-state');}}).value());_.delay(function(){if(_state[handle]){_raiseError(handle,'requested-timeout');}},TIMEOUT)}
+else if(state==='client-is-listening'){CrossFrameEventsUtils.trigger('top-services-ajax-listen-ack.'+handle);}
+else if(state==='data-is-sent'){_sendData(handle);}}
+function _sendData(handle){_logSendData(handle);var dataSentTime=DateTimeUtils.performanceNow();if(_timingMetrics[handle]){_timingMetrics[handle].dataSentEndTime=DateTimeUtils.now();_timingMetrics[handle].dataSentTime=dataSentTime;_timingMetrics[handle].requestToSendMilliseconds=dataSentTime-_timingMetrics[handle].requestTime;}
+CrossFrameEventsUtils.trigger('top-services-ajax-data.'+handle,_data[handle],_timingMetrics[handle]);}
+function _raiseError(handle,errorType,timingMetrics){_logRaiseError(handle,errorType);var timingDataToSend=timingMetrics||_timingMetrics[handle]||{startTime:DateTimeUtils.now()};if(timingDataToSend.requestTime){timingDataToSend.requestToErrorMilliseconds=DateTimeUtils.performanceNow()-timingDataToSend.requestTime;}
+timingDataToSend.errorType=errorType;CrossFrameEventsUtils.trigger('top-services-ajax-error.'+handle,undefined,timingDataToSend);_transitionToState(handle,'none');}
+return{start:function(){if(!_started){_started=true;CrossFrameEventsUtils.on('top-services-ajax-request',_transitionStateForRequest);CrossFrameEventsUtils.on('top-services-ajax-listen',_transitionStateForListen);CrossFrameEventsUtils.on('top-services-ajax-data-ack',_transitionStateForDataAck);}}};});require(['shared:/scripts/athena/top_services/ajax'],function(TopServicesAjax,undefined){TopServicesAjax.start();});

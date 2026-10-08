@@ -1,0 +1,479 @@
+var GetStaticURL=(typeof GetStaticURL==='undefined')?function(initial_static_host){var stored_static_host=initial_static_host||'/static';return function(url){var slashurl=url.replace(/^\/?/,'/');return stored_static_host+slashurl;}}(typeof static_host==='undefined'?'':static_host):GetStaticURL;(function(undefined){"use strict";var _root=this;if(_root.define||_root.requirejs){return;}
+var MAX_TRAVERSAL=1000000;var _configuration={delayBetweenRequireCallbacks:undefined,onReady:undefined,recordModuleTimes:true,recordModuleTimeThreshold:5.0,warnings:true};var _isReady=false;var _readyCallbacksFinished=false;var _flushNextTickCallbacksPaused=false;var _moduleMap={};var _nextTickCallbacks=[];var _onLoadCallbacks=[];var _resolved={};var _resolvedModuleCount=0;var _moduleTimes={totalModuleTime:0.0,totalNumberOfModules:0,modules:{}};var _dirName=(function(){var cache={};return function(path){path=path||'';if(path in cache){return cache[path];}
+var match=path.match(/(.+)\/[^\/]+/);var ret=(match?match[1]:'');cache[path]=ret;return ret;};})();function _config(args){if(args){for(var key in args){if(args.hasOwnProperty(key)){_configuration[key]=args[key];}}}
+return _configuration;}
+function _define(){var anonymousWarning='Encountered anonymously defined module. Modules must be properly compiled into named modules. Proceeding without defining this module.';var moduleName;var dependencies;var factory;var prebuilt;moduleName=arguments[0];if(arguments.length===3){dependencies=arguments[1];if((typeof arguments[2])==='function'){factory=arguments[2];}
+else{prebuilt=arguments[2];factory=function(){return prebuilt;};}}
+else if(arguments.length===2){if(Object.prototype.toString.call(moduleName)!=='[object String]'){_warn(anonymousWarning);return;}
+dependencies=[];if((typeof arguments[1])==='function'){factory=arguments[1];}
+else{prebuilt=arguments[1];factory=function(){return prebuilt;};}}
+else if(arguments.length===1){if((typeof arguments[0])==='function'){_warn(anonymousWarning);return;}}
+if(arguments.length<2){throw new Error('Missing arguments.');}
+if(arguments.length>3||!(Object.prototype.toString.call(moduleName)==='[object String]'&&Object.prototype.toString.call(dependencies)==='[object Array]'&&(typeof factory)==='function')){throw new Error('Invalid arguments.');}
+if(_moduleMap.hasOwnProperty(moduleName)){_warn(moduleName+' is already defined.');}
+else{_moduleMap[moduleName]={dependencies:dependencies,factory:factory}}}
+function _defined(moduleName){return _moduleMap[moduleName]?true:false;}
+function _flushNextTickCallbacks(){if(_flushNextTickCallbacksPaused)return;(function _flush(){_flushNextTickCallbacksPaused=false;while(_nextTickCallbacks.length){var callback=_nextTickCallbacks.pop();var success=callback();if(!success){_nextTickCallbacks.push(callback);return;}
+if(typeof _configuration.delayBetweenRequireCallbacks==='number'&&_nextTickCallbacks.length){_flushNextTickCallbacksPaused=true;setTimeout(_flush,_configuration.delayBetweenRequireCallbacks);return;}}
+if(_isReady&&!_readyCallbacksFinished){_readyCallbacksFinished=true;if(typeof _configuration.onReady==='function'){_configuration.onReady.apply(_root);}}})();}
+function _getModuleTimes(){return _moduleTimes;}
+var _getNow=(_root.performance&&_root.performance.now?_root.performance.now.bind(_root.performance):function(){return(new Date().getTime());});function _normalizeModulePath(modulePath,relativeToModulePath){relativeToModulePath=relativeToModulePath||'';var currentPath;if(modulePath.substr(0,2)==='./'){currentPath=_dirName(relativeToModulePath);return(currentPath?currentPath+modulePath.substr(1):modulePath.substr(2));}
+else if(modulePath.substr(0,3)==='../'){currentPath=_dirName(relativeToModulePath);if(!currentPath){throw new Error('Cannot resolve module path '+modulePath+' relative to'+relativeToModulePath);}
+var parentPath=_dirName(currentPath);return(parentPath?parentPath+modulePath.substr(2):modulePath.substr(3));}
+else{return modulePath;}}
+function _nextTick(func){if(!_nextTickCallbacks.length){setTimeout(_flushNextTickCallbacks,0);}
+_nextTickCallbacks.unshift(func);}
+function _onLoad(callback){var flushOnLoadCallbacks=function(){while(_onLoadCallbacks.length){_onLoadCallbacks.pop()();}};if(!_onLoadCallbacks.length&&_root.document&&_root.document.readyState!=='complete'){if(_root.addEventListener){_root.addEventListener('load',flushOnLoadCallbacks);}
+else if(_root.attachEvent){_root.attachEvent('onload',flushOnLoadCallbacks);}}
+_onLoadCallbacks.unshift(callback);if(_root.document&&_root.document.readyState==='complete'){flushOnLoadCallbacks();}
+else if(!_root.document){setTimeout(flushOnLoadCallbacks,0);}}
+function _ready(){_isReady=true;_flushNextTickCallbacks();}
+function _require(){if(arguments.length===1){var modulePath=arguments[0];var resolveStatus=_resolveTree({modulePaths:[modulePath]});if(resolveStatus.success){return _resolved[modulePath];}
+else{_throwResolveError(resolveStatus);}}
+else if(arguments.length===2){var modulePaths=arguments[0];var callback=arguments[1];_nextTick(function(){var resolveStatus=_resolveTree({modulePaths:modulePaths,onSuccess:function(){var callbackArgs=[];for(var i=0;i<modulePaths.length;++i){callbackArgs.push(_resolved[modulePaths[i]]);}
+callback.apply(_root,callbackArgs);}});if(resolveStatus.success||resolveStatus.deferred){return true;}
+else if(_isReady&&resolveStatus.moduleNotDefined){_throwResolveError(resolveStatus);}
+else{return false;}});}
+else{throw new Error('Invalid arguments.');}}
+function _resolveTree(args){var i;var resolveStack;if(args.resolveStack){resolveStack=args.resolveStack;}
+else if(args.modulePaths.length===1&&_resolved.hasOwnProperty(args.modulePaths[0])){if(args.onSuccess){args.onSuccess();}
+return{success:true};}
+else{resolveStack=[];i=args.modulePaths.length;while(i--){resolveStack.push({modulePath:args.modulePaths[i]});}}
+var currentNode;var numberOfTraversedNodes=0;while(currentNode=resolveStack.pop()){var bangIndex;var modulePathIsExactMatch;if(_resolved.hasOwnProperty(currentNode.modulePath)){currentNode.fullModulePath=currentNode.modulePath;currentNode.numberOfDependencies=0;}
+else if(currentNode.fullModulePath&&_resolved.hasOwnProperty(currentNode.fullModulePath)){currentNode.numberOfDependencies=0;}
+else if((modulePathIsExactMatch=_moduleMap.hasOwnProperty(currentNode.modulePath))||(bangIndex=currentNode.modulePath.indexOf('!'))<1){if(!modulePathIsExactMatch&&currentNode.modulePath.charAt(0)==='.'){currentNode.fullModulePath=_normalizeModulePath(currentNode.modulePath,currentNode.parentNode?currentNode.parentNode.fullModulePath:'');}
+else{currentNode.fullModulePath=currentNode.modulePath;}
+if(!_moduleMap.hasOwnProperty(currentNode.fullModulePath)){return{moduleNotDefined:currentNode.fullModulePath};}}
+else{var pluginPath=currentNode.modulePath.substr(0,bangIndex);var pluginArg=currentNode.modulePath.substr(bangIndex+1);if(pluginPath.charAt(0)==='.'){pluginPath=_normalizeModulePath(pluginPath,currentNode.parentNode?currentNode.parentNode.fullModulePath:'');}
+var plugin=_resolved[pluginPath];if(!plugin){var pluginStatus=_resolveTree({modulePaths:[pluginPath],onSuccess:function(){if(pluginStatus&&pluginStatus.deferred){_resolveTree({resolveStack:resolveStack,onSuccess:args.onSuccess});}}});if(pluginStatus.success){plugin=_resolved[pluginPath];}
+else{return pluginStatus;}}
+if(plugin.normalize){pluginArg=plugin.normalize(pluginArg,function(arg){if(arg.charAt(0)==='.'){return _normalizeModulePath(arg,currentNode.parentNode?currentNode.parentNode.fullModulePath:'');}
+else{return arg;}});}
+else if(pluginArg.charAt(0)==='.'){pluginArg=_normalizeModulePath(pluginArg,currentNode.parentNode?currentNode.parentNode.fullModulePath:'');}
+currentNode.fullModulePath=pluginPath+'!'+pluginArg;currentNode.numberOfDependencies=0;if(!_resolved.hasOwnProperty(currentNode.fullModulePath)){var pluginLoadIsSynchronous=true;plugin.load(pluginArg,_require,function(result){_resolved[currentNode.fullModulePath]=result;++_resolvedModuleCount;if(!pluginLoadIsSynchronous){resolveStack.push(currentNode);_resolveTree({resolveStack:resolveStack,onSuccess:args.onSuccess});}},_configuration);if(!_resolved.hasOwnProperty(currentNode.fullModulePath)){pluginLoadIsSynchronous=false;return{deferred:currentNode.fullModulePath};}}}
+if(_resolved.hasOwnProperty(currentNode.fullModulePath)){currentNode.numberOfDependencies=0;}
+else{currentNode.factory=_moduleMap[currentNode.fullModulePath].factory;currentNode.numberOfDependencies=_moduleMap[currentNode.fullModulePath].dependencies.length;currentNode.resolvedDependencies=new Array(currentNode.numberOfDependencies);currentNode.numberOfResolvedDependencies=0;i=currentNode.numberOfDependencies;while(i--){var dependencyString=_moduleMap[currentNode.fullModulePath].dependencies[i];if(_resolved.hasOwnProperty(dependencyString)){currentNode.resolvedDependencies[i]=_resolved[dependencyString];++currentNode.numberOfResolvedDependencies;}
+else if(dependencyString==='module'||dependencyString==='exports'){currentNode.commonJS=currentNode.commonJS||{id:currentNode.fullModulePath,exports:{}};currentNode.resolvedDependencies[i]=(dependencyString==='module'?currentNode.commonJS:currentNode.commonJS.exports);++currentNode.numberOfResolvedDependencies;}
+else{resolveStack.push({modulePath:dependencyString,parentNode:currentNode,dependencyPosition:i});}}}
+while(currentNode&&(currentNode.numberOfResolvedDependencies||0)===currentNode.numberOfDependencies){var fullModulePath=currentNode.fullModulePath;if(!_resolved.hasOwnProperty(fullModulePath)){var startTime=_getNow();_resolved[fullModulePath]=currentNode.factory.apply(_root,currentNode.resolvedDependencies);var moduleTime=(_getNow()-startTime);++_resolvedModuleCount;if(_configuration.recordModuleTimes){_moduleTimes.totalModuleTime+=moduleTime;++_moduleTimes.totalNumberOfModules;if(moduleTime>_configuration.recordModuleTimeThreshold){_moduleTimes.modules[fullModulePath]={time:moduleTime,ordering:_resolvedModuleCount};}}
+if((typeof _resolved[fullModulePath])==='undefined'&&currentNode.commonJS){_resolved[fullModulePath]=currentNode.commonJS.exports;}}
+var parentNode=currentNode.parentNode;if(parentNode){parentNode.resolvedDependencies[currentNode.dependencyPosition]=_resolved[fullModulePath];++parentNode.numberOfResolvedDependencies;delete currentNode.parentNode;}
+currentNode=parentNode;}
+if(++numberOfTraversedNodes>MAX_TRAVERSAL){throw new Error('Traversed too many nodes in the dependency tree. Possible cycle at module '
++(currentNode.fullModulePath||currentNode.modulePath)
++' or at a related module.');}}
+if(args.onSuccess){args.onSuccess();}
+return{success:true};}
+function _stopTimer(){_config({recordModuleTimes:false});return _getModuleTimes();}
+function _throwResolveError(resolveStatus){if(resolveStatus.moduleNotDefined){throw new Error('Module '
++resolveStatus.moduleNotDefined
++' or one of its dependencies is not '
++(_isReady?'':'yet ')
++'defined.');}
+else if(resolveStatus.deferred){throw new Error(resolveStatus.deferred+' is not yet ready.');}
+else{throw new Error('Unknown error: '+JSON.stringify(resolveStatus));}}
+function _toUrl(modulePath){var match=modulePath.match(/\.[^\/]+$/);if(match){return modulePath;}
+else{return modulePath+'.js';}}
+function _warn(message){if(_configuration.warnings&&_root.console&&_root.console.warn){_root.console.warn(message);}}
+if(_root&&_root.require&&typeof _root.require==='object')_config(require);_root.define=_define;_root.require=_require;_root.require.ready=_ready;_root.require.getTimes=_getModuleTimes;_root.require.stopTimer=_stopTimer;_root.require.defined=_defined;_root.require.config=_config;_root.require.toUrl=_toUrl;_root.requirejs=_root.require;_root.require._resolved=_resolved;_root.define.amd={athena:true};_onLoad(_ready);_define('require',function(){return _require;});}).call(this);function AthenaNavInList(value,array){for(var i=0;i<array.length;i++){if(value==array[i]){return 1;}}
+return 0;}
+function PlaceOpenMenu(args){PlaceMenuComponentSelected({MENUNAME:args.MENUNAME});PlaceMenuContainer({MENUNAME:args.MENUNAME});var hascrollbar=FixContainerHeight({MENUNAME:args.MENUNAME});FixContainerWidth({MENUNAME:args.MENUNAME,HASSCROLLBAR:hascrollbar});FixFrameWidthHeight({MENUNAME:args.MENUNAME});}
+function PlaceOpenMenus(){var menuname=jQuery('.menucomponentselected').filter(':visible').attr('name');if(menuname){PlaceOpenMenu({MENUNAME:menuname});}}
+function CloseAthenaNav(fade){if(fade){jQuery('.menucomponentselected').fadeOut();jQuery('.megamenucontainer').fadeOut();jQuery('.athenanavlightbox').fadeOut();jQuery('.shimiframe').fadeOut();}
+else{jQuery('.menucomponentselected').hide();jQuery('.megamenucontainer').hide();jQuery('.athenanavlightbox').hide();jQuery('.shimiframe').hide();}
+if(navsearchobject){navsearchobject.Hide();navsearchobject.SelectDefault();}}
+function CloseAllMenus(forceclose){if(top.AH&&top.AH.Frames&&top.AH.Frames.Top){if(typeof(top.AH.Frames.Top.Frame().CloseClassicNavMenu)=='function'){top.AH.Frames.Top.Frame().CloseClassicNavMenu(forceclose);}
+if(typeof(top.AH.Frames.Top.Frame().CloseAthenaNav)=='function'){top.AH.Frames.Top.Frame().CloseAthenaNav();}}
+else{if(typeof(top.CloseClassicNavMenu)=='function'){CloseClassicNavMenu(forceclose);}
+if(typeof(top.CloseAthenaNav)=='function'){CloseAthenaNav();}}}
+function GetGlobalNavFrameHeight(){var standardscontainer=jQuery('#GlobalNav');var quirkscontainer=jQuery('#GlobalWrapper').contents().find('frameset#frWrapper').find('frame[name="frGlobalNav"]');var airlockcontainer=jQuery('#navbar-iframe');var globalnavframeheight=standardscontainer.length?jQuery(standardscontainer.get(0)).outerHeight(true):quirkscontainer.length?quirkscontainer.height():jQuery(airlockcontainer.get(0)).outerHeight(true);return globalnavframeheight;}
+function GetScrollbarWidth(){var div=jQuery('<div />')
+.css({width:100,height:100,overflow:'auto',position:'absolute',top:-1000,left:-1000})
+.prependTo('body').append('<div />').find('div')
+.css({width:'100%',height:200});var scrollbarWidth=100-div.width();div.parent().remove();return scrollbarWidth;}
+function GetGlobalNavContainer(){var standardscontainer=jQuery('#GlobalNav');var quirkscontainer=jQuery('#GlobalWrapper').contents().find('frameset#frWrapper').find('frame[name="frGlobalNav"]');var airlockcontainer=jQuery('#navbar-iframe');var globalnavframe=standardscontainer.length?standardscontainer:quirkscontainer.length?quirkscontainer:airlockcontainer;return jQuery(globalnavframe.get(0).contentWindow.document);}
+if(!FormatDate){var FormatDate=function(e){if(!e){e=window.event;}
+var target;if(e.target){target=e.target;}
+else{target=e.srcElement;}
+if(e.keyCode==8||e.keyCode==37){return;}
+d=target.value;if(d.substring(d.length-2,d.length)=="//"||d.substring(d.length-2,d.length)=="/-"){target.value=d.substring(0,d.length-1);}else if(d.length==2&&!isNaN(d.substring(0,2))){target.value+="/";}else if(d.length==5&&!isNaN(d.substring(0,2))&&!isNaN(d.substring(3,5))){target.value+="/";}}}
+var AH=top.AH;function DisplayMegaMenu(args){if(window.RefreshFacit)RefreshFacit();var body=jQuery('body');var menuname=args.MENUNAME;var menuobj=args.MENUOBJ;removeConfigureBrowseriftriforce(menuobj);var lightbox=body.find('.athenanavlightbox');var globalnavcontainer=GetGlobalNavContainer();var menucomponent=globalnavcontainer.find('#'+menuname+'menucomponent');var menucomponentselected=jQuery('#'+menuname+'menucomponentselected');var menucontainer=jQuery('#'+menuname+'menucontainer');var menuframe=jQuery('#'+menuname+'menuiframe');CloseAthenaNav();if(menucomponentselected.length>0){menucomponentselected.show();menuframe.show();}
+else{menucomponentselected=CreateMenuComponentSelected(args);body.append(menucomponentselected);}
+if(menucontainer.length>0){menucontainer.show();menuframe.show();}
+else{menucontainer=CreateMenuContainer(args);body.append(menucontainer);}
+PlaceOpenMenu({MENUNAME:menuname});menuframe.css({height:menucontainer.outerHeight(true)});menucontainer.focus();}
+function removeConfigureBrowseriftriforce(menuobj){if(typeof Triforce!=='undefined'&&Triforce&&menuobj)
+{for(var column=0;column<menuobj.COLUMNS.length;column++){for(var category=0;category<menuobj.COLUMNS[column].CATEGORIES.length;category++){for(var item=0;item<menuobj.COLUMNS[column].CATEGORIES[category].ITEMS.length;item++){if(menuobj.COLUMNS[column].CATEGORIES[category].ITEMS[item].ITEMTEXT==='Configure Your Browser'){menuobj.COLUMNS[column].CATEGORIES[category].ITEMS.splice(item,1);return;}}}}}}
+function CreateMenuComponentSelected(args){var html;var globalnavcontainer=GetGlobalNavContainer();var menucomponent=globalnavcontainer.find('#'+args.MENUNAME.toLowerCase()+'menucomponent');if(AthenaNavInList(menucomponent.html(),["settings","help"])){html=args.MENUNAME;}
+else if(args.MENUNAME.toUpperCase()=='SETTINGS'){html="<div class='sprite-gearicon-14x14-selected'></div>";}
+else if(args.MENUNAME.toUpperCase()=='HELP'){html="<div class='sprite-helpicon-10x15-selected'></div>";}
+else if(args.MENUNAME.toUpperCase()=='USER'){var translateAttr=args.PREVENTTRANSLATION?" translate='no'":"";html="<div><span class='username'"+translateAttr+">"+args.USERNAMEHTML+"</span></div>";}
+else if(args.MENUNAME.toUpperCase()=='MESSAGES'){html="<div class='anchor'></div>";}
+else{html=args.MENUNAME.charAt(0).toUpperCase()+args.MENUNAME.slice(1);}
+var menucomponentselected=jQuery(document.createElement("DIV")).addClass("menucomponent").addClass("menucomponentselected").addClass(args.MENUNAME+'menucomponentselected').attr({id:args.MENUNAME+'menucomponentselected',name:args.MENUNAME}).html(html);return menucomponentselected;}
+function PlaceMenuComponentSelected(args){var menuname=args.MENUNAME.toLowerCase();var globalnavcontainer=GetGlobalNavContainer();var menucomponent=globalnavcontainer.find('#'+menuname+'menucomponent');var menucomponentselected=jQuery('#'+menuname+'menucomponentselected');var body=jQuery('body');if(menucomponent.offset().left+menucomponent.outerWidth()<body.outerWidth()){menucomponentselected.offset({top:menucomponent.offset().top,left:menucomponent.offset().left})
+.css({width:menucomponent.outerWidth()+menucomponentselected.outerWidth()-menucomponentselected.innerWidth(),height:menucomponent.outerHeight()+18+menucomponentselected.outerHeight()-menucomponentselected.innerHeight()});}
+else{menucomponentselected.offset({top:menucomponent.offset().top,left:body.outerWidth()-menucomponent.outerWidth()})
+.css({width:menucomponent.outerWidth()+menucomponentselected.outerWidth()-menucomponentselected.innerWidth(),height:menucomponent.outerHeight()+18+menucomponentselected.outerHeight()-menucomponentselected.innerHeight()});}}
+function CreateMenuContainer(args){var menuname=args.MENUNAME;var menuobj=args.MENUOBJ;var menucontainer=jQuery(document.createElement("DIV")).addClass("megamenucontainer").attr({id:menuname+'menucontainer',name:menuname,tabindex:-1});var menuframe=jQuery(document.createElement("iframe")).attr({id:menuname+'menuiframe'}).addClass("shimiframe").appendTo('body');menucontainer.blur(function(){CloseAllMenus();});var menucolumnsection=CreateMenuColumnSection({MENUOBJ:menuobj.COLUMNS});var resourcessection=CreateResourcesSection({MENUOBJ:menuobj.RESOURCES});var recentlyviewedsection=CreateRecentlyViewedSection({MENUOBJ:menuobj.RECENTLYVIEWED});if(menuobj.COLUMNS&&menuobj.COLUMNS.length){menucontainer.append(menucolumnsection);}
+if(menuobj.RESOURCES&&menuobj.RESOURCES.length){menucontainer.append(resourcessection);}
+if(menuobj.RECENTLYVIEWED&&menuobj.RECENTLYVIEWED.length){menucontainer.append(recentlyviewedsection);}
+return menucontainer;}
+function PlaceMenuContainer(args){var menuname=args.MENUNAME.toLowerCase();var globalnavcontainer=GetGlobalNavContainer();var menucomponent=globalnavcontainer.find('#'+menuname+'menucomponent');var menucomponentselected=jQuery('#'+menuname+'menucomponentselected');var menucontainer=jQuery('#'+menuname+'menucontainer');var menuframe=jQuery('#'+menuname+'menuiframe');var body=jQuery('body');var menucomponentleft=menucomponentselected.offset().left;var menucomponentright=body.outerWidth()-menucomponent.outerWidth()-menucomponent.offset().left-2;var globalnavheight;if(jQuery('#navbar-iframe').length){globalnavheight=jQuery('#navbar-iframe').outerHeight();}
+else{globalnavheight=jQuery(AH.Frames.GlobalNav.Frame().frameElement).outerHeight();}
+menucontainer.offset({top:globalnavheight});menuframe.offset({top:globalnavheight});if(menucomponentselected.offset().left+menucontainer.outerWidth()<body.outerWidth()){menucontainer.offset({left:menucomponentleft});menuframe.offset({left:menucomponentleft});}
+else if(menucontainer.outerWidth()<body.outerWidth()-menucomponentright){menucontainer.css({'right':menucomponentright});menuframe.css({'right':menucomponentright});}
+else{menucontainer.offset({left:menucomponentleft+(menucomponent.outerWidth()/2)-(menucontainer.outerWidth()/2)});menuframe.offset({left:menucomponentleft+(menucomponent.outerWidth()/2)-(menucontainer.outerWidth()/2)});}}
+function FixFrameWidthHeight(args){var menuname=args.MENUNAME.toLowerCase();var menucontainer=jQuery('#'+menuname+'menucontainer');var shimframe=jQuery('#'+menuname+'menuiframe');shimframe.css({height:menucontainer.outerHeight(true),width:menucontainer.outerWidth(true)});}
+function FixContainerHeight(args){var menuname=args.MENUNAME.toLowerCase();var menucontainer=jQuery('#'+menuname+'menucontainer');var body=jQuery('body');var navheight=GetGlobalNavFrameHeight();var availableheight=body.outerHeight()-navheight;menucontainer.css('position','fixed');menucontainer.height('auto');var hasscrollbar;if(menucontainer.outerHeight(true)>=availableheight){var newheight=availableheight;menucontainer.css({height:availableheight});hasscrollbar=1;}
+else{hasscrollbar=0;}
+menucontainer.css('position','');return hasscrollbar;}
+function FixContainerWidth(args){var menuname=args.MENUNAME.toLowerCase();var hasscrollbar=args.HASSCROLLBAR;var menucontainer=jQuery('#'+menuname+'menucontainer');var menucolumnsection=menucontainer.find('.menucolumnsection');var menuframe=jQuery('#'+menuname+'menuiframe');var resourcessection=menucontainer.find('.resourcessection');var maxwidth=0;menucolumnsection.each(function(){var menucolumnsectionwidth=0;jQuery(this).children('.menucolumn').each(function(){menucolumnsectionwidth+=jQuery(this).outerWidth()+1;});jQuery(this).css({width:menucolumnsectionwidth});});menucolumnsection.each(function(){var sectionwidth=jQuery(this).outerWidth();if(sectionwidth>maxwidth){maxwidth=sectionwidth;}});resourcessection.each(function(){jQuery(this).children('.categoryitem').each(function(){var itemwidth=jQuery(this).outerWidth(true);maxwidth=Math.max(itemwidth,maxwidth);});});maxwidth=maxwidth+parseInt(menucontainer.css("border-left-width"))+parseInt(menucontainer.css("border-right-width"));if(hasscrollbar){maxwidth=maxwidth+GetScrollbarWidth();}
+if(menuname!='user'&&menuname!='messages'){menucontainer.css({width:maxwidth});menuframe.css({width:maxwidth});}}
+function CreateResourcesSection(args){var menuobj=args.MENUOBJ;var resourcestitle=jQuery(document.createElement("DIV")).addClass("categorytitle").html('Resources');var resourcessection=jQuery(document.createElement("DIV")).addClass("resourcessection").append(resourcestitle);if(menuobj){for(var i=0;i<menuobj.length;i++){var resourceitem=CreateCategoryItem({MENUOBJ:menuobj[i]});resourcessection.append(resourceitem);}}
+return resourcessection;}
+function CreateRecentlyViewedSection(args){var menuobj=args.MENUOBJ;var recentlyviewedtitle=jQuery(document.createElement("DIV")).addClass("categorytitle").html('Recently Viewed');var recentlyviewedsection=jQuery(document.createElement("DIV")).addClass("recentlyviewedsection").append(recentlyviewedtitle);if(menuobj){for(var i=0;i<menuobj.length;i++){var resourceitem=CreateCategoryItem({MENUOBJ:menuobj[i]});recentlyviewedsection.append(resourceitem);}}
+return recentlyviewedsection;}
+function CreateMenuColumnSection(args){var menuobj=args.MENUOBJ;var menucolumnsection=jQuery(document.createElement("DIV")).addClass("menucolumnsection");if(menuobj){for(var i=0;i<menuobj.length;i++){var menucolumn=CreateMenuColumn({MENUOBJ:menuobj[i]});menucolumnsection.append(menucolumn);}}
+var clearfix=jQuery(document.createElement("DIV")).addClass("clearfix");menucolumnsection.append(clearfix);return menucolumnsection;}
+function CreateMenuColumn(args){var menuobj=args.MENUOBJ;var menucolumn=jQuery(document.createElement("DIV")).addClass("menucolumn");if(menuobj){for(var i=0;i<menuobj.CATEGORIES.length;i++){var columncategory=CreateColumnCategory({MENUOBJ:menuobj.CATEGORIES[i]});menucolumn.append(columncategory);}}
+return menucolumn;}
+function CreateColumnCategory(args){var menuobj=args.MENUOBJ;var categorytitle=jQuery(document.createElement("DIV")).addClass("categorytitle").html(menuobj.TITLE);var columncategory=jQuery(document.createElement("DIV")).addClass("columncategory").append(categorytitle);if(menuobj){for(var i=0;i<menuobj.ITEMS.length;i++){var categoryitem=CreateCategoryItem({MENUOBJ:menuobj.ITEMS[i]});columncategory.append(categoryitem);}}
+return columncategory;}
+function CreateCategoryItem(args){var menuobj=args.MENUOBJ;var itemtext=menuobj.ITEMTEXT.replace(new RegExp("&(.)","g"),"$1");var categoryitem=jQuery(document.createElement("DIV")).addClass("categoryitem "+(menuobj.ADDITIONALCLASS||"")).html(itemtext);categoryitem.hover(function(){jQuery(this).addClass('menuhover');},function(){jQuery(this).removeClass('menuhover');});var MD5=require('shared:/scripts/third_party/crypto-js/md5');menuobj.ID=MD5(menuobj.ITEMTEXT+menuobj.ITEMURL).toString();categoryitem.attr({id:menuobj.ID});categoryitem.data('menuobj',menuobj);categoryitem.mousedown(function(event){if(event.which==1){MegaMenuClick({MENUOBJ:menuobj,EVENT:window.event});}});return categoryitem;}
+function SimulateMegaMenuClick(args){var body=jQuery('body');var mainmenu=args.MAINMENU;var menucontainer;for(var i=0;i<mainmenu.length;i++){menucontainer=CreateMenuContainer({MENUNAME:mainmenu[i].MENUNAME.toLowerCase(),MENUOBJ:mainmenu[i]});body.append(menucontainer);}
+var iconmenu=args.ICONMENU;for(i=0;i<iconmenu.length;i++){menucontainer=CreateMenuContainer({MENUNAME:iconmenu[i].MENUNAME.toLowerCase(),MENUOBJ:iconmenu[i]});body.append(menucontainer);}
+MegaMenuClick(args);}
+function MegaMenuClick(args){CloseAthenaNav();var event;var menuobj;var url;var target;var onclick;var trackonclick;var menuid=args.MENUID;if(menuid){menuobj=jQuery('#'+menuid).data('menuobj');}
+else{event=args.EVENT;menuobj=args.MENUOBJ;}
+url=menuobj.ITEMURL;target=menuobj.ITEMTARGET;onclick=menuobj.ITEMONCLICK;if(url==='/add_document'){require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){try{CrossFrameEventsUtils.trigger('user-tracking.track-event',{rollout_toggle_key:'ADD_DOCUMENT_AMPLITUDE_TRACKING',event_type:'UPLOAD_ADD_DOCUMENT::PATIENT_MENU',event_properties:{username:AH.GetGlobal('USERNAME')}});}
+catch(err){}});}
+if(onclick&&onclick==='trackCareGapWorklist'){require(['shared:/scripts/athena/utils/cross_frame_events'],function(CrossFrameEventsUtils){CrossFrameEventsUtils.trigger('user-tracking.track-event',{rollout_toggle_key:'AMPLITUDE_ANALYTICS',event_type:'PATIENTDROPDOWN::CAREGAPWORKSLIST::NA::NA::OPEN'});});}
+if(menuobj.STITCHFIRST&&jQuery('#navbar-iframe').length){var stitchargs={AXMENUID:args.MENUOBJ.ID};if(args.MENUOBJ.ITEMTARGET==='ScheduleNav'){stitchargs.AXLEFTNAV=1;}
+AH.FramesetNavigation({frame:'Top',url:'/globalframeset.esp?'+MakeGetString(stitchargs)});}
+else if(onclick&&!target){if(typeof AH.Frames.GlobalNav.Frame()[onclick]=='function'){if(onclick=='OpenSuggestionCommunityBoard'||onclick=='OpenPOPPages'||onclick=='OpenStreamlinedPage'){AH.Frames.GlobalNav.Frame()[onclick](url);}
+else{AH.Frames.GlobalNav.Frame()[onclick]();}}
+else if(onclick=='TrackMarketplaceBrowse'||onclick=='TrackMarketplaceAllrecommended'){trackonclick='TrackBrowseMktplace';AH.Frames.GlobalNav.Frame()[trackonclick](onclick,menuobj.TRACKEVENT);AH.FramesetNavigation({frame:target,url:url});}
+else if(onclick=='TrackMarketplaceRecommendedApp'||onclick=='TrackMarketplaceQuickLinkApp'){trackonclick='TrackMarketplaceProductLinks';AH.Frames.GlobalNav.Frame()[trackonclick](onclick,menuobj.ITEMTEXT,menuobj.TRACKEVENT);AH.FramesetNavigation({frame:target,url:url});}}
+else{AH.FramesetNavigation({frame:target,url:url});}}
+function CloseClassicNavMenu(forceclose){if(forceclose||(AH&&!AH.GetGlobal('mouseinmainmenu'))){hotkeys=[];jQuery('#displayedmenu').remove();jQuery('#menushim').remove();}}
+var NavSearchObject=function(args){var hasdocumentsearchaccess=args.HASDOCUMENTSEARCHACCESS;var haspatientaccess=args.HASPATIENTACCESS;var validpracticeswitcher=args.VALIDPRACTICESWITCHER;var useglobalsearch;var usemenusearch;if(args.GLOBALSEARCHSETTINGS){usemenusearch=args.GLOBALSEARCHSETTINGS.USEMENUSEARCH;useglobalsearch=true;}
+else{usemenusearch=false;useglobalsearch=false;}
+var usevendorshortcut=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.VENDORSHORTCUTKEYS==='Y');var augmentsogi=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.AUGMENTSOGI);var oldsearchtext;var searchtext;var searchfilter;var placed=false;var MAXSHOWNOPTIONS=6;var keepsearchopen=0;var silentlyfocus=0;var OptionsTemplate=require('shared:/scripts/searchoptiontemplate');var numoptions=0;var optionobjects=[];var availableoptions=[];var displayedoptions=[];var hiddenoptions=[];var recentpatients=[];var lastselected;var lastsearched;var categories=GetAllSearchCategories();var categorylist=[];for(var key in categories){categorylist.push(key);}
+var patientname;var currentpatientid;var nextpatientid;var metrics={timescalled:{},executiontime:{}};var body=jQuery('body');var menucontainer=jQuery(document.createElement("DIV")).addClass("megamenucontainer").addClass("searchmenucontainer").attr({id:"searchmenucontainer"});if(useglobalsearch){menucontainer.addClass("globalsearch");}
+var menuframe=jQuery(document.createElement("iframe")).attr({id:"searchmenuiframe"}).addClass("shimiframe");var searchtextrowcontainer=jQuery(document.createElement("DIV")).addClass("searchtextrowcontainer").attr({id:"searchtextrowcontainer"});var searchvalue=jQuery(document.createElement("SPAN")).addClass('searchvalue');var searchrowcontainers={};for(var i=0;i<categorylist.length;i++){if(categories[categorylist[i]].CONTAINERID){var container=jQuery(document.createElement("DIV")).addClass("searchtextrowcontainer").attr({id:categories[categorylist[i]].CONTAINERID});searchrowcontainers[categorylist[i]]=container;}}
+function InList(element,array){for(var i=0;i<array.length;i++){if(element===array[i]){return 1;}}
+return 0;}
+function SetSearchTextWidth(){var searchinfo=searchtextrowcontainer.find('.searchinfo');var searchvaluecontainer=searchtextrowcontainer.find('.searchvaluecontainer');searchvaluecontainer.width("auto");if(searchvaluecontainer.width()*2>searchinfo.width()){searchvaluecontainer.width(0);searchvaluecontainer.width(searchinfo.width()/2);}}
+function Place(){var globalnavcontainer=GetGlobalNavContainer();var search=globalnavcontainer.find('#searchform');var offsetvalue=search.offset().top+search.outerHeight();var rightposition=body.outerWidth()-search.offset().left-search.width()-1;menucontainer.offset({top:offsetvalue}).css({right:rightposition});menuframe.offset({top:offsetvalue}).css({right:rightposition});}
+function SetAvailableOptions(){availableoptions=[];for(var i=0;i<categorylist.length;i++){var categorykey=categorylist[i];var categoryoptions=navsearchobject.GetCategoryOptions({OPTIONS:optionobjects,CATEGORY:categorykey});if(categoryoptions.length){for(var j=0;j<categoryoptions.length;j++){if(categoryoptions[j].available){availableoptions.push(categoryoptions[j]);}}}}}
+function ClearSelected(){var elements=jQuery('.searchselection',menucontainer);elements.removeClass('menuselect menuhover');}
+function GetSelectedIndex(){var selectedindex;var options=jQuery('.searchselection:visible',menucontainer);for(var i=0;i<displayedoptions.length;i++){var option=options.eq(i);if(option.hasClass('menuselect')){selectedindex=i;break;}}
+return selectedindex;}
+function GetHighlightedOption(){var highlightedoption;var options=jQuery('.searchselection:visible',menucontainer);for(var i=0;i<displayedoptions.length&&i<options.length;i++){var option=options.eq(i);if(option.hasClass('menuhover')){highlightedoption=displayedoptions[i];break;}}
+return highlightedoption;}
+function GetSelectedOption(){var selectedoption;var options=jQuery('.searchselection.menuselect',menucontainer);if(options.length!==1){selectedoption=lastselected;}
+else{if(options.data('index')||options.data('index')===0){selectedoption=GetObjectByIndex(options.data('index'));}
+else if(options.hasClass('viewmore')){selectedoption={VIEWMORE:options.data('category')};}
+else if(options.hasClass('viewless')){selectedoption={VIEWLESS:options.data('category')};}}
+return selectedoption;}
+function FirstCategoryOptionIndex(category){var firstcategoryoptionindex;for(var i=0;displayedoptions.length;i++){var option=displayedoptions[i];if(option.CATEGORY&&option.CATEGORY===category){firstcategoryoptionindex=i;break;}}
+return firstcategoryoptionindex;}
+function GetViewMoreIndex(category){var viewmoreindex;for(var i=0;i<displayedoptions.length;i++){var option=displayedoptions[i];if(option.VIEWMORE&&option.VIEWMORE===category){viewmoreindex=i;break;}}
+return viewmoreindex;}
+function GetViewLessIndex(category){var viewlessindex;for(var i=0;i<displayedoptions.length;i++){var option=displayedoptions[i];if(option.VIEWLESS&&option.VIEWLESS===category){viewlessindex=i;break;}}
+return viewlessindex;}
+function GetObjectByIndex(index){var obj;for(var i=0;i<optionobjects.length;i++){if(optionobjects[i].INDEX===index){obj=optionobjects[i];break;}}
+return obj;}
+function GetObjectByNameAndCategory(args){var option;for(var i=0;i<optionobjects.length;i++){if(optionobjects[i].NAME==args.OPTIONNAME&&optionobjects[i].CATEGORY==args.OPTIONCATEGORY){option=optionobjects[i];break;}}
+return option;}
+function GetElementByIndex(index){var elements=jQuery('.searchselection:visible',menucontainer);var match=elements.filter(function(){return jQuery(this).data('index')===index;});if(match.length!==1){match=0;}
+return match;}
+function GetViewMoreElement(category){var elements=jQuery('.searchselection:visible',menucontainer);var match=elements.filter(function(){return jQuery(this).data('category')===category&&jQuery(this).hasClass('viewmore');});if(match.length!==1){match=0;}
+return match;}
+function GetViewLessElement(category){var elements=jQuery('.searchselection:visible',menucontainer);var match=elements.filter(function(){return jQuery(this).data('category')===category&&jQuery(this).hasClass('viewless');});if(match.length!==1){match=0;}
+return match;}
+function PopulateSearchIcon(args){var spriteClass=CategorySpriteClass(args.SEARCHBYCATEGORY);var globalnavcontainer=GetGlobalNavContainer();var searchdiv=globalnavcontainer.find('#categoryicon');var hasClass=false;var className;var classList=(searchdiv.prop('className')||'').split(/\s+/);for(var i=0;i<classList.length;i++){className=classList[i];if(spriteClass&&className===spriteClass){hasClass=true;}
+else if(/^sprite-\w+icon$/.test(className)){searchdiv.removeClass(className);}}
+if(spriteClass&&!hasClass){searchdiv.addClass(spriteClass);}
+ResizeSearchBox();}
+function ReorderCategories(){var orderedcategories=[];if(InList("VENDOR SHORTCUTS",categorylist)){orderedcategories.push("VENDOR SHORTCUTS");}
+if(InList("ACTION MENU",categorylist)){orderedcategories.push("ACTION MENU");}
+if(InList("MAIN MENU",categorylist)){orderedcategories.push("MAIN MENU");}
+if(InList("VISIT",categorylist)){orderedcategories.push("VISIT");}
+if(InList("CLAIM",categorylist)){orderedcategories.push("CLAIM");}
+if(InList("CLINICALITEMS",categorylist)){orderedcategories.push("CLINICALITEMS");}
+if(InList("ENROLLMENTTASK",categorylist)){orderedcategories.push("ENROLLMENTTASK");}
+if(InList("PATIENT",categorylist)){orderedcategories.push("PATIENT");}
+if(InList("ACEPOP",categorylist)){orderedcategories.push("ACEPOP");}
+if(InList("RECENT PATIENT",categorylist)){orderedcategories.push("RECENT PATIENT");}
+return orderedcategories;}
+function PatientIDInRecentPatients(patientid){var obj;for(var i=0;i<recentpatients.length;i++){if(recentpatients[i].PATIENTID===patientid){obj=recentpatients[i];break;}}
+return obj;}
+function ClearAvailable(){for(var i=0;i<optionobjects.length;i++){if(optionobjects[i].CATEGORY!=='RECENT PATIENT'){optionobjects[i].available=0;}}
+availableoptions=[];}
+function IndexOf(args){if(args.ARRAY&&args.ELEMENT){for(var i=0;i<args.ARRAY.length;i++){if(args.ARRAY[i]===args.ELEMENT){return i;}}}
+return-1;}
+function IncrementCountMetric(args){var name=args.FUNCTIONNAME;if(name){if(metrics.timescalled[name]){metrics.timescalled[name]+=1;}
+else{metrics.timescalled[name]=1;}}}
+function MenucontainerOnLeave(event){navsearchobject.SelectDefault();if(keepsearchopen){keepsearchopen=0;var globalnavcontainer=GetGlobalNavContainer();var searchbox=globalnavcontainer.find('#searchinput');searchbox.focus();}}
+function MenucontainerOnMousedown(event){if(event.target.id==="searchmenucontainer"){keepsearchopen=1;silentlyfocus=1;}}
+function AttachMenuContainer(event){body.append(menucontainer);body.append(menuframe);menucontainer.mouseleave(MenucontainerOnLeave);menucontainer.mousedown(MenucontainerOnMousedown);}
+function CalculateTimeMetric(args){if(args.STARTTIME&&args.ENDTIME&&args.FUNCTIONNAME){var name=args.FUNCTIONNAME;var t1=args.STARTTIME;var t2=args.ENDTIME;var t1ms=t1.getTime(t1);var t2ms=t2.getTime(t2);var difference=t2ms-t1ms;if(metrics.executiontime[name]){metrics.executiontime[name]+=difference;}
+else{metrics.executiontime[name]=difference;}}}
+function _RefreshDocumentSearchInNavBar(){var globalnavdocument;try{if(AH&&AH.Frames&&AH.Frames.GlobalNav&&AH.Frames.GlobalNav.Document){globalnavdocument=AH.Frames.GlobalNav.Document();}}
+catch(err){return false;}
+return(globalnavdocument&&jQuery('#refresh-document-search-in-nav-bar',globalnavdocument).length>0);}
+function CategorySpriteClass(category){if(categories[category].HASSPRITE){return'sprite-'+(categories[category].SPRITE||category.toLowerCase())+'icon';}}
+function _AllowHyphenDOBSearch(){var globalnavdocument;try{if(AH&&AH.Frames&&AH.Frames.GlobalNav&&AH.Frames.GlobalNav.Document){globalnavdocument=AH.Frames.GlobalNav.Document();}}
+catch(err){return false;}
+return(globalnavdocument&&jQuery('#allow-hyphenated-patient-dob-search',globalnavdocument).length>0);}
+function _IsHyphenatedDOBSearch(findtext){return _AllowHyphenDOBSearch()&&findtext.indexOf('-')!=-1&&TrimWhitespace(findtext).match(/^\d{1,2}-\d{1,2}-?\d{0,4}$/);}
+function _NormalizeHyphenatedDOBSearch(findtext){findtext=TrimWhitespace(findtext);if(findtext.match(/^\d{1,2}-\d{1,2}$/)){findtext+='-'+new Date().getFullYear();}
+return findtext.replace(/-/g,'/');}
+return{Create:function(){var searchicon=jQuery(document.createElement("SPAN")).addClass('icon').addClass('sprite-searchicon-13x13-c5c4c8');var presearchinfolabel=jQuery(document.createElement("SPAN")).addClass('searchinfolabel').html('Search for "');var searchvaluecontainer=jQuery(document.createElement("SPAN")).addClass('searchvaluecontainer');var postsearchinfolabel=jQuery(document.createElement("SPAN")).addClass('searchinfolabel').html('" by');var searchlabel=jQuery(document.createElement("SPAN")).addClass('searchlabel');searchlabel.append(searchicon);searchlabel.append(presearchinfolabel);var searchvisitcategoryseparator=jQuery(document.createElement("DIV")).addClass('searchcategoryseparator');var searchclaimcategoryseparator=jQuery(document.createElement("DIV")).addClass('searchcategoryseparator');var searchpatientcategoryseparator=jQuery(document.createElement("DIV")).addClass('searchcategoryseparator');var searchinfo=jQuery(document.createElement("DIV")).addClass('searchinfo');searchinfo.append(searchlabel);searchvaluecontainer.append(searchvalue);searchinfo.append(searchvaluecontainer);searchinfo.append(postsearchinfolabel);searchtextrowcontainer.append(searchinfo);menucontainer.append(searchtextrowcontainer);AttachMenuContainer();this.Hide();},Reinitialize:function(args){oldsearchtext='';searchtext='';searchfilter='';placed=false;keepsearchopen=0;silentlyfocus=0;displayedoptions=[];hiddenoptions=[];patientname='';currentpatientid='';var shortcut_key_check=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.VENDORSHORTCUTKEYS==='Y');var menu_search_check=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.USEMENUSEARCH);var global_search_check=!!args.GLOBALSEARCHSETTINGS;var document_search_check=args.HASDOCUMENTSEARCHACCESS;var initialize_object_options;if(usevendorshortcut!==shortcut_key_check){usevendorshortcut=shortcut_key_check;initialize_object_options=1;}
+if(usemenusearch!==menu_search_check){usemenusearch=menu_search_check;initialize_object_options=1;}
+if(useglobalsearch!==global_search_check){useglobalsearch=global_search_check;initialize_object_options=1;if(menucontainer){this.SetGlobalSearchClass();}}
+if(_RefreshDocumentSearchInNavBar()&&hasdocumentsearchaccess!=document_search_check){hasdocumentsearchaccess=document_search_check;initialize_object_options=1;}
+if(initialize_object_options){numoptions=0;optionobjects=[];InitializeObjectOptions(args);}
+if(!this.IsInitialized()){AttachMenuContainer();}},IsInitialized:function(){return jQuery('#searchmenucontainer').length;},SetGlobalSearchClass:function(){if(useglobalsearch){menucontainer.addClass("globalsearch");}
+else{menucontainer.removeClass("globalsearch");}},Show:function(){if(window.RefreshFacit)RefreshFacit();if(!placed){Place();placed=true;}
+this.SelectDefault();menucontainer.show();menuframe.show();},Hide:function(){if(lastsearched){lastselected=lastsearched;}
+menucontainer.hide();menuframe.hide();},AddOption:function(option){option.INDEX=numoptions;numoptions++;if(option.CATEGORY){option.SPRITECLASS=CategorySpriteClass(option.CATEGORY);if(categories[option.CATEGORY].CATEGORYTEXT){option.ICONLABEL=categories[option.CATEGORY].CATEGORYTEXT;}
+else{option.ICONLABEL=option.CATEGORY+'S';}}
+if(option.FILTERS){jQuery.extend(option,option.FILTERS);delete option.FILTERS;}
+if(option.MATCHFUNCTION){jQuery.extend(option,option.MATCHDATA);delete option.MATCHDATA;}
+if(option.MATCHTEXT){option.MATCHTEXT=option.OPTIONTEXT;}
+if(!option.CATEGORYRANK){option.CATEGORYRANK=1;}
+if(option.OPTIONDATA){jQuery.extend(option,option.OPTIONDATA);delete option.OPTIONDATA;}
+optionobjects.push(option);},ResetRecentPatientOptions:function(){for(var i=0;i<recentpatients.length;i++){recentpatients[i].INDEX=numoptions;numoptions++;optionobjects.push(recentpatients[i]);}},AddOptionListeners:function(){var options=jQuery('.searchselection',menucontainer);options.hover(function(){jQuery('.searchselection').removeClass('menuhover');jQuery(this).addClass('menuhover');});var obj=this;options.mousedown(function(event){if(event.which==1){keepsearchopen=0;silentlyfocus=0;obj.PerformSearch({EVENT:event,ELEMENTINDEX:jQuery(this).data('index')});}});},BuildAndRender:function(args){this.BuildDisplayedOptions();this.RenderAvailableOptions({SEARCHTEXT:args.SEARCHTEXT});},BuildDisplayedOptions:function(){displayedoptions=[];hiddenoptions=[];var categoryorder=ReorderCategories();for(var i=0;i<categoryorder.length;i++){var categorykey=categoryorder[i];if(categorykey==='RECENT PATIENT'){for(var k=0;k<recentpatients.length;k++){displayedoptions.push(recentpatients[k]);}}
+else{var categoryoptions=this.GetCategoryOptions({OPTIONS:availableoptions,CATEGORY:categorykey});for(var j=0;j<categoryoptions.length;j++){if(j<MAXSHOWNOPTIONS){displayedoptions.push(categoryoptions[j]);}
+else{hiddenoptions.push(categoryoptions[j]);}}
+if(categoryoptions.length>MAXSHOWNOPTIONS){displayedoptions.push({VIEWMORE:categorykey});}}}},RenderAvailableOptions:function(args){var searchtext=args.SEARCHTEXT;if(searchtext.length||recentpatients.length){this.Show();}
+var presearchinfolabel=jQuery('.searchlabel',searchtextrowcontainer).children('.searchinfolabel');var postsearchinfolabel=jQuery('.searchinfo',searchtextrowcontainer).children('.searchinfolabel');if(!searchtext.length&&recentpatients.length){presearchinfolabel.html('Search for');postsearchinfolabel.html('');}
+else{presearchinfolabel.html('Search for "');postsearchinfolabel.html('" by');}
+var categoryorder=ReorderCategories();for(var i=0;i<categoryorder.length;i++){var categorykey=categoryorder[i];var searchrowcontainer=searchrowcontainers[categorykey];if(categorykey==='RECENT PATIENT'){var recentpatientshtml=this.RenderRecentPatients();searchrowcontainer.html(recentpatientshtml);menucontainer.append(searchrowcontainer);}
+else{var context=this.BuildContext({CATEGORYKEY:categorykey});var categoryhtml=OptionsTemplate.render(context);searchrowcontainer.html(categoryhtml);jQuery('.searchselection:not(.viewmore):gt('+(MAXSHOWNOPTIONS-1)+')',searchrowcontainer).hide();if(categories[categorykey].OnAfterDisplay){categories[categorykey].OnAfterDisplay(patientname,searchrowcontainer);}
+menucontainer.append(searchrowcontainer);}}
+this.SelectDefault();this.AddOptionListeners();this.RealignRows();SetSearchTextWidth();menuframe.height(menucontainer.outerHeight(true));menuframe.width(menucontainer.outerWidth(true));},BuildContext:function(args){var context={};var options=context.OPTION=[];var categoryoptions=this.GetCategoryOptions({OPTIONS:availableoptions,CATEGORY:args.CATEGORYKEY});for(var i=0;i<categoryoptions.length;i++){var option=categoryoptions[i];var optioncontext={};if(i===0){optioncontext.FIRSTOPTION=1;}
+if(option.SPRITECLASS){optioncontext.HASSPRITE=1;optioncontext.SPRITECLASSNAME=option.SPRITECLASS;}
+optioncontext.ICONLABELHTML=option.ICONLABEL;optioncontext.OPTIONTEXT=option.OPTIONTEXT;if(option.SPANLABEL){optioncontext.HASSPANLABEL=1;optioncontext.SPANLABEL=option.SPANLABEL;}
+optioncontext.INDEX=option.INDEX;optioncontext.USEGLOBALSEARCH=useglobalsearch;options.push(optioncontext);}
+if(categoryoptions.length>MAXSHOWNOPTIONS){context.ADDVIEWMORE=1;context.CATEGORY=args.CATEGORYKEY;}
+if(options.length===0){context.EMPTY=1;}
+return context;},RenderRecentPatients:function(){var recentpatientcontext={OPTION:[]};if(recentpatients.length===0){recentpatientcontext.EMPTY=1;}
+for(var i=0;i<recentpatients.length;i++){var optioncontext={};if(i==0){optioncontext.FIRSTOPTION=1;optioncontext.HASSPRITE=1;optioncontext.SPRITECLASSNAME=CategorySpriteClass('RECENT PATIENT');}
+optioncontext.ICONLABELHTML='RECENT PATIENTS';optioncontext.INDEX=recentpatients[i].INDEX;optioncontext.RECENTPATIENTS=1;optioncontext.HASSPANLABEL=1;optioncontext.SPANLABEL=recentpatients[i].SPANLABEL;optioncontext.AGEANDSEX=recentpatients[i].AGEANDSEX;optioncontext.DOB=recentpatients[i].DOB;optioncontext.PATIENTID=recentpatients[i].PATIENTID;optioncontext.ENTERPRISEID=recentpatients[i].ENTERPRISEID;optioncontext.USEGLOBALSEARCH=useglobalsearch;recentpatientcontext.OPTION.push(optioncontext);}
+return OptionsTemplate.render(recentpatientcontext);},RealignRows:function(){var searchlabels=jQuery('.searchlabelcontainer',menucontainer);searchlabels.width('');var widths=jQuery.map(searchlabels,function(element){return jQuery(element).width();});var maxwidth=Math.max.apply(null,widths);searchlabels.width(maxwidth);for(var i=0;i<searchlabels.length;i++){var label=searchlabels.eq(i);if(label.width()!==maxwidth){var padding=label.outerWidth()-label.width();label.width(maxwidth+padding);}}},GetCategoryOptions:function(args){var categoryoptions=[];var optionlist=args.OPTIONS;for(var i=0;i<optionlist.length;i++){if(optionlist[i].CATEGORY==args.CATEGORY){categoryoptions.push(optionlist[i]);}}
+return categoryoptions;},UpdateCurrentPatientID:function(args){var newpatientid="";if(args&&args.PATIENTID){newpatientid=args.PATIENTID.toString();}
+if(newpatientid&&newpatientid!==currentpatientid){nextpatientid=newpatientid;}},SetCurrentPatientIDFilter:function(args){if(!haspatientaccess){return;}
+var newpatientid=args.PATIENTID;this.UpdateRecentPatients(args);currentpatientid=newpatientid.toString();var searchstate=AH.GetGlobal('currentSearchState')||{};searchstate.TEXT=newpatientid.toString();searchstate.CATEGORY="PATIENT";searchstate.OPTIONNAME="ID";AH.SetGlobal('currentSearchState',searchstate);var globalnavcontainer=GetGlobalNavContainer();var searchbox=globalnavcontainer.find('#searchinput');searchbox.val(newpatientid.toString());PopulateSearchIcon({SEARCHBYCATEGORY:searchstate.CATEGORY});var searchtext=newpatientid.toString();this.SetSearchFilter({SEARCHTEXT:searchtext});this.BuildDisplayedOptions();lastselected=GetObjectByNameAndCategory({OPTIONNAME:'ID',OPTIONCATEGORY:'PATIENT'});lastsearched=lastselected;},UpdateRecentPatients:function(args){var newpatientid=args.PATIENTID;if(haspatientaccess&&newpatientid&&currentpatientid!==newpatientid.toString()){if(args.PATIENTINFO){if(AH&&AH.Frames&&AH.Frames.Top&&AH.Frames.Top.Frame()&&AH.Frames.Top.Frame().navsearchobject){var navsearchobject=AH.Frames.Top.Frame().navsearchobject;navsearchobject.AugmentRecentlyViewed({PATIENTID:newpatientid,PATIENTINFO:args.PATIENTINFO});}}
+else{AH.Frames.GlobalNav.Frame().CallRemote({SUB:'AthenaMenu::GetPatientInfo',ARGS:{PATIENTID:newpatientid},ONFINISH:function(patientinfo){if(patientinfo&&AH&&AH.Frames&&AH.Frames.Top&&AH.Frames.Top.Frame()&&AH.Frames.Top.Frame().navsearchobject){var navsearchobject=AH.Frames.Top.Frame().navsearchobject;navsearchobject.AugmentRecentlyViewed({PATIENTID:newpatientid,PATIENTINFO:patientinfo});}}});}}},SetSearchFilter:function(args){oldsearchtext=searchtext;searchtext=args.SEARCHTEXT;searchevent=args.SEARCHEVENT;searchvalue.text(searchtext);if(searchtext==''){searchfilter='';if(recentpatients.length===0){this.Hide();}}
+else if(searchtext.indexOf('/')!=-1||_IsHyphenatedDOBSearch(searchtext)){searchfilter='dob';if(typeof searchevent!='undefined'){if(_IsHyphenatedDOBSearch(searchtext)){searchtext=_NormalizeHyphenatedDOBSearch(searchtext);}
+else{FormatDate(searchevent);}}}
+else if(validpracticeswitcher&&searchtext.match(/^\s*\d+\s*[aA]\s*\d+\s*$/)){searchfilter='patientid';}
+else if(validpracticeswitcher&&searchtext.match(/^\s*\d+\s*[vV][zZ]\s*\d+\s*$/)){searchfilter='visitid';}
+else if(validpracticeswitcher&&searchtext.match(/^\s*\d+\s*[vV]\s*\d+\s*$/)){searchfilter='claimid';}
+else if(validpracticeswitcher&&searchtext.match(/^\s*\d+\s*[hH]\s*\d+\s*$/)){searchfilter='documentid';}
+else if(searchtext.match(/^[\d]+[\s]*$/)){searchfilter='number';}
+else if(searchtext.match(/^\d{3}[ -]?\d{0,6}$/)){searchfilter='phoneorssn';}
+else if(searchtext.match(/^\(\d{0,3}$/)||searchtext.match(/^(?:\(?\d{3}\)|\d{3})[ .-]?\d{0,2}$/)||searchtext.match(/^(?:\(?\d{3}\)|\d{3})[ .-]?\d{3}[ .-]?\d{0,4}$/)){searchfilter='phone';}
+else if(searchtext.match(/^\d{3}[ -]?\d{2}[ -]?\d{0,4}$/)){searchfilter='ssn';}
+else if(searchtext.match(/^\s*[ANTE]\d+[e]\d+\s*$/)){searchfilter='task';}
+else if(isNaN(searchtext)){searchfilter='string';}
+this.FilterOptions();},FilterOptions:function(args){if(searchtext===''){ClearAvailable();return;}
+for(var i=0;i<optionobjects.length;i++){var option=optionobjects[i];if(option[searchfilter]||option.any){var optioncategory=option.CATEGORY;if(categories[optioncategory].CategoryRequirement&&!categories[optioncategory].CategoryRequirement(option)){option.available=0;}
+else if(option.MATCHFUNCTION){var matchfunction=option.MATCHFUNCTION;if(matchfunction==='matchshortcut'){this.FilterShortCutKeys({OPTION:option});}}
+else if(option.MATCHTEXT){this.FilterMatchedText({OPTION:option});}
+else{option.available=1;}}
+else{option.available=0;}}
+SetAvailableOptions();},FilterShortCutKeys:function(args){var option=args.OPTION;if(searchtext){var shortcut=option.SHORTCUTKEY;if(searchtext.toLowerCase()===shortcut.toLowerCase()){option.available=1;return;}}
+option.available=0;},FilterMatchedText:function(args){var optionobject=args.OPTION;var optionwords=optionobject.MATCHTEXT.split(' ');var locationwords=optionobject.SPANLABEL.split(' ');if(searchtext){var searchablewords=optionwords.concat(locationwords);var searchwords=searchtext.split(' ');var foundallwords=1;for(var j=0;j<searchwords.length;j++){var foundword=0;for(var k=0;k<searchablewords.length;k++){var enteredword=EscapeRegExp(searchwords[j].toLowerCase());var searchvalue=searchablewords[k].toLowerCase().search(enteredword);if(searchvalue===0){foundword=1;}}
+if(!foundword){foundallwords=0;break;}}
+if(foundallwords){optionobject.available=1;}
+else{optionobject.available=0;}}},SelectDefault:function(){if(this.SelectShortCut()){return;}
+if(lastselected&&lastselected.CATEGORY!=='RECENT PATIENT'){if(InList(lastselected,displayedoptions)){this.Select({OPTION:lastselected});return;}}
+else if(lastselected&&lastselected.CATEGORY==='RECENT PATIENT'&&lastsearched){if(InList(lastsearched,displayedoptions)){this.Select({OPTION:lastsearched});return;}}
+var popdefaultfilter=false;try{if(AH.Frames.Main.Frame().location.href){popdefaultfilter=IsURLPOPPage(AH.Frames.Main.Frame().location.href);}}
+catch(err){}
+for(var i=0;i<displayedoptions.length;i++){if(displayedoptions[i].MATCHTEXT){this.Select({OPTION:displayedoptions[i]});return;}
+if(popdefaultfilter){if(displayedoptions[i].NAME=='ACEPOPPATIENTID'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].NAME=='ACEPOPMEMBERID'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].NAME=='ACEPOPDOB'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].NAME=='ACEPOPNAME'){this.Select({OPTION:displayedoptions[i]});return;}}
+else{if(displayedoptions[i].PATIENTID&&searchfilter=='patientid'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].VISITID&&searchfilter=='visitid'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].CLAIMID&&searchfilter=='claimid'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].DOCUMENTID&&searchfilter=='documentid'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].CATEGORY=='PATIENT'&&displayedoptions[i].NAME=='ID'){this.Select({OPTION:displayedoptions[i]});return;}
+if(displayedoptions[i].CATEGORY=='PATIENT'&&displayedoptions[i].NAME=='NAME'){this.Select({OPTION:displayedoptions[i]});return;}}}
+if(displayedoptions.length){this.SelectAvailable({INDEX:0});}
+else{}},SelectShortCut:function(){for(var i=0;i<categorylist.length;i++){var categorykey=categorylist[i];var categoryoptions=navsearchobject.GetCategoryOptions({OPTIONS:displayedoptions,CATEGORY:categorykey});if(categoryoptions.length){for(var j=0;j<categoryoptions.length;j++){if(categoryoptions[j].MATCHFUNCTION==='matchshortcut'){this.Select({OPTION:categoryoptions[j]});return 1;}}}}
+return 0;},SelectPrev:function(){var currentindex=GetSelectedIndex();if(typeof currentindex=='undefined'){this.SelectDefault();}
+else{var previndex=currentindex-1;if(previndex<0){previndex=displayedoptions.length-1;}
+this.SelectAvailable({INDEX:previndex});}},SelectNext:function(){var currentindex=GetSelectedIndex();if(typeof currentindex=='undefined'){this.SelectDefault();}
+else{var nextindex=currentindex+1;if(nextindex>=displayedoptions.length){nextindex=0;}
+this.SelectAvailable({INDEX:nextindex});}},SelectAvailable:function(args){var index=args.INDEX;if(index>displayedoptions.length-1||index<0){return;}
+this.Select({OPTION:displayedoptions[index]});},Select:function(args){ClearSelected();var option;if(args.OPTION){option=args.OPTION;}
+else if(args.OPTIONNAME&&args.OPTIONCATEGORY){option=GetObjectByNameAndCategory({OPTIONNAME:args.OPTIONNAME,OPTIONCATEGORY:args.OPTIONCATEGORY});}
+if(option){var element;if(option.INDEX||option.INDEX===0){element=GetElementByIndex(option.INDEX);}
+else if(option.VIEWMORE){element=GetViewMoreElement(option.VIEWMORE);}
+else if(option.VIEWLESS){element=GetViewLessElement(option.VIEWLESS);}
+if(element){element.addClass('menuselect');element.addClass('menuhover');if(element.offset().top>menucontainer.height()||element.offset().top<0){element[0].scrollIntoView();}
+lastselected=option;}
+else{if(InList(option,displayedoptions)){lastselected=option;}
+else{}}}},PerformSearch:function(args){var event=args.EVENT;var selectedoption;if(event&&(event.type=='click'||event.type=='mousedown')){if(args.ICONCLICK){selectedoption=GetSelectedOption();}
+else{selectedoption=GetHighlightedOption();}}
+else{selectedoption=GetSelectedOption();}
+if(!selectedoption){return;}
+var optioncategory;if(selectedoption.INDEX||selectedoption.INDEX===0){optioncategory=selectedoption.CATEGORY;if(args.ELEMENTINDEX&&args.ELEMENTINDEX!=selectedoption.INDEX){return;}}
+else if(selectedoption.VIEWMORE){optioncategory=selectedoption.VIEWMORE;}
+else if(selectedoption.VIEWLESS){optioncategory=selectedoption.VIEWLESS;}
+var globalnavcontainer=GetGlobalNavContainer();var searchbox=globalnavcontainer.find('#searchinput');if(selectedoption.CATEGORY&&(optioncategory=='VISIT'||optioncategory=='CLAIM'||optioncategory=='CLINICALITEMS'||optioncategory=='PATIENT'||optioncategory=='RECENT PATIENT')){if(selectedoption.CATEGORY&&optioncategory=='PATIENT'){var patientsearchform=globalnavcontainer.find('form[name="zform"]');if(selectedoption.NAME=='DOB'){var dobsearchvalue=searchbox.val();if(dobsearchvalue.length=='8'&&!dobsearchvalue.match(/\D/)){var month=dobsearchvalue.substring(-1,2);var day=dobsearchvalue.substring(2,4);var year=dobsearchvalue.substring(4);searchbox.val(month+'/'+day+'/'+year);}
+else if(_IsHyphenatedDOBSearch(dobsearchvalue)){var updateddobsearchvalue=_NormalizeHyphenatedDOBSearch(dobsearchvalue);searchbox.val(updateddobsearchvalue);}}
+patientsearchform.find('input[name="filtertype"]').val(selectedoption.NAME);patientsearchform.find('.searchvalue').val(searchbox.val());patientsearchform.submit();}
+else if(selectedoption.CATEGORY&&optioncategory=='VISIT'){var visitsearchform=globalnavcontainer.find('form[name="visitfindform"]');visitsearchform.find('.searchvalue').val(searchbox.val());visitsearchform.submit();}
+else if(selectedoption.CATEGORY&&optioncategory=='CLAIM'){var claimsearchform=globalnavcontainer.find('form[name="claimfindform"]');claimsearchform.find('.searchvalue').val(searchbox.val());claimsearchform.submit();}
+else if(selectedoption.CATEGORY&&optioncategory=='CLINICALITEMS'){var clinicalitemssearchform=globalnavcontainer.find('form[name="clinicalitemsfindform"]');clinicalitemssearchform.find('input[name="filtertype"]').val(selectedoption.NAME);clinicalitemssearchform.find('.searchvalue').val(searchbox.val());clinicalitemssearchform.submit();}
+else if(selectedoption.CATEGORY&&optioncategory=='RECENT PATIENT'){var recentpatientsearchform=globalnavcontainer.find('form[name="zform"]');recentpatientsearchform.find('input[name="filtertype"]').val('ID');recentpatientsearchform.find('.searchvalue').val(selectedoption.PATIENTID);this.PrepareSearch({TEXT:selectedoption.PATIENTID,CATEGORY:'PATIENT'});recentpatientsearchform.submit();}}
+else if(selectedoption.CATEGORY&&optioncategory=='ACEPOP'){var acepatientsearchform=globalnavcontainer.find('form[name="acepopfindform"]');if(selectedoption.NAME=='ACEPOPDOB'){var acedobsearchvalue=searchbox.val();if(acedobsearchvalue.length=='8'&&!acedobsearchvalue.match(/\D/)){var acemonth=acedobsearchvalue.substring(-1,2);var aceday=acedobsearchvalue.substring(2,4);var aceyear=acedobsearchvalue.substring(4);searchbox.val(acemonth+'/'+aceday+'/'+aceyear);}
+else if(_IsHyphenatedDOBSearch(acedobsearchvalue)){var updatedacedobsearchvalue=_NormalizeHyphenatedDOBSearch(acedobsearchvalue);searchbox.val(updatedacedobsearchvalue);}}
+acepatientsearchform.find('input[name="filtertype"]').val(selectedoption.NAME);acepatientsearchform.find('.searchvalue').val(searchbox.val());acepatientsearchform.submit();}
+else if(selectedoption.CATEGORY&&optioncategory=='ENROLLMENTTASK'){var tasksearchform=globalnavcontainer.find('form[name="enrollmenttaskfindform"]');tasksearchform.find('.searchvalue').val(searchbox.val());tasksearchform.submit();}
+else if(selectedoption.VIEWMORE){this.ExpandCategory(optioncategory);if(event.type!='click'&&event.type!='mousedown'){var viewless={VIEWLESS:selectedoption.VIEWMORE};this.Select({OPTION:viewless});}
+else{keepsearchopen=1;silentlyfocus=1;}
+lastsearched='';this.RealignRows();return;}
+else if(selectedoption.VIEWLESS){this.ReduceCategory(optioncategory);if(event.type!='click'&&event.type!='mousedown'){var viewmore={VIEWMORE:selectedoption.VIEWLESS};this.Select({OPTION:viewmore});}
+else{keepsearchopen=1;silentlyfocus=1;}
+lastsearched='';return;}
+else{categories[optioncategory].PerformOption(selectedoption);}
+PopulateSearchIcon({SEARCHBYCATEGORY:optioncategory});lastsearched=selectedoption;this.Hide();ResizeSearchBox();searchbox.blur();},ReduceCategory:function(category){jQuery('.searchselection:gt('+(MAXSHOWNOPTIONS-1)+')',searchrowcontainers[category]).hide();jQuery('.viewless',searchrowcontainers[category]).hide();jQuery('.viewmore',searchrowcontainers[category]).show();var viewlessposition=GetViewLessIndex(category);var firstcategoryoptionindex=FirstCategoryOptionIndex(category);var splicestartindex=firstcategoryoptionindex+MAXSHOWNOPTIONS;var splicecount=viewlessposition-splicestartindex;var viewmoreoption={VIEWMORE:category};displayedoptions.splice(viewlessposition,1,viewmoreoption);var hidden=displayedoptions.splice(splicestartindex,splicecount);hiddenoptions=hiddenoptions.concat(hidden);},ExpandCategory:function(category){jQuery('.searchselection:gt('+(MAXSHOWNOPTIONS-1)+')',searchrowcontainers[category]).show();jQuery('.viewmore',searchrowcontainers[category]).hide();jQuery('.viewless',searchrowcontainers[category]).show();var viewmoreposition=GetViewMoreIndex(category);var hiddencategoryoptions=this.GetCategoryOptions({OPTIONS:hiddenoptions,CATEGORY:category});displayedoptions.splice(viewmoreposition,1);var beginningsegment=displayedoptions.splice(0,viewmoreposition);var endingsegment=displayedoptions;var viewlessoption={VIEWLESS:category};displayedoptions=beginningsegment.concat(hiddencategoryoptions,viewlessoption,endingsegment);for(var i=hiddenoptions.length-1;i>=0;i--){if(hiddenoptions[i].INDEX&&optionobjects[hiddenoptions[i].INDEX].CATEGORY===category){hiddenoptions.splice(i,1);}}},GetCurrentSearchState:function(){var globalnavcontainer=GetGlobalNavContainer();var searchbox=globalnavcontainer.find('#searchinput');return(typeof lastselected==='undefined'?undefined:{TEXT:searchbox.val(),CATEGORY:lastselected.CATEGORY,OPTIONNAME:lastselected.NAME});},PrepareSearch:function(args){var text=args.TEXT;var category=args.CATEGORY;var new_patient_name=args.PATIENTNAME;var event_type=args.EVENTTYPE;if(new_patient_name){patientname=new_patient_name;}
+var event={type:event_type};if(nextpatientid){this.SetCurrentPatientIDFilter({PATIENTID:nextpatientid});nextpatientid=undefined;return;}
+else if(text){var globalnavcontainer=GetGlobalNavContainer();var searchbox=globalnavcontainer.find('#searchinput');searchtext=text;searchbox.val(text).addClass('active');this.SetSearchFilter({SEARCHTEXT:text});}
+if(category){PopulateSearchIcon({SEARCHBYCATEGORY:category});}},PerformPreparedSearch:function(args){var prepareonly=args.PREPAREONLY;delete args.PREPAREONLY;this.SetSearchFilter({SEARCHTEXT:args.TEXT});this.BuildDisplayedOptions();this.PrepareSearch(args);this.Select({OPTIONNAME:args.OPTIONNAME,OPTIONCATEGORY:args.CATEGORY});if(!prepareonly){this.PerformSearch({EVENT:event});}},KeepOpen:function(args){return keepsearchopen;},SilentlyFocus:function(){return silentlyfocus;},UpdateSilentlyFocus:function(flag){silentlyfocus=flag;},AugmentRecentlyViewed:function(args){var patientid=args.PATIENTID.toString();var patientinfo=args.PATIENTINFO;var searchstate=AH.GetGlobal('currentSearchState')||{};var firstname;if(augmentsogi&&patientinfo.PATIENTALTFIRSTNAME){patientname=patientinfo.PATIENTDISPLAYNAME;firstname=patientinfo.PATIENTFIRSTNAME+'/'+patientinfo.PATIENTALTFIRSTNAME;searchstate.PATIENTNAME=patientinfo.PATIENTDISPLAYNAME;}
+else{patientname=patientinfo.PATIENTFULLNAME;firstname=patientinfo.PATIENTFIRSTNAME;searchstate.PATIENTNAME=patientinfo.PATIENTFULLNAME;}
+var previousentry=PatientIDInRecentPatients(patientid);if(previousentry){var spliceindex=IndexOf({ELEMENT:previousentry,ARRAY:recentpatients});recentpatients.splice(spliceindex,1);recentpatients.unshift(previousentry);return;}
+var DateTimeUtils=require('shared:/scripts/athena/utils/datetime');var formattedDate;if(patientinfo.PATIENTDOB&&typeof(patientinfo.PATIENTDOB)==='object'){formattedDate=patientinfo.PATIENTDOB.toString();}
+else if(typeof(patientinfo.PATIENTDOB)==='string'){formattedDate=DateTimeUtils.format(patientinfo.PATIENTDOB,{format:'%Y-%m-%d'});}
+else{formattedDate=patientinfo.PATIENTDOB;}
+var mostrecentoption={INDEX:numoptions,CATEGORY:'RECENT PATIENT',PATIENTID:patientid,CHARTID:AH.GetGlobal('CHARTID'),DEPTID:AH.GetGlobal('DEPARTMENTID'),AGEANDSEX:patientinfo.PATIENTAGEANDSEX,DOB:formattedDate,ENTERPRISEID:patientinfo.PATIENTENTERPRISEID,SPANLABEL:patientinfo.PATIENTLASTNAME.toUpperCase()+
+', '+firstname};numoptions++;optionobjects.push(mostrecentoption);if(recentpatients.length>=5){var removedoption=recentpatients.pop();for(var i=optionobjects.length-1;i>=0;i--){if(optionobjects[i].INDEX===removedoption.INDEX){optionobjects.splice(i,1);break;}}}
+recentpatients.unshift(mostrecentoption);},BuildAirlockURLAndRedirect:function(args){var customargs={id:AH.GetGlobal('CHARTID'),patientid:AH.GetGlobal('PATIENTID')};if(args){var keys=Object.keys(args);for(var i=0;i<keys.length;i++){var newkey=keys[i].toLowerCase();customargs[newkey]=args[keys[i]];}}
+var GlobalNav=AH.Frames.GlobalNav.Frame();GlobalNav.redirectToAirlock(GlobalNav.buildAirlockURL(customargs));},CalculateTimeMetric:function(args){CalculateTimeMetric(args);},IncrementCountMetric:function(args){IncrementCountMetric(args);},GetMetrics:function(){return metrics;},GetAverageMetrics:function(){var avgs={};for(var key in metrics.executiontime){if(metrics.executiontime.hasOwnProperty(key)){avgs[key]=parseFloat((metrics.executiontime[key]/metrics.timescalled[key]).toFixed(2));}}
+return avgs;}};};var navsearchobject;function InitializeSearchObject(args){if(navsearchobject){navsearchobject.Reinitialize(args);}
+else{navsearchobject=new NavSearchObject(args);InitializeObjectOptions(args);navsearchobject.Create();}}
+function InitializeObjectOptions(args){var usevendorshortcut=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.VENDORSHORTCUTKEYS==='Y');var usemenusearch=(args.GLOBALSEARCHSETTINGS&&args.GLOBALSEARCHSETTINGS.USEMENUSEARCH);var vendoroption;var searchoption;if(args.ATHENAMENU&&usemenusearch){AddMainMenuOptions({ATHENAMENU:args.ATHENAMENU,ICONMENU:args.ICONMENU,EXTRAVENDORSHORTCUTS:args.EXTRAVENDORSHORTCUTS,NAVSEARCHOBJECT:navsearchobject,USEVENDORSHORTCUT:usevendorshortcut});}
+if(args.PATIENTACTIONMENU&&usemenusearch){for(var i=0;i<args.PATIENTACTIONMENU.length;i++){var menu=args.PATIENTACTIONMENU[i];for(var j=0;j<menu.COLUMNS.length;j++){var column=menu.COLUMNS[j];for(var k=0;k<column.CATEGORIES.length;k++){var category=column.CATEGORIES[k];for(var l=0;l<category.ITEMS.length;l++){var actionitem=category.ITEMS[l];if(!actionitem.DISABLEGLOBALSEARCH){actionitem.ITEMTEXT=actionitem.ITEMTEXT.replace(/&/g,'');searchoption=MakeSearchOption({ITEM:actionitem,CATEGORY:'ACTION MENU',ADDITIONALOPTIONS:{SPANLABEL:menu.MENUNAME.replace(/&/g,''),CUSTOMJS:actionitem.CUSTOMJS}});navsearchobject.AddOption(searchoption);if(usevendorshortcut&&actionitem.VENDORSHORTCUTKEYS){vendoroption=MakeSearchOption({ITEM:actionitem,CATEGORY:'VENDOR SHORTCUTS',PERFORMCATEGORY:'ACTION MENU',ADDITIONALOPTIONS:{SPANLABEL:menu.MENUNAME.replace(/&/g,''),CUSTOMJS:actionitem.CUSTOMJS}});navsearchobject.AddOption(vendoroption);}}}}}}}
+if(args.HASVISITACCESS){navsearchobject.AddOption({NAME:'ID',OPTIONTEXT:'Visit ID',CATEGORY:'VISIT',FILTERS:{number:1,visitid:1}});}
+if(args.HASCLAIMACCESS){navsearchobject.AddOption({NAME:'ID',OPTIONTEXT:'Claim ID',CATEGORY:'CLAIM',FILTERS:{number:1,claimid:1}});}
+if(args.HASDOCUMENTSEARCHACCESS){navsearchobject.AddOption({NAME:'DOCUMENTID',OPTIONTEXT:'Document ID',CATEGORY:'CLINICALITEMS',FILTERS:{number:1,documentid:1}});}
+if(args.HASPATIENTACCESS){navsearchobject.AddOption({NAME:'ID',OPTIONTEXT:'Patient ID',CATEGORY:'PATIENT',FILTERS:{number:1,patientid:1}});navsearchobject.AddOption({NAME:'NAME',OPTIONTEXT:'Patient name',CATEGORY:'PATIENT',FILTERS:{string:1}});navsearchobject.AddOption({NAME:'DOB',OPTIONTEXT:'Date of birth',CATEGORY:'PATIENT',FILTERS:{number:1,dob:1}});navsearchobject.AddOption({NAME:'SSN',OPTIONTEXT:'Social Security Number',CATEGORY:'PATIENT',FILTERS:{number:1,phoneorssn:1,ssn:1}});navsearchobject.AddOption({NAME:'INSUREDIDNUMBER',OPTIONTEXT:'Insurance number',CATEGORY:'PATIENT',FILTERS:{number:1,string:1}});navsearchobject.AddOption({NAME:'PHONE',OPTIONTEXT:'Phone number',CATEGORY:'PATIENT',FILTERS:{number:1,phoneorssn:1,phone:1}});navsearchobject.AddOption({NAME:'CLIENTRECORDNUMBER',OPTIONTEXT:'Custom ID',CATEGORY:'PATIENT',FILTERS:{string:1,number:1,dob:1}});navsearchobject.AddOption({NAME:'GUARANTORNAME',OPTIONTEXT:'Guarantor',CATEGORY:'PATIENT',FILTERS:{string:1}});}
+if(args.HASPOPACCESS){navsearchobject.AddOption({NAME:'ACEPOPPATIENTID',OPTIONTEXT:'Patient ID',CATEGORY:'ACEPOP',FILTERS:{number:1,string:1}});navsearchobject.AddOption({NAME:'ACEPOPNAME',OPTIONTEXT:'Patient Name',CATEGORY:'ACEPOP',FILTERS:{string:1}});navsearchobject.AddOption({NAME:'ACEPOPDOB',OPTIONTEXT:'Date of birth',CATEGORY:'ACEPOP',FILTERS:{number:1,dob:1}});navsearchobject.AddOption({NAME:'ACEPOPMEMBERID',OPTIONTEXT:'Member ID',CATEGORY:'ACEPOP',FILTERS:{number:1,string:1}});}
+if(args.HASTASKACCESS){navsearchobject.AddOption({NAME:'TASKROW',OPTIONTEXT:'Task',CATEGORY:'ENROLLMENTTASK',FILTERS:{task:1}});}
+if(args.GLOBALSEARCHSETTINGS){navsearchobject.ResetRecentPatientOptions();}}
+function AddMainMenuOptions(args){var navsearchobject=args.NAVSEARCHOBJECT;var combinedmenus=args.ATHENAMENU.concat(args.ICONMENU);if(args.USEVENDORSHORTCUT&&args.EXTRAVENDORSHORTCUTS){for(var c=0;c<args.EXTRAVENDORSHORTCUTS.length;c++){var vendoroption=MakeSearchOption({ITEM:args.EXTRAVENDORSHORTCUTS[c],CATEGORY:'VENDOR SHORTCUTS'});navsearchobject.AddOption(vendoroption);}}
+for(var i=0;i<combinedmenus.length;i++){var menu=combinedmenus[i];var spanlabel;if(menu.MENUNAME){spanlabel=menu.MENUNAME;}
+var combineditems=[];if(menu.RESOURCES){combineditems=menu.RESOURCES;}
+if(menu.COLUMNS){for(var j=0;j<menu.COLUMNS.length;j++){var column=menu.COLUMNS[j];for(var k=0;k<column.CATEGORIES.length;k++){var category=column.CATEGORIES[k];combineditems=combineditems.concat(category.ITEMS);}}}
+for(var l=0;l<combineditems.length;l++){var item=combineditems[l];if(!item.DISABLEGLOBALSEARCH){var searchoption=MakeSearchOption({ITEM:item,CATEGORY:'MAIN MENU',ADDITIONALOPTIONS:{SPANLABEL:menu.MENUNAME}});navsearchobject.AddOption(searchoption);if(args.USEVENDORSHORTCUT&&item.VENDORSHORTCUTKEYS){var vendoroption=MakeSearchOption({ITEM:item,CATEGORY:'VENDOR SHORTCUTS',PERFORMCATEGORY:'MAIN MENU',ADDITIONALOPTIONS:{SPANLABEL:menu.MENUNAME}});navsearchobject.AddOption(vendoroption);}}}}}
+function MakeSearchOption(args){if(args.ITEM&&args.CATEGORY){var item=args.ITEM;var categories=GetAllSearchCategories();var searchoption=categories[args.CATEGORY].BuildOption(item,args);jQuery.extend(searchoption,args.ADDITIONALOPTIONS);return searchoption;}
+return;}
+function CreateDefaultSearchOption(item){return{ITEMTARGET:item.ITEMTARGET,ITEMURL:item.ITEMURL,ITEMONCLICK:item.ITEMONCLICK,OPTIONTEXT:item.ITEMTEXT,FILTERS:{any:1}};}
+function GetAllSearchCategories(){var categories={'VENDOR SHORTCUTS':{CATEGORYTEXT:'VENDOR',CONTAINERID:'vendorrowcontainer',BuildOption:function(item,args){return jQuery.extend(CreateDefaultSearchOption(item),{CATEGORY:'VENDOR SHORTCUTS',CATEGORYRANK:2,CATEGORYTEXT:this.CATEGORYTEXT,MATCHFUNCTION:'matchshortcut',MATCHDATA:{SHORTCUTKEY:item.VENDORSHORTCUTKEYS},OPTIONDATA:{PERFORMCATEGORY:args.PERFORMCATEGORY}});},CategoryRequirement:function(item){if(item.PERFORMCATEGORY==='ACTION MENU'){return categories[item.PERFORMCATEGORY].CategoryRequirement(item);}
+else{return 1;}},PerformOption:function(item){if(item.PERFORMCATEGORY){categories[item.PERFORMCATEGORY].PerformOption(item);}
+else if(item.ITEMONCLICK){var onclick=item.ITEMONCLICK;if(typeof onclick==='function'){onclick();}
+else if(typeof AH.Frames.GlobalNav.Frame()[onclick]=='function'){AH.Frames.GlobalNav.Frame()[onclick]();}}}},'RECENT PATIENT':{CATEGORYTEXT:'RECENT PATIENTS',CONTAINERID:'recentpatientcontainer',SPRITE:'patient',HASSPRITE:1},'MAIN MENU':{CATEGORYTEXT:'PAGES',CONTAINERID:'mainmenurowcontainer',BuildOption:function(item,args){return jQuery.extend(CreateDefaultSearchOption(item),{CATEGORY:'MAIN MENU',CATEGORYTEXT:this.CATEGORYTEXT,MATCHTEXT:1});},PerformOption:function(item){var MD5=require('shared:/scripts/third_party/crypto-js/md5');var menuobjid=MD5(item.OPTIONTEXT+item.ITEMURL).toString();MegaMenuClick({MENUOBJ:{ID:menuobjid,ITEMONCLICK:item.ITEMONCLICK,ITEMURL:item.ITEMURL,ITEMTARGET:item.ITEMTARGET}});}},'ACTION MENU':{CATEGORYTEXT:'ACTIONS',CONTAINERID:'patientactionrowscontainer',BuildOption:function(item,args){return jQuery.extend(CreateDefaultSearchOption(item),{CATEGORY:'ACTION MENU',CATEGORYTEXT:this.CATEGORYTEXT,MATCHTEXT:1,OPTIONDATA:{CHARTTABSID:item.CHARTTABSID}});},CategoryRequirement:function(item){return(AH.GetGlobal('PATIENTID')&&AH.GetGlobal('CHARTID'));},PerformOption:function(item){var usecustomjs=true;if(item.CUSTOMJS&&item.CUSTOMJS.USECUSTOMJSIF){for(var i=0;i<item.CUSTOMJS.USECUSTOMJSIF.length;i++){if(!item.CUSTOMJS.USECUSTOMJSIF[i]){usecustomjs=false;break;}}}
+if(item.CUSTOMJS&&usecustomjs){if(navsearchobject&&typeof navsearchobject[item.CUSTOMJS.FUNCTIONNAME]==='function'){navsearchobject[item.CUSTOMJS.FUNCTIONNAME](item.CUSTOMJS.ARGS);}
+return;}
+var target=item.ITEMTARGET;var url=item.ITEMURL;var patientid=AH.GetGlobal('PATIENTID');var chartid=AH.GetGlobal('CHARTID');url+=MakeGetString({PATIENTID:patientid,CHARTID:chartid,DEPARTMENTID:AH.GetGlobal('DEPARTMENTID')});if(target==='CHARTTABS'){var charttabsid=item.CHARTTABSID?item.CHARTTABSID:item.MATCHTEXT;var charttabsurl=AH.Frames.GlobalNav.Frame().TabLink({ID:charttabsid,TITLE:item.MATCHTEXT,URL:url,NOSELECT:0,REFRESH:'',PATIENTID:patientid,CHARTID:chartid,SECTION:'',RETURNURL:true});if(!charttabsurl)return;url=charttabsurl;target='Main';}
+AH.FramesetNavigation({frame:target,url:url});},OnAfterDisplay:function(patientname,categorycontainer){var patientdisplayname=patientname?patientname:'CURRENT PATIENT';var $actions_for=jQuery(document.createElement("DIV")).html('ACTIONS FOR');var $current_patient=jQuery(document.createElement("DIV")).addClass('currentpatient').html(patientdisplayname);jQuery('.iconlabel',categorycontainer).html($actions_for);jQuery('.iconlabel',categorycontainer).append($current_patient);}},'VISIT':{CATEGORYTEXT:'VISITS',CONTAINERID:'visitrowcontainer',HASSPRITE:1},'CLAIM':{CATEGORYTEXT:'CLAIMS',CONTAINERID:'claimrowcontainer',HASSPRITE:1},'CLINICALITEMS':{CATEGORYTEXT:'CLINICAL ITEMS',CONTAINERID:'clinicalitemsrowcontainer',SPRITE:'claim',HASSPRITE:1},'PATIENT':{CATEGORYTEXT:'PATIENTS',CONTAINERID:'patientsrowcontainer',HASSPRITE:1},'ACEPOP':{CATEGORYTEXT:'NETWORK PATIENTS',CONTAINERID:'acepoprowcontainer',SPRITE:'patient',HASSPRITE:1},'ENROLLMENTTASK':{CATEGORYTEXT:'ENROLLMENT',CONTAINERID:'taskrowcontainer',SPRITE:'claim',HASSPRITE:1}};return categories;}
+function HandleKeyDown(args){if(!navsearchobject){return true;}
+if(args.EVENT.keyCode==38){navsearchobject.SelectPrev();return false;}
+else if(args.EVENT.keyCode==40){navsearchobject.SelectNext();return false;}
+else if(args.EVENT.keyCode==13){var globalnavcontainer=GetGlobalNavContainer();var search=globalnavcontainer.find('#searchinput');if(search.val()||jQuery('#searchmenucontainer:visible')){navsearchobject.PerformSearch({EVENT:args.EVENT});return false;}}
+else if(args.EVENT.keyCode==27){navsearchobject.Hide();return false;}
+return true;}
+function HandleKeyUp(args){if(!navsearchobject){return;}
+if(args.EVENT&&(args.EVENT.keyCode==13||args.EVENT.keyCode==27)){return;}
+var searchtext=args.OBJ.value;if(args.EVENT&&(args.EVENT.keyCode!==38&&args.EVENT.keyCode!==40)){navsearchobject.SetSearchFilter({SEARCHTEXT:searchtext,SEARCHEVENT:args.EVENT});navsearchobject.BuildAndRender({SEARCHTEXT:searchtext});}}
+function HandleFocus(args){if(!navsearchobject){return;}
+var searchtext=args.OBJ.value;var menucontainer=jQuery('#searchmenucontainer');if(args.EVENT&&!menucontainer.is(':visible')){navsearchobject.BuildAndRender({SEARCHTEXT:searchtext});}}
+function ResizeSearchBox(){var globalnavcontainer=GetGlobalNavContainer();var searchdiv=globalnavcontainer.find('#categoryicon');var searchbox=globalnavcontainer.find('#searchinput');if(searchdiv.hasClass('sprite-patienticon')||searchdiv.hasClass('sprite-visiticon')||searchdiv.hasClass('sprite-claimicon')){searchbox.width(95);}
+else{searchbox.width(112);}}
+function ShowUserData(args){var menuname=args.MENUNAME.toLowerCase();var menucontainer=jQuery(document.createElement("DIV"))
+.attr({id:'usermenucontainer',name:menuname,tabindex:-1})
+.addClass('megamenucontainer')
+.addClass('usermenucontainer')
+.addClass('streamlined-styles');var menuframe=jQuery(document.createElement("iframe")).attr({id:menuname+'menuiframe'}).addClass("shimiframe")
+menucontainer.mouseenter(function(){jQuery(this).addClass('hover-marker');});menucontainer.mouseleave(function(){jQuery(this).removeClass('hover-marker');});menucontainer.blur(function(){setTimeout(CloseAllMenus,100);});jQuery(document.createElement("DIV"))
+.addClass('name')
+.html(args.NAME)
+.appendTo(menucontainer);jQuery(document.createElement("DIV"))
+.addClass('username')
+.attr('translate',args.PREVENTTRANSLATION?'no':null)
+.html(args.USERNAME)
+.appendTo(menucontainer);if(args.USERSWITCHER){jQuery(document.createElement("A"))
+.addClass('switchlink')
+.attr('href','javascript:;')
+.mousedown(function(){jQuery('#usermenucontainer').unbind('blur');})
+.click(function(){AH.Frames.Top.SetLocation(AH.BaseURL('/login/chooseuser.esp'));jQuery('#usermenucontainer').blur(function(){CloseAllMenus();});})
+.html('Switch User/Practice')
+.appendTo(menucontainer);}
+var actingasproviderselect;if(args.ACTINGASPROVIDERTOGGLE){jQuery('<div>')
+.addClass('usermenusectiontitle')
+.html('ACTING AS')
+.appendTo(menucontainer);actingasproviderselect=jQuery('<select id="actingasproviderselect">')
+.append(jQuery("<option/>",{text:'',value:''}))
+.addClass('usermenusectionselect')
+.appendTo(menucontainer);jQuery.each(args.ACTINGASPROVIDEROPTIONS,function(idx,elt){actingasproviderselect.append(jQuery("<option/>",{text:elt['TEXT'],value:elt['VALUE']}));});actingasproviderselect.val(args.CURRENTACTINGASPROVIDER);SelectSupressMenuClose(actingasproviderselect);actingasproviderselect.change(function(){var switchProviderURL=AH.BaseURL('/inpatient/recent_user_data/save_value');jQuery.ajax(switchProviderURL,{type:'POST',contentType:'application/json',processData:false,data:JSON.stringify({key:'ACTINGASPROVIDERUSERNAME',value:actingasproviderselect.val()}),success:function(data){CloseAllMenus();AH.Frames.GlobalNav.Reload();var location=AH.Frames.Main.GetLocation();var pathName=location.pathname;if(pathName.search(/\/inpatient/)!==-1){if(pathName.search(/\/chart/)!==-1){location.hash='';}
+AH.Frames.Main.SetLocation(location);AH.Frames.Main.Reload();}}});});}
+var airlock=jQuery('iframe#navbar-iframe').length;var airlockinclassicframeset=airlock?false:AH.GetGlobal('AIRLOCKINCLASSICFRAMESET');if(args.HOMEPAGETOGGLE){jQuery(document.createElement("DIV"))
+.addClass('usermenusectiontitle')
+.html('USER HOMEPAGE')
+.appendTo(menucontainer);var homepagetoggle=jQuery(document.createElement("SELECT"));for(var preference in args.HOMEPAGEINFO){var optioninfo=args.HOMEPAGEINFO[preference];homepagetoggle.append(jQuery("<option/>",{text:optioninfo.NAME,value:preference,'data-homepage-url':optioninfo.URL}));}
+homepagetoggle.val(args.HOMEPAGE)
+.addClass('usermenusectionselect')
+.attr('id','homepageswitcher')
+.change(function(){var input=jQuery(this);var value=input.val();var nav=GetGlobalNavContainer();var logo=nav.find('div.menuitemlogo');var oldvalue=logo.attr('data-homepage-preference');var airlock=jQuery('iframe#navbar-iframe').length;var success_handler=function(){var selected=input.find(":selected");var selectedurl=selected.attr('data-homepage-url');var selectedvalue=selected.val();nav.find('div.menuitemlogo')
+.attr('data-homepage-url',selectedurl)
+.attr('data-homepage-preference',selectedvalue);};var error_handler=function(){input.val(oldvalue);success_handler();};success_handler();if(airlockinclassicframeset){CallRemote({SUB:'BusCall::User::ResourcedRecentUserDataSet',ARGS:{USERNAME:args.USERNAME,KEY:'AIRLOCK.HOMEPAGE',VALUE:value},ONFINISH:function(){var homepagetest=new RegExp('/(ax|bx_[^\/]+)/'+oldvalue+'(?:/|$)');var onhomepage=homepagetest.test(top.frMain.location.pathname);if(onhomepage&&value!==oldvalue){nav.find('div.menuitemlogo').click();input.attr('data-redirecting',1);}},ONERROR:error_handler});}
+else{if(airlock){var homepagetest=new RegExp('/(ax|bx_[^\/]+)/'+oldvalue+'(?:/|$)');var onhomepage=homepagetest.test(document.location.pathname);var url=document.location.pathname
+.replace(/\/(ax|bx_[^\/]+)\/.*$/,'/$1/recent_user_data/save_value');jQuery.ajax(url,{type:'POST',contentType:'application/json',processData:false,data:JSON.stringify({username:args.USERNAME,key:'AIRLOCK.HOMEPAGE',value:value}),success:function(data){if(onhomepage&&value!==oldvalue){nav.find('div.menuitemlogo').click();input.attr('data-redirecting',1);}},error:error_handler});}else{CallRemote({SUB:'BusCall::User::ResourcedRecentUserDataSet',ARGS:{USERNAME:args.USERNAME,KEY:'AIRLOCK.HOMEPAGE',VALUE:value},ONERROR:error_handler});}}})
+.appendTo(menucontainer);SelectSupressMenuClose(homepagetoggle);}
+jQuery(document.createElement("DIV"))
+.addClass('usermenusectiontitle')
+.html('DEPARTMENT')
+.appendTo(menucontainer);jQuery(document.createElement("DIV"))
+.addClass('departmentname')
+.html(args.DEPARTMENT)
+.appendTo(menucontainer);jQuery(document.createElement("DIV"))
+.addClass('usermenusectiontitle')
+.html('PRACTICE')
+.appendTo(menucontainer);jQuery(document.createElement("DIV"))
+.addClass('contextname')
+.html(args.CONTEXT)
+.appendTo(menucontainer);if(args.PRACTICESWITCHER){jQuery(document.createElement("A"))
+.addClass('switchlink')
+.attr('href','javascript:;')
+.mousedown(function(){jQuery('#usermenucontainer').unbind('blur');})
+.click(function(){CloseAthenaNav();if(typeof(window.history.replaceState)==='function'){AH.Frames.GlobalNav.Frame().PracticeSwitcher();}
+else if(jQuery('#navbar-iframe').length){window.location=jQuery('#meta-context-url').attr('content')+'/globalframeset.esp?AXSWITCHPRACTICE=1';}
+else{if(airlockinclassicframeset&&isAirlockOpen()){AH.Frames.Top.SetLocation(AH.BaseURL('/globalframeset.esp?AXSWITCHPRACTICE=1'));}
+else{AH.Frames.GlobalNav.Frame().PracticeSwitcher();}}
+jQuery('#usermenucontainer').blur(function(){CloseAllMenus();});})
+.html('Switch Practice')
+.appendTo(menucontainer);}
+if(args.SIMULATETIMEOUT){var $p=jQuery(document.createElement('p'))
+.appendTo(menucontainer);jQuery(document.createElement('a'))
+.attr('href','javascript:;')
+.click(function(){console.log('Logging out user; this may take a minute');CloseAthenaNav();CallRemote({SUB:'AthenaSecurity::Session::LogoutUser',ARGS:{},ONFINISH:function(){CheckIfLockedOut();}});})
+.html('Simulate Session Timeout')
+.appendTo($p);}
+var body=jQuery('body');var menucomponentselected=jQuery('#'+menuname+'menucomponentselected');var menucontainerobject=jQuery('#'+menuname+'menucontainer');var menucontainerobjectiframe=jQuery('#'+menuname+'menuiframe');CloseAthenaNav();if(menucomponentselected.length>0){menucomponentselected.show();}
+else{menucomponentselected=CreateMenuComponentSelected(args);body.append(menucomponentselected);}
+if(menucontainerobject.length>0){menucontainerobject.show();menucontainerobjectiframe.show();}
+else{body.append(menucontainer);body.append(menuframe);menucontainerobject=menucontainer;}
+if(homepagetoggle&&!args.HOMEPAGE){homepagetoggle.prop('selectedIndex',-1);}
+if(window.RefreshFacit)RefreshFacit();PlaceOpenMenu({MENUNAME:menuname});menucontainerobject.focus();}
+function SelectSupressMenuClose($element){$element.mousedown(function(){jQuery('#usermenucontainer').unbind('blur');})
+.blur(function(){jQuery('#usermenucontainer').focus().blur(function(){CloseAllMenus();});if(!jQuery('#usermenucontainer').hasClass('hover-marker')){jQuery('#usermenucontainer').blur();}});return $element;}

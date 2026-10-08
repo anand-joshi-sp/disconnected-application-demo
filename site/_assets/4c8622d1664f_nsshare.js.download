@@ -1,0 +1,907 @@
+var secureToken = "";
+
+function CreateMainTable()
+{
+	document.writeln("<table class=\"full_width_height\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">");
+}
+
+function CreateBannerI()
+{
+	document.writeln("<tr>");
+	document.writeln("<td valign=\"top\" class=\"full_width\">");
+	document.writeln("<table class=\"full_width\" cellspacing=\"0\" cellpadding=\"0\">");
+	document.writeln("<tr>");
+}
+
+function CreateBannerII()
+{
+	document.writeln("<td class=\"header_middle\">&nbsp;</td>");
+	document.writeln("</tr>");
+	document.writeln("<tr>");
+	document.writeln("<td colspan=2 class=\"navbar\">&nbsp;</td>");
+	document.writeln("</tr>");
+	document.writeln("</table></td></tr>");
+}
+
+function AddHeaderAndBar()
+{
+	CreateBannerI();
+	document.writeln("<td class=\"header_left\">&nbsp;</td>");
+	CreateBannerII();	
+}
+
+function AddHeaderAndBarForTM()
+{
+	CreateBannerI();
+	document.writeln("<td class=\"header_left_for_tm\">&nbsp;</td>");
+	CreateBannerII();	
+}
+
+function AddHeaderAndBarForCitrix()
+{
+	CreateBannerI();
+	document.writeln("<td class=\"header_ctx\">&nbsp;</td>");
+	CreateBannerII();	
+}
+
+function AddFooter()
+{
+    document.writeln('<tr class="full_width_height">');
+	document.writeln('<td valign="bottom">');
+	document.writeln('<table class="full_width" cellspacing="0" cellpadding="0">');
+	document.writeln('<tr>');
+	document.writeln('<td class="watermark">');
+	document.writeln('</td>');
+	document.writeln('</tr>');
+	document.writeln('</table>');
+	document.writeln('</td>');
+	document.writeln('</tr>');	
+}
+
+function AddBanner()
+{
+	document.writeln("<TABLE  cellSpacing=0 cellPadding=0 width=\"100%\" border=0>");
+    document.writeln("<TBODY>");
+    document.writeln("<TR height=94>");
+    document.writeln("<TD style=\"BACKGROUND-IMAGE: url(/vpn/images/ctxBanner01.gif); BACKGROUND-REPEAT: no-repeat\" width=701></TD>");
+    document.writeln("<TD style=\"BACKGROUND-IMAGE: url(/vpn/images/ctxBanner02.gif); BACKGROUND-REPEAT: repeat-x\">&nbsp;</TD>");
+    document.writeln("</TR>");
+    document.writeln("<TR>");
+    document.writeln("<TD style=\"FONT-SIZE: 1px; HEIGHT: 8px; BACKGROUND-COLOR: white\" vAlign=bottom></TD>");
+    document.writeln("</TR></TBODY></TABLE>");
+}
+
+var suitable_browser_to_use_png = false;
+    
+function canShowPNGWell()
+{
+	//As all morden browsers support PNG alfa transperancy by default this function will return true
+	//except for IE 6 and lower, as IE 7 was first browser of IE series to support it
+    var usrAgt = navigator.userAgent.toLowerCase();
+	var msieOld = /(msie) [1-6]\.+/;
+	if(msieOld.test(usrAgt)) {
+		return false;
+	}
+	return true;
+}
+
+suitable_browser_to_use_png = canShowPNGWell();
+
+function documentWriteGlowBoxUpper()
+{
+    if (suitable_browser_to_use_png == true)
+        {
+            document.write('<table class="CTXMSAM_LogonFont" cellpadding="0" cellspacing="0" align="center" border="0">\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxTop glowBoxLeft glowBoxTopLeftPng"></td>\r\n');
+            document.write('<td class="glowBoxTop glowBoxTopMidPng"></td>\r\n');
+            document.write('<td class="glowBoxTop glowBoxRight glowBoxTopRightPng"></td>\r\n');
+            document.write('</tr>\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxLeft glowBoxMidLeftPng"></td>\r\n');
+            document.write('<td class="glowBoxMidPng loginTableMidWidth">\r\n');
+        }
+        else
+        {
+            document.write('<table class="CTXMSAM_LogonFont" cellpadding="0" cellspacing="0" align="center" border="0">\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxTop glowBoxLeft glowBoxTopLeft"></td>\r\n');
+            document.write('<td class="glowBoxTop glowBoxTopMid"></td>\r\n');
+            document.write('<td class="glowBoxTop glowBoxRight glowBoxTopRight"></td>\r\n');
+            document.write('</tr>\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxLeft glowBoxMidLeft"></td>\r\n');
+            document.write('<td class="glowBoxMid loginTableMidWidth">\r\n');
+        }
+}
+
+function documentWriteGlowBoxLower()
+{
+    if (suitable_browser_to_use_png == true)
+        {
+        	document.write('</td>');
+            document.write('<td class="glowBoxRight glowBoxMidRightPng"></td>\r\n');
+            document.write('</tr>\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxLeft glowBoxFooterLeftPng"></td>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxFooterMidPng"></td>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxRight glowBoxFooterRightPng"></td>\r\n');
+			document.write('</tr>\r\n');
+			document.write('</table>\r\n');
+        }
+        else
+        {
+        	document.write('</td>');
+            document.write('<td class="glowBoxRight glowBoxMidRight"></td>\r\n');
+            document.write('</tr>\r\n');
+            document.write('<tr>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxLeft glowBoxFooterLeft"></td>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxFooterMid"></td>\r\n');
+            document.write('<td class="glowBoxFooter glowBoxRight glowBoxFooterRight"></td>\r\n');
+			document.write('</tr>\r\n');
+			document.write('</table>\r\n');
+        }
+}
+
+function documentWriteActionPane()
+{
+	if (suitable_browser_to_use_png == true)
+		{
+			document.write('<div class="actionPanePng">\r\n');
+		}
+		else
+		{
+			document.write('<div class="actionPane">\r\n');
+		}
+}
+
+function DialogueBodyTop()
+{
+	CreateMainTable();
+	AddHeaderAndBarForCitrix();
+	document.writeln('<tr class="mainPane">');
+	document.writeln('<td class="carbonBoxBottom" valign="bottom">');
+	documentWriteGlowBoxUpper();
+	document.writeln('<table cellspacing="4" cellpadding="0" border="0" width=100%>');
+	document.writeln('<tr><td class="CTX_ContentTitleHeader"><div id="dialogueHeader"></div></td></tr>');
+	document.writeln('<tr><td class="CTXMSAM_LogonFont"><div id="dialogueInfo"></div></td></tr>');
+	document.writeln('<tr><td valign="top"><div id=content>');
+}
+
+function DialogueBodyBottom()
+{
+	document.writeln('</div></td></tr></table>');
+	documentWriteGlowBoxLower();
+	document.writeln('</td></tr>');
+	AddFooter();
+	document.writeln('</table>');
+
+	//change maxLength for new password field to 127, to be compatible with LDAP
+	var dlgStr = document.getElementById("dialogueStr").innerHTML;
+	dlgStr = dlgStr.toLowerCase();
+	if ((dlgStr.indexOf("password expired") > -1) && (dlgStr.indexOf("new password") > -1)) {
+		document.getElementById("response").maxLength = 127;
+		var localizedStr = _("DIALOGUE_HTML::dialoguePasswordChange");
+		if (localizedStr && localizedStr.length > 0) {
+			document.getElementById("dialogueStr").innerHTML = localizedStr;
+		}
+	}
+
+	if (dlgStr.indexOf("confirm password") > -1) {
+		document.getElementById("response").maxLength = 127;
+		var localizedStr = _("DIALOGUE_HTML::dialogueConfirmPassword");
+		if (localizedStr && localizedStr.length > 0) {
+			document.getElementById("dialogueStr").innerHTML = localizedStr;
+		}
+	}
+
+}
+
+function AddLinkTag(href) {
+	link = document.createElement("link");
+	link.href = href;
+	link.rel = "stylesheet";
+	link.type = "text/css";
+	link.media = "screen";
+	document.head.appendChild(link);
+}
+
+function DialogInclude()
+{
+	AddLinkTag("/logon/themes/Default/css/base.css");
+	AddLinkTag("/logon/fonts/citrix-fonts.css");
+	AddLinkTag("/logon/themes/Default/css/custom.css");
+}
+
+
+function DialogueBodyI()
+{							//Having the same markup for both caxton and green bubble themes.
+	var ln = "";
+	ln += '<div id="authentication">';
+	ln += '<div id="logonbelt-topshadow"><table class="full_width">';
+	ln += '<tr id="row1"><td class="header_left"></td></tr>';	
+	ln += '<tr id="row2"><td colspan="2" class="navbar"></td></tr></tbody></table></div>';
+	ln += '<div id="logonbox-container">';
+	ln += '<div id="logonbox-innerbox">';
+	ln += '<div id="logonbox-logoarea">';
+	ln += '<div id="logonbox-logoimage">';
+    ln += '</div></div>';
+	ln += '<div id="logonbox-logonform">';
+	ln += '<table cellspacing="4" cellpadding="0" border="0" width=100%>';
+	ln += '<tr><td class="label plain CTX_ContentTitleHeader"><div id="dialogueHeader"></div></td></tr>';
+	ln += '<tr><td class="label plain CTXMSAM_LogonFont"><div id="dialogueInfo"></div></td></tr>';
+	ln += '<tr><td valign="top"><div id=content>';
+	ln += '<FORM class="dialogueForm" METHOD=POST ACTION="/cgi/dlge" id="dlgform" NAME="dlgform" autocomplete="off" >';
+	ln += '<table id="dialogueTable" class="CTXMSAM_LogonFont">';
+	ln += '<tr><td>&nbsp;</td></tr>';
+	ln += '<tr><td id="dialogueChallengeCell" class="label plain dialogueChallengeCell">';
+	document.writeln( ln );
+	document.getElementById("dlgform").onsubmit = function(){return validate_entry(event)};
+	document.getElementById("dlgform").onload= function() {Resources.load(); resize(); document.getElementById("response").focus();}; 
+}
+
+function DialogueBodyII()
+{
+        dialogueTable = document.getElementById("dialogueTable");
+        dialogueRow3 = dialogueTable.insertRow(2);
+        dialogueCell3 = dialogueRow3.insertCell(0)
+        dialogueCell3.setAttribute("class", "dialogueResponseCell");
+        dialogueCell3.setAttribute("style", "float:left");
+        response = document.createElement("input");
+        response.setAttribute("size", "35");
+        response.setAttribute("maxlength", "256");
+        response.setAttribute("id", "response");
+        response.setAttribute("name", "response");
+        response.setAttribute("type", "password");
+        response.setAttribute("tabindex", "1");
+        dialogueCell3.appendChild(response);
+
+        dialogueRow4 = dialogueTable.insertRow(3);
+        dialogueCell4 = dialogueRow4.insertCell(0)
+        dialogueCell4.setAttribute("class", "dialogueSubmitCell");
+        dialogueCell4.setAttribute("style", "float:left");
+        input = document.createElement("input");
+        input.setAttribute("id", "SubmitButton");
+        input.setAttribute("type", "submit");
+        input.setAttribute("tabindex", "2");
+        input.setAttribute("class", "custombutton");
+        dialogueCell4.appendChild(input);
+
+        authenticationDiv = document.getElementById("authentication");
+        logonbeltBottomshadowDiv = document.createElement("div");
+        authenticationDiv.appendChild(logonbeltBottomshadowDiv);
+        window.onload = function() {
+                resize();
+        	document.getElementById("response").focus();
+        };
+        window.onresize = function() {resize();};
+
+        //change maxLength for new password field to 127, to be compatible with LDAP
+        var dlgStr = document.getElementById("dialogueStr").innerHTML;
+        dlgStr = dlgStr.toLowerCase();
+        if ((dlgStr.indexOf("password expired") > -1) && (dlgStr.indexOf("new password") > -1)) {
+                document.getElementById("response").maxLength = 127;
+                var localizedStr = _("DIALOGUE_HTML::dialoguePasswordChange");
+                if (localizedStr && localizedStr.length > 0) {
+                        document.getElementById("dialogueStr").innerHTML = localizedStr;
+                }
+        }
+
+        if (dlgStr.indexOf("confirm password") > -1) {
+                document.getElementById("response").maxLength = 127;
+                var localizedStr = _("DIALOGUE_HTML::dialogueConfirmPassword");
+                if (localizedStr && localizedStr.length > 0) {
+                        document.getElementById("dialogueStr").innerHTML = localizedStr;
+                }
+        }
+}
+
+function validate_entry(ev)
+{
+        var passwd = document.getElementById("response").value;
+        if (passwd == "") {
+                window.alert(_("logon::You need to enter passwd"));
+                if (ev.preventDefault) {
+                        //for firefox and chrome so that they dont post the /cgi/dlge after displaying the error
+                        ev.preventDefault();
+                }
+                //for IE so that it does not post the /cgi/dlge after displaying the error message.
+                ev.returnValue = false;
+
+                return false;
+        }
+        document.getElementById("SubmitButton").disabled = true;
+        return true;
+}
+
+ function TransferInclude()
+{
+	document.writeln('<link href="/logon/themes/Default/css/base.css" rel="stylesheet" type="text/css" media="screen"/>');
+	document.writeln('<link rel="stylesheet" href="/logon/fonts/citrix-fonts.css" type="text/css">');
+	document.writeln('<link href="/logon/themes/Default/css/custom.css" rel="stylesheet" type="text/css" media="screen"/>');
+}
+
+function TransferOnesessBodyI()
+{
+
+var ln = "";
+ln += '<div class="header_top"><table class="full_width">';
+ln += '<tr id="row1"><td class="header_left"></td></tr>';	
+ln += '<tr id="row2"><td colspan="2" class="navbar"></td></tr></tbody></table></div>';
+ln += '<div class="header"><div class="branding"><div class="custom_logo"></div></div></div>';
+ln+='<div id="messagebox" style="top: 205px; position: relative; display: block; ">';
+ln+='<div><div class="ctxsui-messagebox" style="margin-left: auto; margin-right: auto; "><div class="messagebox-middle"><div class="messagebox-middlebody">';
+ln+= '<div id="content" class="warning ">';
+ln+= '<div id="heading" class="CTX_ContentTitleHeader transfer_heading">Transfer Logon</div>';
+ln+=  '<div id="description" class="messageStyle">';
+ln+=	'<BR><span id="You are currently logged on to the Access Gateway on another device."></span>';
+ln+=	'<BR><span id="Would you like to end that session?"></span><BR>';
+ln+=	'</div>';
+ln+=	 '<form class="dialogueForm" action="/cgi/tlogin" method="POST" id="tlogin_form" autocomplete="off">';
+ln+=	'<table id="tlogin_table">';
+document.writeln(ln);
+document.getElementById("tlogin_form").onsubmit = changeTransferValue;
+}
+
+function TransferMultsessBodyI()
+{
+
+var ln = "";
+ln += '<div class="header_top"><table class="full_width">';
+ln += '<tr id="row1"><td class="header_left"></td></tr>';	
+ln += '<tr id="row2"><td colspan="2" class="navbar"></td></tr></tbody></table></div>';
+ln += '<div class="header"><div class="branding"><div class="custom_logo"></div></div></div>';
+ln+='<div id="messagebox" style="top: 205px; position: relative; display: block; ">';
+ln+='<div><div class="ctxsui-messagebox" style="margin-left: auto; margin-right: auto; "><div class="messagebox-middle"><div class="messagebox-middlebody">';
+ln+='<div id="content" class="warning">';
+ln+='<div id="heading" class="CTX_ContentTitleHeader transfer_heading">Transfer Logon</div>';
+ln+='<div id="description" class="messageStyle">';
+ln+='<BR><span id="You have reached the limit of the allowed Access Gateway sessions."></span>';
+ln+='<BR><span id="Please select which session to release in order to continue with this session."></span><BR><BR></div>';
+ln+='<form class="dialogueForm" action="/cgi/tlogin" method="POST" id="tlogin_form" autocomplete="off">';
+ln+='<table id="tlogin_table" class="CTXMSAM_LogonFont">';
+ln+='<tr><th></th><th><span id="Intranet IP Address"></span>&nbsp;&nbsp;</th><tab><th><span id="Idle Time"></span></th></tr>';
+document.writeln(ln);
+document.getElementById("tlogin_form").onsubmit = changeTransferValue;
+}
+
+function changeTransferValue(){
+	document.getElementById("TransferButton").value = "Transfer";
+	document.getElementById("CancelButton").value = "Cancel";
+}
+function TransferBodyII()
+{
+var ln;
+ln='<tr><td colspan=3><BR></td></tr>';
+ln+='</table>';
+ln+='<div class="transferLogonButtonRow">';
+ln+='<input type="submit" id="TransferButton" value="Transfer" name="cm" class="custombutton"/>';
+ln+='<input type="submit" id="CancelButton" value="Cancel" name="cm"class="custombutton"/>';
+ln+='</div></form></div></div>';
+ln+='</div></div></div>';
+ln+='</div>';
+
+document.writeln(ln);
+
+
+
+}
+
+function resize(){
+	
+		var windowHeight = window.innerHeight || document.documentElement.clientHeight; //Second function is for supporting method in IE8
+		
+		if (document.getElementById("logonbelt-topshadow").clientHeight== 88){  //height for header in caxton theme is 88px
+			//Logic for moving the watermark on the page on basis of window size.
+			var height1 = windowHeight -( document.getElementById("logonbox-container").clientHeight + document.getElementById("logonbelt-topshadow").clientHeight + document.getElementById("logonbelt-bottomshadow").clientHeight);
+			if (height1 <= 25){  //Giving gap between container and watwermark as 25px
+				document.getElementById("logonbelt-bottomshadow").style.marginTop = "25px";
+			}
+			else{
+					document.getElementById("logonbelt-bottomshadow").style.marginTop = height1+"px";
+				}
+		}
+		else{
+			//Logic for Centering the central strip in case gb theme.
+			if (windowHeight > document.getElementById("logonbox-container").clientHeight){
+					margin_top = "-" + document.getElementById("logonbox-container").clientHeight/2 + "px";   //This centres the middle strip at centre of page in case of GB theme 
+					document.getElementById("authentication").style.marginTop= margin_top;
+			}
+			else
+				document.getElementById("authentication").style.marginTop = 0;
+		}
+}
+
+/*code for generating random form field names- start*/
+	var allOriName = {};
+
+	function createRandName()
+	{
+		var tmpString = "a";
+		for(var i=0; i< 16; i++)
+		{
+			 tmpString = tmpString + Math.floor((Math.random() * 10)); 
+		}
+		return tmpString;
+	}
+
+	function revertNames() 
+	{
+		var allFields = $("#vpnForm input").each(function (i) {
+			$(this).attr("name", allOriName[$(this).attr('id')]);
+		})
+	}
+	
+	function randomize(){
+	$("#vpnForm input").not(":input[type=submit]").each( function (i) {
+		var newName = createRandName();
+		var oldName = $(this).attr("name");
+		if(oldName == 'login')
+			username_newattr = newName;
+		else if(oldName == 'passwd')
+			password_newattr = newName;
+		$(this).attr("name", newName);
+		allOriName[$(this).attr('id')] = oldName;
+	});
+	}
+/*code for generating random form field names- end */
+/* --------------  Helper functions start -------------------- */
+
+var util = { }		//Generic Utility namespace
+
+util.win = {}		// This namespace should be used for all Windows only util functions
+util.linux = {}		// This namespace should be used for all Linux only util functions
+
+util.timers = [];
+
+util.emptyFunction = function () {}
+
+util.setTimeout = function(fName, timeVal) {
+  var timeoutID = window.setTimeout(fName, timeVal);
+  util.timers.push(timeoutID);
+  return timeoutID;
+};
+
+util.clearAllTimeouts = function() {
+  for(var i = 0; i < util.timers.length; i++) {
+    window.clearTimeout(util.timers[i]);
+  }
+  util.timers = [];
+}
+
+util.ajaxGet = function(URL, successCallback, errorcallback, headers)
+{
+	errorcallback =  (typeof errorcallback !== "undefined") ? errorcallback : util.emptyFunction
+	successCallback =  (typeof successCallback !== "undefined") ? successCallback : util.emptyFunction
+
+	try
+	{
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", URL);
+		$.each(headers, function(key,value) {
+			xmlhttp.setRequestHeader(key, value);
+		});
+
+		xmlhttp.onerror = errorcallback;
+		xmlhttp.ontimeout = function () { console.log("Request " + URL + " timed out"); }
+
+		xmlhttp.onreadystatechange=function()
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status == 200)
+			{
+				try {
+					  json = JSON.parse(xmlhttp.responseText);
+				} catch (exception) {
+					  json = null;
+				}
+				if (!json && URL == "/pluginResults") {
+				   window.location = "/";	
+				}
+				successCallback(xmlhttp);
+			}
+		}
+		xmlhttp.send();
+	}
+	catch(e)
+	{
+		errorcallback("Error in sending request" + e);
+	}
+}
+
+//Please use this function only when it is necessary
+util.synAjax = function(method, URL)
+{
+	try
+	{
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open(method, URL, false);
+		xmlhttp.send();
+		return xmlhttp;
+	}
+	catch(e)
+	{
+		return
+	}
+}
+
+util.parseToXml = function(xmlString)
+{
+	var xmlDoc;
+	if (window.DOMParser)
+	{
+		var parser = new DOMParser();
+		xmlDoc=parser.parseFromString(xmlString, "text/xml");
+	}
+	else 
+	{
+		xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+		xmlDoc.async = false;
+		xmlDoc.loadXML(xmlString);
+	}
+	return xmlDoc
+}
+
+util.extractPluginInfo = function (pluginInfo, repositoryName, pluginActualType)
+	{
+		for(var i=0; i < pluginInfo.childNodes.length; i++)
+		{
+			if(pluginInfo.childNodes[i].nodeName !== "repository")
+				continue;
+				
+			if(pluginInfo.childNodes[i].getAttribute("name") !== repositoryName)
+				continue;
+
+			var repository = pluginInfo.childNodes[i];
+			for(var j=0; j <repository.childNodes.length; j++)
+			{
+				if(repository.childNodes[j].nodeName !== "plugin")
+					continue;
+					
+				if(repository.childNodes[j].getAttribute("type") === pluginActualType)
+				{
+					return {
+						"path" 				: repository.childNodes[j].getAttribute("path") , 
+						"version" 			: repository.childNodes[j].getAttribute("version") , 
+						"compatibleFrom" 	: repository.childNodes[j].getAttribute("compatibleFrom"),
+						"compatibleTill" 	: repository.childNodes[j].getAttribute("compatibleTill")
+					};
+				}
+			}
+		}
+		return null
+	}
+	
+util.extractPluginHeader = function(wholeHeader, osType, pluginType)
+{
+	var pluginName = pluginType.toLowerCase() + "_" + osType.toLowerCase();
+	var eachPlugin = wholeHeader.split(";");
+	for(var i=0; i < eachPlugin.length; i++)
+	{
+		var pluginValues = eachPlugin[i].split(":");
+		if(pluginValues[0] == pluginName)
+			return pluginValues[1];
+	}
+	return "Always";
+}
+
+
+
+util.getPluginInfo = function(osType, pluginType, pluginTypeForExtract)
+{
+	var reqObj = util.synAjax("GET","/vpn/pluginlist.xml");
+	
+	var pluginInfo 		= util.parseToXml(reqObj.responseText).firstChild;
+	var repositoryName 	= reqObj.getResponseHeader("repository");
+	var upgradeType		= util.extractPluginHeader(reqObj.getResponseHeader("Plugin-Upgrade"), osType, pluginType)
+
+	var pluginActualType = osType + "-" + ( (typeof pluginTypeForExtract !== "undefined") ? pluginTypeForExtract : pluginType);
+	
+	var pluginData;
+	if((repositoryName !== null) && (repositoryName !="") )
+	{
+		pluginData = util.extractPluginInfo(pluginInfo, repositoryName, pluginActualType);
+		//if all attributes are proper then only return data
+		if( pluginData && (pluginData.path) && (pluginData.version) && (pluginData.compatibleFrom) )
+		{
+			pluginData["upgradeType"] = upgradeType;
+			return pluginData;
+		}	
+	}
+	
+	//if we don't find any plugin in that repository or that repository header was NULL, then check in "default"
+	pluginData =  util.extractPluginInfo(pluginInfo, "default", pluginActualType);
+	pluginData["upgradeType"] = upgradeType;
+	return pluginData;
+}
+
+util.redirectToPlugin = function(osType, pluginType)
+{
+	var pluginData = util.getPluginInfo(osType, pluginType)
+	window.location.assign(pluginData.path)
+}
+
+//this will compare version only upto 4 digit
+// negative 	ver1 < ver2 
+// 0			ver1 == ver2
+// positive		ver1 > ver2 
+util.compareVersion = function(ver1, ver2)
+{
+	var ver1Digit = ver1.split(/[\.,]/);
+	var ver2Digit = ver2.split(/[\.,]/);
+	
+	for(var i=0; i <4; i++)
+	{
+		var diff = parseInt(ver1Digit[i]) - parseInt(ver2Digit[i]);
+		if(diff!==0)
+		{
+			return diff;
+		}
+	}
+	return 0;
+}
+
+//use this function instead IE check
+//Even if ActiveXObject is defined, IE 11 reports "typeof ActiveXObject" as undefined. So, don't use typeof operator for this check
+util.win.ACTIVEX_SUPPORTED = ("ActiveXObject" in window);		
+
+
+var winAgentPortForLauncher = 3198;
+
+//function which does actual probing
+util.prob = function (requestString, successCallback, errorCallback)
+{
+	image = new Image();
+	image.onload = 	successCallback; 
+	image.onerror = errorCallback; 
+	image.src = "http://localhost:" + winAgentPortForLauncher + "/" + requestString + "&" + Math.random();
+}
+
+//will return empty string on any error
+util.getStringFromLauncher =  function(requestName, callBack)
+{
+	var index = 0;
+	var hexResult = [];
+	
+	var probeError 	= function () { callBack("") }
+	
+	var probSuccess =  function ()   
+	{ 
+		hexResult.push(this.height -1); 
+		
+		if( (hexResult.length > 2) && (hexResult.length % 2 == 0) )
+		{
+			if( (hexResult[hexResult.length - 1] == 0) &&  (hexResult[hexResult.length - 2] == 0) )		//found whole string
+			{
+				try
+				{
+					var encodedString = "";
+					
+					for (var i = 0; i < hexResult.length-2; i += 2)
+					{
+						var utf8Val = (hexResult[i]*16 + hexResult[i+1]);
+						// add UTF8 character in encoded format
+						encodedString += ( "%" +  ( utf8Val < 0x10 ? "0" : "" ) + utf8Val.toString(16) );
+					}
+					
+					callBack( decodeURIComponent(encodedString) );
+				}
+				catch(e)
+				{
+					callBack("");
+				}
+				
+				return;
+			}
+		}
+		
+		index+=1;
+		util.prob(requestName + "&"+ index, probSuccess, probeError);
+	} 
+
+	util.prob(requestName + "&"+ index, probSuccess, probeError);
+}
+
+util.maxAttempt 	= 20;
+util.currentAttempt	= 0;
+
+util._launchErrorHandler 	= util.emptyFunction;
+util._launchSuccessHandler 	= util.emptyFunction;
+
+util.useOnlyLocalHostComm = false;
+util.useOnlyNSproxyComm = true;
+
+util._checkIfLaunched =  function()
+{
+	util.currentAttempt+=1;
+	if(util.currentAttempt > util.maxAttempt)
+	{
+		util._launchErrorHandler();
+		return;
+	}
+
+	function errorhandler()
+	{
+		util.setTimeout(util._checkIfLaunched, 1000);
+	}
+	util.prob("NOP", util._launchSuccessHandler, errorhandler);
+}
+
+util.launchPlugin =  function(successCallback, errorCallback)
+{
+	var pluginProtocol = "citrixNG://";
+	if (secureToken && !util.useOnlyLocalHostComm) {
+		pluginProtocol += "vpnplugin/";
+		pluginProtocol += document.location.host;
+		pluginProtocol += "/";
+		pluginProtocol += secureToken;
+		pluginProtocol += "/";
+		//browsers add " at the end of the URL sent through custom protocol handler. Adding a / at the end
+		//to indicate the end of the token so that plugin won't misintrepret " to be a part of the token
+	}
+
+
+	//If application is not installed Firefox, redirects to blank page. So instead of redirecting to protocol page, open the link in an iframe.
+	if(navigator.userAgent.search("Firefox") != -1)
+	{
+		var launcherFrame = document.getElementById("launcherIframe");
+		if(launcherFrame)
+		{
+			launcherFrame.parentNode.removeChild(launcherFrame);
+		}
+		var iFrameChild = document.createElement("iframe");
+        iFrameChild.setAttribute("src", pluginProtocol); 
+        iFrameChild.id = "launcherIframe";
+        iFrameChild.style.width = "1px";
+        iFrameChild.style.height = "1px";
+        iFrameChild.style.visibility = "hidden";
+        document.body.appendChild(iFrameChild);
+	}
+	else
+	{
+		window.location = pluginProtocol;
+	}
+	util._launchErrorHandler	= errorCallback;
+	util._launchSuccessHandler 	= successCallback;
+	util.setTimeout(util.checkIfLaunched(), 2000);		// give little time (2s) to start the plugin
+}
+
+util.useLauncher = true;
+
+util.winMaxTimerValue 		=  20;
+
+
+/* --------------  Helper functions end -------------------- */
+//=======================================================================
+// new EPA  functions
+
+util.maxInactiveAttempts = 12;
+util.isPluginActive = false;
+
+
+util.pollNS = function(maxAttempts, pollPath, successCallback, failureCallback) {
+    function pollHandler() {
+        util.currentAttempt += 1;
+        if ((navigator.userAgent.indexOf("Windows NT") != -1) && !util.isPluginActive && !util.fallbackStarted && !util.useOnlyNSproxyComm) {
+            util.checkIfLaunched = util.emptyFunction;
+            util._launchErrorHandler	= util.emptyFunction;
+            util._launchSuccessHandler 	= detectAgent;
+            util.fallbackStarted = true;
+            failureCallback();
+        } else if (navigator.userAgent.indexOf("Linux") != -1) { 
+            if (util.useOnlyNSproxyComm) {
+                if ((util.currentAttempt % 30) == 0){
+                        linux_launchVpnApp(secureToken);
+                }
+                if (util.currentAttempt > 20) {
+                        displayDownloadArea();
+                }
+            } else if (util.currentAttempt > util.maxInactiveAttempts && !util.isPluginActive && !util.fallbackStarted) {
+                util.checkIfLaunched = util.emptyFunction;
+                failureCallback();
+            }
+        }
+    }
+    util.pollNSId = setInterval(function() {util.ajaxGet(pollPath, successCallback, failureCallback); pollHandler(); }, 1000);
+}
+
+util.win.pluginLaunch = function() {
+    util.isPluginActive = false;
+    util.checkIfLaunched = util.pluginResults;
+    clearInterval(util.pollNSId);
+    util.fallback = util._checkIfLaunched;
+    if (!util.fallbackStarted && util.currentAttempt < util.maxInactiveAttempts) {
+        showTimer();
+    } else {
+        displayDownloadArea();
+    }
+    util.fallbackStarted = false;
+    util.launchPlugin(util.emptyFunction, util.fallback);
+}
+
+util.linux.pluginLaunch = function() {
+    util.isPluginActive = false;
+    util.fallbackStarted = false;
+    clearInterval(util.pollNSId);
+    launchVpnApp(secureToken)
+    util.fallback = function() {
+        clearInterval(util.pollNSId);
+        probeErrors = util.maxInactiveAttempts;
+        util.getNoHttpOnlyCookies(function() {
+            checkForCookies();
+            probeError();
+        });
+    };
+    util.pluginResults();
+}
+
+util.pluginResults = function() {
+    util.currentAttempt = 0;
+    util.pollNS(util.maxInactiveAttempts, "/pluginResults", util.pluginResultsSuccessHandler, util.fallback);
+}
+
+util.pluginResultsSuccessHandler = function (XMLHttpRequest) {
+    var response = {};
+    try {
+        response = JSON.parse(XMLHttpRequest.responseText)
+        if (response.type == "Inactive") {
+            console.log(response.type);
+        } else if (response.type == "Active") {
+           if (!util.fallbackStarted) {
+               util.isPluginActive = true;
+               clearInterval(util.pollNSId);
+               util.pollNS(util.maxInactiveAttempts, "/pluginResults", util.pluginResultsSuccessHandler, util.emptyFunction);
+           }
+           if (navigator.userAgent.indexOf("Windows NT") != -1) {
+               clearTimeout(showTimerHandler);
+           }
+           console.log(response.type);
+        } else if (response.type == "Upgrade EPA") {
+            if (!util.fallbackStarted) {
+                util.isPluginActive = true;
+            }
+            console.log("Upgrade EPA received");
+            AppendDownloadButton();
+        } else if (response.type == "Upgrade VPN") {
+            if (!util.fallbackStarted) {
+                util.isPluginActive = true;
+            }
+            console.log("Upgrade VPN received");
+            displayDownloadArea();
+            setTimeout(function() { util.ajaxGet("/cgi/logout") }, 15000 )
+        } else if (response.type == "Passed") {
+            clearInterval(util.pollNSId);
+            console.log("pluginResult is " + response.type);
+            epa_success_callback("passed");
+            return;
+        } else if (response.type == "Failed") {
+            clearInterval(util.pollNSId);
+            console.log("pluginResult is " + response.type);
+            util.epaFailResult = {};
+            util.epaFailResult.epaMessage = response.epaMessage.split("\n");
+            util.epaFailResult.epaErrors  = response.epaErrors.split("\n");
+            util.epaFailResult.epaErrors.pop();
+            UnsetCookie("NSC_ERRM");
+            epa_success_callback("failed");
+        } else if (response.type == "Established") {
+            clearInterval(util.pollNSId);
+            if (navigator.userAgent.indexOf("Windows NT") != -1) {
+                clearTimeout(showTimerHandler);
+            }
+            console.log("pluginResult is " + response.type);
+            window.location = "/vpns/services.html";
+        } else if (response.type == "choices") {
+            clearInterval(util.pollNSId);
+            console.log("pluginResult is " + response.type);
+            epa_success_callback("passed");
+        } else {
+            console.error("Unexpected response");
+        }
+    } catch (e) {
+       console.error("Unexpected response");
+    }
+}
+
+util.getNoHttpOnlyCookies = function (successCallback) {
+    util.ajaxGet("/getCookies", successCallback, util.emptyFunction, [{"X-Citrix-Secure-Token" : secureToken}]);
+}
+

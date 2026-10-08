@@ -1,0 +1,170 @@
+/**
+ * Extracts the stack number and context ID from a path name
+ * @param {string} pathname - URL in format /{PRACTICE_ID}/{STACK_NUMBER}/{ROUTE}"
+ * @returns {{stackNumber: string, practiceId: string} | {}} Object containing stackNumber and practiceId, or an empty object if parsing fails
+ */
+function getDataFromPathname(pathname) {
+    if (!pathname) {
+        console.error('Pathname not provided for DataDog context');
+        return {};
+    }
+    if (pathname === '/login.esp') {
+        return {};
+    }
+    try {
+        const stackNumberAndPracticeRegEx = /^\/(\d+)\/(\d+)\//;
+        const results = stackNumberAndPracticeRegEx.exec(pathname);
+        if (!results) {
+            throw new Error(`${pathname} does not match pattern ${stackNumberAndPracticeRegEx}`);
+        }
+
+        const practiceId = results[1];
+        const stackNumber = results[2];
+
+        return {
+            stackNumber,
+            practiceId,
+        };
+    } catch (error) {
+        // some routes do not have a practice id and stack number in the url, simply omit these values
+        return {};
+    }
+}
+
+/**
+ * Enhances the data returned by getDataFromPathname with values from a cookie.
+ *
+ * Supported cookie keys:
+ * - LOGINSTACK
+ * - UNENCRYPTED_USERNAME
+ * - UNENCRYPTED_LOGINPRACTICEID
+ *
+ * @param {{stackNumber: string, practiceId: string}} data
+ * @param {string} cookie Cookie string (e.g. document.cookie)
+ */
+function updateDataFromCookie(userInfo, cookie) {
+    if (!cookie) {
+        return userInfo;
+    }
+
+    if (userInfo.practiceId === undefined) {
+        let practiceIdRegex = /.*UNENCRYPTED_LOGINPRACTICEID=(.*?);.*/;
+        let practiceIdResult = practiceIdRegex.exec(cookie);
+        userInfo.practiceId = practiceIdResult ? practiceIdResult[1] : undefined;
+    }
+
+    if (userInfo.stackNumber === undefined) {
+        let stackRegex = /.*LOGINSTACK=(.*?);.*/;
+        let stackResult = stackRegex.exec(cookie);
+        userInfo.stackNumber = stackResult ? stackResult[1] : undefined;
+    }
+
+    let usernameRegex = /.*UNENCRYPTED_USERNAME=(.*?);.*/;
+    let usernameResult = usernameRegex.exec(cookie);
+    userInfo.username = usernameResult ?  usernameResult[1] : undefined;
+}
+
+
+if (window['datadog-token'] && window['datadog-application-id'] && window['datadog-rum-env']) {
+    (function(h,o,u,n,d) {
+        h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+        d=o.createElement(u);d.async=1;d.src=n
+        n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+    })(window,document,'script','https://www.datadoghq-browser-agent.com/datadog-rum-v5.js','DD_RUM')
+    window.DD_RUM.onReady(function() {
+        window.DD_RUM.init({
+            clientToken: window['datadog-token'],
+            applicationId: window['datadog-application-id'],
+            env: window['datadog-rum-env'],
+            site: 'datadoghq.com',
+            service: window['datadog-service-name'] || 'anet---dev',
+            // Specify a version number to identify the deployed version of your application in Datadog
+            // version: '1.0.0',
+            sampleRate: 100,
+            sessionReplaySampleRate: 0,
+            trackUserInteractions: false,
+            trackResources: true,
+            trackLongTasks: true,
+            trackViewsManually: Boolean(window['datadog-current-route']),
+            beforeSend: (event, context) => { 
+                // collect a RUM resource's response headers
+                try {
+                    if (event.type === 'resource') {
+                        if (event.resource['url'].includes('hidden_exposed.esp')) {
+                            if (event.resource.type === 'fetch' && context.response) {
+                                const fetchHeaders = Object.fromEntries(context.response.headers);
+                                event.context.uniqueID = fetchHeaders['x-athena-unique-id'];
+                                event.context.rpc = fetchHeaders['x-athena-rpc'];
+                            }
+                            if (event.resource.type === 'xhr') {
+                                const xhrHeadersStr = context.xhr.getAllResponseHeaders();
+                                if (xhrHeadersStr) {
+                                    const xhrHeaders = Object.fromEntries(xhrHeadersStr.split(/\r\n/g).map(s => s.split(/(.*): /s).filter(Boolean)));
+                                    event.context.uniqueID = xhrHeaders['x-athena-unique-id'];
+                                    event.context.rpc = xhrHeaders['x-athena-rpc'];
+                                }
+                            }
+                        }
+                        event.context.initiator = context.handlingStack;
+                        event.context.performanceEntry = context.performanceEntry;
+                    }
+                    
+                } catch (error) {
+                    // try-catch block to not block loading the page due to any DataDog error. Logging the error for visibility.
+                    console.error(error);
+                }
+                return true;
+            },  
+            excludedActivityUrls: [
+                /^https:\/\/(.+)\.in\.applicationinsights\.azure\.com/,
+                /^https:\/\/(.+)\.data\.pendo\.io/,
+                /^https:\/\/clientstream\.launchdarkly\.com/,
+                /^https:\/\/app\.launchdarkly\.com/,
+                /^https:\/\/clientsdk\.launchdarkly\.com/,
+                /^https:\/\/events\.launchdarkly\.com/,
+                /^https:\/\/mobile\.launchdarkly\.com/,
+                /^https:\/\/api\.amplitude\.com/,
+                /^https:\/\/api2\.amplitude\.com/,
+                /^https:\/\/dc\.applicationinsights\.azure\.com/,
+                /^https:\/\/dc\.applicationinsights\.microsoft\.com/,
+                /^https:\/\/dc\.services\.visualstudio\.com/,
+                /^https:\/\/ive\.applicationinsights\.azure\.com/,
+                /^https:\/\/rt\.applicationinsights\.microsoft\.com/,
+                /^https:\/\/rt\.services\.visualstudio\.com/,
+                /^https:\/\/(.+)\.livediagnostics\.monitor\.azure\.com/
+            ]
+        });
+
+        if (window['datadog-current-route']) {
+            window.DD_RUM.startView({
+                name: window['datadog-current-route'],
+            });
+        }
+        window.addEventListener("hashchange", (event) => {
+            window.DD_RUM.addAction("hashchange", {
+                'newHash': window.location?.hash
+            })
+        });
+
+        const userInfo = getDataFromPathname(document?.location?.pathname);
+        updateDataFromCookie(userInfo, document?.cookie);
+
+        let encounterId = null;
+
+        // Extract encounter id from the url path, if the format is
+        // /3199/34/ax/case/217823/exam and /3199/34/ax/encounter/217823/exam.
+        const pathname = document?.location?.pathname;
+        const pathRegex = /\/ax\/(?:case|encounter)\/(\d+)\//;
+        const pathResult = pathRegex.exec(pathname);
+
+        if (pathResult && pathResult[1]) {
+            encounterId = pathResult[1];  
+        }
+
+        // Datadog will ignore any values that are null or undefined
+        window.DD_RUM.setGlobalContextProperty('stack', userInfo.stackNumber);
+        window.DD_RUM.setGlobalContextProperty('practice_id', userInfo.practiceId);
+        window.DD_RUM.setGlobalContextProperty('encounter_id', encounterId);
+        window.DD_RUM.setUser({id: userInfo.username});
+    })
+}

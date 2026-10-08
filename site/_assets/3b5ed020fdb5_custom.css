@@ -1,0 +1,156 @@
+#logonbox-container { 
+ background : none; 
+ } 
+body { 
+ background-image : url('../custom_media/atback.png'); 
+ height: 100%; 
+ margin-right: 0px;
+ margin-left: 0px;
+ background-color: inherit;
+ background-repeat: no-repeat;
+ background-size:cover; 
+} 
+.ns_body{ 
+ background-image : url('../custom_media/atback.png'); 
+ height: 100%;
+ background-color: inherit;
+ background-repeat: no-repeat;
+ background-size: 100%;
+ -webkit-background-size: cover;
+  
+}.mainPane { 
+ background : none; 
+ } 
+.choices_bkgrnd { 
+ background : none; 
+ } 
+
+
+.CTX_ContentTitleHeader { 
+font-size : 18px; 
+ }
+
+.ctxsui-messagebox .headermessage { 
+font-size : 16px; 
+ }
+
+.CTX_ContentTitleHeader { 
+ color: #400eb3;
+}
+
+.eula_title {
+ color : #ffffff;
+}
+
+.ctxsui-messagebox .headermessage { 
+ color: #ffffff;
+}
+
+#dialogueHeader { 
+ color: #101010;
+}
+
+#logonbox-logonform .plain:not(.CTX_ContentTitleHeader) { 
+ font-size : 10px;
+}
+
+.eula .agreement {
+ font-size : 10px;
+}
+
+#logonbox-logonform .plain.form_text { 
+ font-size : 14px;
+}
+
+#logonbox-logonform .plain.CTXMSAM_LogonFont { 
+ font-size : 20px;
+}
+
+#logonbox-logonform .plain.dialogueChallengeCell { 
+ font-size : 20px;
+}
+
+.form_text { 
+ font-size : 10px;
+}
+
+#logonbox-logonform .error { 
+ font-size : 13px;
+}
+
+#logonbox-logonform .plain:not(.CTX_ContentTitleHeader)  { 
+ color: #0e0e0e;
+}
+
+.eula .agreement{ 
+ color: #ffffff;
+}
+
+.form_text  { 
+ color: #ffffff;
+}
+
+#logonbox-logonform .plain.form_text  { 
+ color: #020202;
+}
+
+.CTXMSAM_LogonFont  { 
+ color: #ffffff;
+}
+
+.messageStyle  { 
+ color: #ffffff;
+}
+
+#logonbox-logonform .error { 
+ color: #060606;
+}
+
+#logonbox-logonform .plain.CTXMSAM_LogonFont { 
+ color: #000000;
+}
+
+#logonbox-logonform .plain.dialogueChallengeCell { 
+ color: ##080808;
+}
+
+.header_left{ 
+  background-position: left 20px center ; 
+ }
+
+.eula_title { 
+ font-size : 20px;
+}
+
+
+
+.navBar a {
+ color :#ffffff; 
+}
+
+.navBar a:hover, .currentLink a:link, .currentLink a:visited, .currentLink a:hover {
+ color :#ffffff; 
+}
+.ns_body input {
+    font-family: "Lucida Grande","Segoe UI",verdana,arial,helvetica,sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+.ns_body input[type="text"] {
+    height: 25px;
+    padding: inherit;
+    
+}
+logonbox-footer {
+    padding: 0px 10px 20px 10px;
+}
+#logonbelt-bottomshadow,
+#logonbelt-bottomshadow a {
+   text-align: left;
+   color: #FF0000;
+   font-size:22pt;
+}   
+#logonbelt-bottomshadow a {
+   font-weight: bold;
+   text-decoration: underline;
+} 
